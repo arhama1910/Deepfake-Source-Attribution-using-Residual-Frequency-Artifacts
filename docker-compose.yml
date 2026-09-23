@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: deeptrace-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: deeptrace_user
+      POSTGRES_PASSWORD: deeptrace_password
+      POSTGRES_DB: deeptrace_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U deeptrace_user -d deeptrace_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: deeptrace-backend
+    restart: unless-stopped
+    environment:
+      - DATABASE_URL=postgresql://deeptrace_user:deeptrace_password@postgres:5432/deeptrace_db
+      - STORAGE_TYPE=local
+      - MAX_UPLOAD_SIZE_MB=100
+      - LLM_PROVIDER=deterministic
+      - MODEL_DEVICE=cpu
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend/uploads:/app/uploads
+      - ./backend/static:/app/static
+      - ./backend/reports:/app/reports
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: deeptrace-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
