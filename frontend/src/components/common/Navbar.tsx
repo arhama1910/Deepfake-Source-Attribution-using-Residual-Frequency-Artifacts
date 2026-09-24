@@ -45,15 +45,12 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
             onClick={() => setActiveTab('landing')}
             className="flex items-center space-x-3 cursor-pointer group"
           >
-            <div className="relative flex items-center justify-center w-10 h-10 rounded-2xl bg-[#0D4F43] text-white shadow-sm transition-all">
-              <svg viewBox="0 0 24 24" className="w-5 h-5 text-[#F7F6F0] stroke-current fill-none stroke-[2]" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M12 2a10 10 0 0 0-10 10c0 4.4 2.9 8.2 7 9.5" />
-                <path d="M12 6a6 6 0 0 0-6 6c0 2.6 1.7 4.9 4.2 5.7" />
-                <path d="M12 10a2 2 0 0 0-2 2c0 .9.6 1.6 1.4 1.9" />
-                <path d="M18 12c0-3.3-2.7-6-6-6" />
-                <path d="M22 12c0-5.5-4.5-10-10-10" />
-                <circle cx="12" cy="12" r="1" className="fill-[#F7F6F0]" />
-              </svg>
+            <div className="relative flex items-center justify-center w-11 h-11 shrink-0">
+              <img
+                src="/logo.png"
+                alt="DeepTrace AI Logo"
+                className="w-11 h-11 object-contain drop-shadow-sm group-hover:scale-105 transition-transform"
+              />
               <span className="absolute -bottom-0.5 -right-0.5 flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#125B4D] opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-[#0D4F43]"></span>

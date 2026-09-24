@@ -8,8 +8,8 @@ export const Footer: React.FC = () => {
         
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 pb-6 border-b border-[#166355]">
           <div>
-            <div className="flex items-center space-x-2 text-[#F7F6F0] font-bold text-sm">
-              <Shield className="w-4 h-4 text-[#D9DED4]" />
+            <div className="flex items-center space-x-3 text-[#F7F6F0] font-bold text-sm">
+              <img src="/logo.png" alt="DeepTrace AI Logo" className="w-6 h-6 object-contain" />
               <span>DeepTrace AI</span>
             </div>
             <p className="text-[#D9DED4]/90 text-xs mt-1">
