@@ -2,41 +2,43 @@
 
 @theme {
   --font-sans: 'Montserrat', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --color-background: #07090e;
-  --color-foreground: #f1f5f9;
-  --color-card: #0d121f;
-  --color-card-foreground: #f1f5f9;
-  --color-popover: #0d121f;
-  --color-popover-foreground: #f1f5f9;
-  --color-primary: #38bdf8;
-  --color-primary-foreground: #07090e;
-  --color-secondary: #1e293b;
-  --color-secondary-foreground: #f1f5f9;
-  --color-muted: rgba(30, 41, 59, 0.7);
-  --color-muted-foreground: #94a3b8;
-  --color-accent: #1e293b;
-  --color-accent-foreground: #f1f5f9;
-  --color-destructive: #f43f5e;
-  --color-destructive-foreground: #f1f5f9;
-  --color-border: rgba(148, 163, 184, 0.15);
-  --color-input: rgba(148, 163, 184, 0.15);
-  --color-ring: #38bdf8;
+  --color-background: #F7F6F0;
+  --color-foreground: #083C33;
+  --color-card: #FFFFFF;
+  --color-card-foreground: #083C33;
+  --color-popover: #FFFFFF;
+  --color-popover-foreground: #083C33;
+  --color-primary: #0D4F43;
+  --color-primary-foreground: #FFFFFF;
+  --color-secondary: #D9DED4;
+  --color-secondary-foreground: #083C33;
+  --color-muted: #EBF0E6;
+  --color-muted-foreground: #3D5A52;
+  --color-accent: #125B4D;
+  --color-accent-foreground: #FFFFFF;
+  --color-destructive: #9E3A3A;
+  --color-destructive-foreground: #FFFFFF;
+  --color-border: #D9DED4;
+  --color-input: #E2E7DE;
+  --color-ring: #0D4F43;
 }
 
 @layer base {
   :root {
-    --bg-primary: #07090e;
-    --bg-card: #0d121f;
-    --bg-card-hover: #121829;
-    --accent-blue: #38bdf8;
-    --accent-violet: #818cf8;
-    --accent-cyan: #22d3ee;
-    --border-subtle: rgba(56, 189, 248, 0.15);
+    --bg-primary: #F7F6F0;
+    --bg-card: #FFFFFF;
+    --bg-card-hover: #FAFCF8;
+    --accent-forest: #0D4F43;
+    --accent-emerald: #125B4D;
+    --accent-dark: #083C33;
+    --accent-sage: #D9DED4;
+    --accent-sage-light: #EBF0E6;
+    --border-subtle: #D9DED4;
   }
 
   body {
     background-color: var(--bg-primary);
-    color: #f1f5f9;
+    color: #083C33;
     font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     overflow-x: hidden;
     margin: 0;
@@ -48,37 +50,38 @@
   }
 }
 
-/* Custom forensic laboratory styling */
+/* Custom clinical & research laboratory styling */
 .glass-panel {
-  background: rgba(13, 18, 31, 0.7);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(148, 163, 184, 0.1);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+  background: #FFFFFF;
+  border: 1px solid #D9DED4;
+  box-shadow: 0 4px 20px -2px rgba(13, 79, 67, 0.05);
 }
 
 .glass-panel-hover:hover {
-  border-color: rgba(56, 189, 248, 0.25);
-  box-shadow: 0 12px 40px 0 rgba(56, 189, 248, 0.08);
+  border-color: #0D4F43;
+  box-shadow: 0 8px 30px -4px rgba(13, 79, 67, 0.08);
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.glow-blue {
-  box-shadow: 0 0 25px -5px rgba(56, 189, 248, 0.3);
-}
-
-.glow-violet {
-  box-shadow: 0 0 25px -5px rgba(129, 140, 248, 0.3);
 }
 
 .forensic-grid {
   background-size: 32px 32px;
   background-image: 
-    linear-gradient(to right, rgba(56, 189, 248, 0.04) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(56, 189, 248, 0.04) 1px, transparent 1px);
+    linear-gradient(to right, rgba(13, 79, 67, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(13, 79, 67, 0.035) 1px, transparent 1px);
 }
 
-/* Scanning line animation */
+/* Deep forest section styling matching reference */
+.deep-forest-panel {
+  background: #083C33;
+  color: #F7F6F0;
+}
+
+.sage-pill {
+  background: #D9DED4;
+  color: #083C33;
+}
+
+/* Scanning line animation with subtle emerald tone */
 @keyframes scanline {
   0% {
     transform: translateY(-100%);
@@ -99,14 +102,14 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: #090d16;
+  background: #F7F6F0;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #1e293b;
+  background: #D9DED4;
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #334155;
+  background: #0D4F43;
 }

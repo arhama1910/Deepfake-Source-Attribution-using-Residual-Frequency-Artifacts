@@ -77,36 +77,36 @@ export const HistoryPage: React.FC<HistoryPageProps> = ({ onSelectCase }) => {
       
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-white">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-[#083C33]">
             Forensic Case Log & Archive
           </h1>
-          <p className="text-xs sm:text-sm text-slate-400 mt-1">
+          <p className="text-xs sm:text-sm text-[#3D5A52] mt-1">
             Historical audit logs of inspected media and attribution records.
           </p>
         </div>
 
         <div className="flex items-center space-x-3">
-          <div className="flex rounded-xl bg-slate-900 border border-slate-800 p-1 text-xs">
+          <div className="flex rounded-full bg-[#EBF0E6] border border-[#D9DED4] p-1 text-xs">
             <button
               onClick={() => setMediaFilter('')}
-              className={`px-3 py-1 rounded-lg transition-all ${
-                mediaFilter === '' ? 'bg-cyan-500/20 text-cyan-300 font-semibold' : 'text-slate-400 hover:text-white'
+              className={`px-3.5 py-1.5 rounded-full transition-all ${
+                mediaFilter === '' ? 'bg-[#0D4F43] text-white font-semibold shadow-sm' : 'text-[#3D5A52] hover:text-[#083C33]'
               }`}
             >
               All ({total})
             </button>
             <button
               onClick={() => setMediaFilter('image')}
-              className={`px-3 py-1 rounded-lg transition-all ${
-                mediaFilter === 'image' ? 'bg-cyan-500/20 text-cyan-300 font-semibold' : 'text-slate-400 hover:text-white'
+              className={`px-3.5 py-1.5 rounded-full transition-all ${
+                mediaFilter === 'image' ? 'bg-[#0D4F43] text-white font-semibold shadow-sm' : 'text-[#3D5A52] hover:text-[#083C33]'
               }`}
             >
               Images
             </button>
             <button
               onClick={() => setMediaFilter('video')}
-              className={`px-3 py-1 rounded-lg transition-all ${
-                mediaFilter === 'video' ? 'bg-cyan-500/20 text-cyan-300 font-semibold' : 'text-slate-400 hover:text-white'
+              className={`px-3.5 py-1.5 rounded-full transition-all ${
+                mediaFilter === 'video' ? 'bg-[#0D4F43] text-white font-semibold shadow-sm' : 'text-[#3D5A52] hover:text-[#083C33]'
               }`}
             >
               Videos
@@ -115,7 +115,7 @@ export const HistoryPage: React.FC<HistoryPageProps> = ({ onSelectCase }) => {
 
           <button
             onClick={fetchHistory}
-            className="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors"
+            className="p-2.5 rounded-full bg-[#D9DED4] hover:bg-[#CAD2C4] text-[#083C33] transition-colors"
           >
             <RefreshCw className="w-4 h-4" />
           </button>
@@ -123,16 +123,16 @@ export const HistoryPage: React.FC<HistoryPageProps> = ({ onSelectCase }) => {
       </div>
 
       {/* History Table */}
-      <div className="glass-panel rounded-3xl border border-slate-800 overflow-hidden">
+      <div className="bg-white rounded-3xl border border-[#D9DED4] shadow-sm overflow-hidden">
         {items.length === 0 ? (
-          <div className="p-16 text-center text-slate-500 text-xs font-mono">
+          <div className="p-16 text-center text-[#3D5A52] text-xs font-mono">
             {isLoading ? 'Loading forensic audit history...' : 'No historical forensic cases logged yet.'}
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-xs text-left border-collapse">
               <thead>
-                <tr className="bg-slate-900/80 text-slate-400 border-b border-slate-800 font-mono">
+                <tr className="bg-[#F7F6F0] text-[#3D5A52] border-b border-[#D9DED4] font-mono">
                   <th className="p-4">Case Reference / Media</th>
                   <th className="p-4">Type</th>
                   <th className="p-4">Timestamp</th>
@@ -141,62 +141,62 @@ export const HistoryPage: React.FC<HistoryPageProps> = ({ onSelectCase }) => {
                   <th className="p-4 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800/60 font-mono">
+              <tbody className="divide-y divide-[#D9DED4]/60 font-mono">
                 {items.map((item) => (
                   <tr
                     key={item.id}
                     onClick={() => handleOpen(item.id)}
-                    className="hover:bg-slate-800/30 cursor-pointer transition-colors"
+                    className="hover:bg-[#EBF0E6]/50 cursor-pointer transition-colors"
                   >
                     <td className="p-4">
                       <div className="flex items-center space-x-3">
-                        <div className="w-8 h-8 rounded-lg bg-slate-900 overflow-hidden shrink-0 border border-slate-800 flex items-center justify-center">
+                        <div className="w-8 h-8 rounded-lg bg-[#EBF0E6] overflow-hidden shrink-0 border border-[#D9DED4] flex items-center justify-center">
                           {item.thumbnail_url ? (
                             <img src={item.thumbnail_url} alt="" className="w-full h-full object-cover" />
                           ) : item.media_type === 'image' ? (
-                            <FileImage className="w-4 h-4 text-cyan-400" />
+                            <FileImage className="w-4 h-4 text-[#0D4F43]" />
                           ) : (
-                            <FileVideo className="w-4 h-4 text-indigo-400" />
+                            <FileVideo className="w-4 h-4 text-[#0D4F43]" />
                           )}
                         </div>
                         <div>
-                          <span className="font-bold text-white block max-w-xs truncate font-sans text-xs">
+                          <span className="font-bold text-[#083C33] block max-w-xs truncate font-sans text-xs">
                             {item.filename}
                           </span>
-                          <span className="text-[10px] text-slate-400">
+                          <span className="text-[10px] text-[#3D5A52]">
                             {item.id.slice(0, 13)}...
                           </span>
                         </div>
                       </div>
                     </td>
 
-                    <td className="p-4 uppercase text-[11px] text-slate-300">
+                    <td className="p-4 uppercase text-[11px] text-[#083C33] font-semibold">
                       {item.media_type}
                     </td>
 
-                    <td className="p-4 text-slate-400 text-[11px]">
+                    <td className="p-4 text-[#3D5A52] text-[11px]">
                       {new Date(item.created_at).toLocaleDateString()} {new Date(item.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </td>
 
                     <td className="p-4">
                       {item.prediction?.model_status === 'loaded' ? (
                         item.prediction.is_synthetic ? (
-                          <span className="px-2 py-0.5 rounded text-[10px] text-rose-300 bg-rose-950/40 border border-rose-500/20">
+                          <span className="px-2.5 py-0.5 rounded-full text-[10px] text-[#9E3A3A] bg-[#FDF2F2] border border-[#E0B4B4] font-semibold">
                             Synthetic
                           </span>
                         ) : (
-                          <span className="px-2 py-0.5 rounded text-[10px] text-emerald-300 bg-emerald-950/40 border border-emerald-500/20">
+                          <span className="px-2.5 py-0.5 rounded-full text-[10px] text-[#0D4F43] bg-[#EBF0E6] border border-[#D9DED4] font-semibold">
                             Authentic
                           </span>
                         )
                       ) : (
-                        <span className="px-2 py-0.5 rounded text-[10px] text-amber-300 bg-amber-950/40 border border-amber-500/20">
+                        <span className="px-2.5 py-0.5 rounded-full text-[10px] text-[#B57424] bg-[#FDF9F0] border border-[#E6DAC0] font-semibold">
                           Demo Mode
                         </span>
                       )}
                     </td>
 
-                    <td className="p-4 text-slate-300">
+                    <td className="p-4 text-[#083C33] font-medium">
                       {item.prediction?.source_class || 'Model Not Loaded'}
                     </td>
 
@@ -205,14 +205,14 @@ export const HistoryPage: React.FC<HistoryPageProps> = ({ onSelectCase }) => {
                         <button
                           onClick={(e) => handleDownloadPdf(item.id, e)}
                           title="Download PDF Report"
-                          className="p-1.5 rounded-lg hover:bg-slate-700 text-slate-400 hover:text-cyan-400 transition-colors"
+                          className="p-1.5 rounded-lg hover:bg-[#EBF0E6] text-[#3D5A52] hover:text-[#0D4F43] transition-colors"
                         >
                           <Download className="w-4 h-4" />
                         </button>
                         <button
                           onClick={(e) => handleDelete(item.id, e)}
                           title="Purge Case"
-                          className="p-1.5 rounded-lg hover:bg-rose-950 text-slate-400 hover:text-rose-400 transition-colors"
+                          className="p-1.5 rounded-lg hover:bg-[#FDF2F2] text-[#3D5A52] hover:text-[#9E3A3A] transition-colors"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>

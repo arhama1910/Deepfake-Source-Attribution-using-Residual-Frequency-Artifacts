@@ -37,7 +37,7 @@ export const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#07090e] text-slate-100 forensic-grid selection:bg-cyan-500/30 selection:text-cyan-200">
+    <div className="min-h-screen flex flex-col bg-[#F7F6F0] text-[#083C33] forensic-grid selection:bg-[#0D4F43]/20 selection:text-[#083C33]">
       <Navbar activeTab={activeTab} setActiveTab={setActiveTab} />
 
       <main className="flex-1">
@@ -53,8 +53,8 @@ export const App: React.FC = () => {
             {!currentResult ? (
               <div className="space-y-6">
                 <div className="text-center space-y-2">
-                  <h1 className="text-3xl font-extrabold text-white">Forensic Media Inspection</h1>
-                  <p className="text-xs sm:text-sm text-slate-400 max-w-lg mx-auto">
+                  <h1 className="text-3xl sm:text-4xl font-extrabold text-[#083C33]">Forensic Media Inspection</h1>
+                  <p className="text-xs sm:text-sm text-[#3D5A52] max-w-lg mx-auto">
                     Upload an image or video to extract SRM high-pass residuals, 2D FFT spectra, 2D DCT matrices, and temporal stability.
                   </p>
                 </div>

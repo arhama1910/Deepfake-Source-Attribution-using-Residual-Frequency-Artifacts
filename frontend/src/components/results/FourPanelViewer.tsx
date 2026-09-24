@@ -16,28 +16,28 @@ export const FourPanelViewer: React.FC<FourPanelViewerProps> = ({ artifacts, fil
       title: 'Original Aligned ROI',
       desc: 'RGB Spatial Face / Object Region',
       url: artifacts.original,
-      badgeColor: 'border-slate-700 text-slate-300 bg-slate-900/60'
+      badgeColor: 'border-[#D9DED4] text-[#083C33] bg-[#EBF0E6]'
     },
     {
       id: 'residual',
       title: 'Residual Noise (SRM 3x3 Edge)',
       desc: 'High-Pass Sensor & Generative Artifacts',
       url: artifacts.residual,
-      badgeColor: 'border-amber-500/30 text-amber-300 bg-amber-950/40'
+      badgeColor: 'border-[#D9DED4] text-[#083C33] bg-[#EBF0E6]'
     },
     {
       id: 'fft',
       title: '2D FFT Power Spectrum',
       desc: 'Log-Scaled Radial Frequency Profile',
       url: artifacts.fft,
-      badgeColor: 'border-cyan-500/30 text-cyan-300 bg-cyan-950/40'
+      badgeColor: 'border-[#D9DED4] text-[#0D4F43] bg-[#EBF0E6]'
     },
     {
       id: 'dct',
       title: '2D DCT Coefficient Matrix',
       desc: 'Orthonormal Cosine Basis Distribution',
       url: artifacts.dct,
-      badgeColor: 'border-purple-500/30 text-purple-300 bg-purple-950/40'
+      badgeColor: 'border-[#D9DED4] text-[#083C33] bg-[#EBF0E6]'
     }
   ];
 
@@ -54,10 +54,10 @@ export const FourPanelViewer: React.FC<FourPanelViewerProps> = ({ artifacts, fil
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-base font-bold text-white flex items-center space-x-2">
+          <h3 className="text-base font-bold text-[#083C33] flex items-center space-x-2">
             <span>Dual-Domain Forensic Evidence Gallery</span>
           </h3>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-[#3D5A52]">
             Synchronized decomposition across spatial, high-pass residual, and orthogonal frequency domains.
           </p>
         </div>
@@ -67,11 +67,11 @@ export const FourPanelViewer: React.FC<FourPanelViewerProps> = ({ artifacts, fil
         {panels.map((p) => (
           <div
             key={p.id}
-            className="group relative rounded-2xl glass-panel border border-slate-800/80 overflow-hidden flex flex-col justify-between hover:border-cyan-500/30 transition-all"
+            className="group relative rounded-2xl bg-white border border-[#D9DED4] shadow-sm overflow-hidden flex flex-col justify-between hover:border-[#0D4F43] hover:shadow-md transition-all"
           >
             {/* Panel Header */}
-            <div className="p-3 border-b border-slate-800/60 flex items-center justify-between">
-              <span className={`px-2 py-0.5 rounded text-[10px] font-mono font-medium border ${p.badgeColor}`}>
+            <div className="p-3 border-b border-[#D9DED4] flex items-center justify-between bg-white">
+              <span className={`px-2.5 py-1 rounded-full text-[10px] font-mono font-bold border ${p.badgeColor}`}>
                 {p.title}
               </span>
 
@@ -80,14 +80,14 @@ export const FourPanelViewer: React.FC<FourPanelViewerProps> = ({ artifacts, fil
                   <button
                     onClick={() => setModalImage({ title: p.title, url: p.url! })}
                     title="Fullscreen inspection"
-                    className="p-1 rounded hover:bg-slate-800 text-slate-400 hover:text-white"
+                    className="p-1 rounded-lg hover:bg-[#EBF0E6] text-[#3D5A52] hover:text-[#083C33]"
                   >
                     <Maximize2 className="w-3.5 h-3.5" />
                   </button>
                   <button
                     onClick={() => handleDownload(p.url!, p.title)}
                     title="Download artifact"
-                    className="p-1 rounded hover:bg-slate-800 text-slate-400 hover:text-white"
+                    className="p-1 rounded-lg hover:bg-[#EBF0E6] text-[#3D5A52] hover:text-[#083C33]"
                   >
                     <Download className="w-3.5 h-3.5" />
                   </button>
@@ -96,7 +96,7 @@ export const FourPanelViewer: React.FC<FourPanelViewerProps> = ({ artifacts, fil
             </div>
 
             {/* Image Frame */}
-            <div className="relative aspect-square w-full bg-slate-950 flex items-center justify-center overflow-hidden">
+            <div className="relative aspect-square w-full bg-[#083C33] flex items-center justify-center overflow-hidden">
               {p.url ? (
                 <img
                   src={p.url}
@@ -105,12 +105,12 @@ export const FourPanelViewer: React.FC<FourPanelViewerProps> = ({ artifacts, fil
                   onClick={() => setModalImage({ title: p.title, url: p.url! })}
                 />
               ) : (
-                <div className="text-xs text-slate-600 font-mono">Artifact Pending</div>
+                <div className="text-xs text-[#D9DED4] font-mono">Artifact Pending</div>
               )}
             </div>
 
             {/* Footer description */}
-            <div className="p-2.5 bg-slate-950/60 border-t border-slate-900 text-[11px] text-slate-400">
+            <div className="p-3 bg-[#F7F6F0] border-t border-[#D9DED4] text-[11px] text-[#3D5A52]">
               {p.desc}
             </div>
           </div>
@@ -119,21 +119,21 @@ export const FourPanelViewer: React.FC<FourPanelViewerProps> = ({ artifacts, fil
 
       {/* Fullscreen Inspection Modal */}
       {modalImage && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-md p-4">
-          <div className="relative max-w-4xl w-full glass-panel rounded-3xl p-4 border border-cyan-500/30 space-y-4">
-            <div className="flex items-center justify-between pb-2 border-b border-slate-800">
-              <h4 className="text-sm font-bold text-white font-mono">{modalImage.title}</h4>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md p-4">
+          <div className="relative max-w-4xl w-full bg-white rounded-[28px] p-6 border border-[#D9DED4] shadow-2xl space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-[#D9DED4]">
+              <h4 className="text-sm font-bold text-[#083C33] font-mono">{modalImage.title}</h4>
               <div className="flex items-center space-x-2">
                 <button
                   onClick={() => handleDownload(modalImage.url, modalImage.title)}
-                  className="px-3 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs flex items-center space-x-1"
+                  className="px-4 py-2 rounded-full bg-[#0D4F43] hover:bg-[#125B4D] text-white text-xs font-semibold flex items-center space-x-1.5 transition-all shadow-sm"
                 >
                   <Download className="w-3.5 h-3.5" />
                   <span>Download</span>
                 </button>
                 <button
                   onClick={() => setModalImage(null)}
-                  className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800"
+                  className="p-2 rounded-full text-[#3D5A52] hover:text-[#083C33] hover:bg-[#EBF0E6]"
                 >
                   <X className="w-5 h-5" />
                 </button>
