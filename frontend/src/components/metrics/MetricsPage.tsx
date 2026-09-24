@@ -35,7 +35,7 @@ export const MetricsPage: React.FC = () => {
   const isEvaluated = metricsData?.status === 'evaluated';
 
   return (
-    <div className="max-w-6xl mx-auto space-y-8 py-8 px-4 sm:px-6">
+    <div className="site-container space-y-8 py-8">
       
       {/* Title */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">

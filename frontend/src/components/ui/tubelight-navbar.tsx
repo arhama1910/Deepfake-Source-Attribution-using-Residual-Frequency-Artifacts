@@ -49,9 +49,9 @@ export function NavBar({ items, className, activeTab: controlledActiveTab, onTab
   }, [])
 
   return (
-    <div
+    <nav
       className={cn(
-        "fixed bottom-0 sm:top-0 left-1/2 -translate-x-1/2 z-50 mb-6 sm:pt-6",
+        "relative flex items-center",
         className,
       )}
     >
@@ -97,6 +97,6 @@ export function NavBar({ items, className, activeTab: controlledActiveTab, onTab
           )
         })}
       </div>
-    </div>
+    </nav>
   )
 }

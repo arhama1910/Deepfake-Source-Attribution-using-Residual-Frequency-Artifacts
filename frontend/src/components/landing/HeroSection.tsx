@@ -1,5 +1,6 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import { Shield, ArrowRight, Activity, Layers, FileSearch, Zap, CheckCircle2 } from 'lucide-react';
+import { ForensicFingerprintVisual } from './ForensicFingerprintVisual';
 
 interface HeroSectionProps {
   onStartAnalysis: () => void;
@@ -7,135 +8,37 @@ interface HeroSectionProps {
 }
 
 export const HeroSection: React.FC<HeroSectionProps> = ({ onStartAnalysis, onExploreMethodology }) => {
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
-
-  // Animated forensic frequency canvas in sophisticated forest green & warm ivory
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    let animationFrameId: number;
-    let t = 0;
-
-    const render = () => {
-      t += 0.015;
-      const w = canvas.width;
-      const h = canvas.height;
-      const cx = w / 2;
-      const cy = h / 2;
-
-      // Deep forest background
-      ctx.fillStyle = '#083C33';
-      ctx.fillRect(0, 0, w, h);
-
-      // Fine clinical forensic grid
-      ctx.strokeStyle = 'rgba(217, 222, 212, 0.08)';
-      ctx.lineWidth = 1;
-      for (let x = 0; x < w; x += 30) {
-        ctx.beginPath();
-        ctx.moveTo(x, 0);
-        ctx.lineTo(x, h);
-        ctx.stroke();
-      }
-      for (let y = 0; y < h; y += 30) {
-        ctx.beginPath();
-        ctx.moveTo(0, y);
-        ctx.lineTo(w, y);
-        ctx.stroke();
-      }
-
-      // Concentric FFT frequency rings in ivory & sage
-      const numRings = 7;
-      for (let i = 1; i <= numRings; i++) {
-        const radius = (i * 28) + Math.sin(t + i) * 2.5;
-        ctx.beginPath();
-        ctx.arc(cx, cy, radius, 0, Math.PI * 2);
-        ctx.strokeStyle = i % 2 === 0 ? 'rgba(247, 246, 240, 0.28)' : 'rgba(217, 222, 212, 0.18)';
-        ctx.setLineDash([4, 6]);
-        ctx.stroke();
-      }
-      ctx.setLineDash([]);
-
-      // Generative frequency spikes (simulating spectral peaks in Fourier space)
-      const numSpikes = 8;
-      for (let s = 0; s < numSpikes; s++) {
-        const angle = (s * (Math.PI / 4)) + (t * 0.12);
-        const spikeDist = 110 + Math.sin(t * 1.5 + s) * 16;
-        const px = cx + Math.cos(angle) * spikeDist;
-        const py = cy + Math.sin(angle) * spikeDist;
-
-        ctx.beginPath();
-        ctx.arc(px, py, 3.5, 0, Math.PI * 2);
-        ctx.fillStyle = '#F7F6F0';
-        ctx.fill();
-
-        // Line to center
-        ctx.beginPath();
-        ctx.moveTo(cx, cy);
-        ctx.lineTo(px, py);
-        ctx.strokeStyle = 'rgba(217, 222, 212, 0.15)';
-        ctx.stroke();
-      }
-
-      // Restrained scanning sweep in soft emerald
-      const scanY = (Math.sin(t * 0.6) * 0.5 + 0.5) * h;
-      const grad = ctx.createLinearGradient(0, scanY - 24, 0, scanY + 24);
-      grad.addColorStop(0, 'transparent');
-      grad.addColorStop(0.5, 'rgba(18, 91, 77, 0.35)');
-      grad.addColorStop(1, 'transparent');
-      ctx.fillStyle = grad;
-      ctx.fillRect(0, scanY - 24, w, 48);
-
-      ctx.beginPath();
-      ctx.moveTo(0, scanY);
-      ctx.lineTo(w, scanY);
-      ctx.strokeStyle = 'rgba(247, 246, 240, 0.45)';
-      ctx.lineWidth = 1;
-      ctx.stroke();
-
-      animationFrameId = requestAnimationFrame(render);
-    };
-
-    render();
-
-    return () => {
-      cancelAnimationFrame(animationFrameId);
-    };
-  }, []);
-
   return (
     <div className="space-y-16 py-8">
       
       {/* Hero Header on Warm Ivory Background */}
-      <section className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+      <section className="relative site-container py-6 lg:py-10">
+        <div className="hero-grid grid grid-cols-1 lg:grid-cols-[minmax(0,1.05fr)_minmax(400px,0.95fr)] gap-8 lg:gap-[clamp(32px,5vw,80px)] items-center min-h-[clamp(560px,calc(100vh-130px),760px)]">
           
-          <div className="lg:col-span-7 space-y-6">
+          <div className="hero-content max-w-[680px] space-y-6 min-w-0">
             <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-[#EBF0E6] border border-[#D9DED4] text-[#0D4F43] text-xs font-semibold">
               <span className="w-2 h-2 rounded-full bg-[#0D4F43] animate-pulse"></span>
               <span>M.Tech Multimedia Forensics & Attribution Lab</span>
             </div>
 
             <div className="space-y-2">
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-[#083C33] leading-[1.12]">
+              <h1 className="text-[clamp(36px,4.2vw,68px)] font-extrabold tracking-tight text-[#083C33] leading-[1.08]">
                 DeepTrace Forensic Intelligence
               </h1>
-              <p className="text-xl sm:text-2xl font-semibold text-[#1B4D3E]">
+              <p className="text-lg sm:text-xl lg:text-2xl font-semibold text-[#1B4D3E]">
                 Diagnose Authenticity. Attribute Provenance.
               </p>
             </div>
 
-            <p className="text-base sm:text-lg text-[#3D5A52] leading-relaxed font-normal max-w-2xl">
+            <p className="text-sm sm:text-base lg:text-lg text-[#3D5A52] leading-relaxed font-normal">
               Advanced multi-domain implementation for deepfake source attribution. We translate high-pass noise residuals 
               and 2D Fourier frequency artifacts into rigorous, explainable forensic evidence.
             </p>
 
-            <div className="flex flex-wrap items-center gap-4 pt-2">
+            <div className="flex flex-wrap items-center gap-3 sm:gap-4 pt-1 sm:pt-2">
               <button
                 onClick={onStartAnalysis}
-                className="flex items-center space-x-2.5 px-7 py-3.5 rounded-full bg-[#0D4F43] hover:bg-[#125B4D] text-white font-semibold text-sm tracking-wide shadow-sm transition-all hover:scale-[1.02] active:scale-[0.98]"
+                className="flex items-center space-x-2.5 px-6 sm:px-7 py-3 sm:py-3.5 rounded-full bg-[#0D4F43] hover:bg-[#125B4D] text-white font-semibold text-xs sm:text-sm tracking-wide shadow-sm transition-all hover:scale-[1.02] active:scale-[0.98]"
               >
                 <Shield className="w-4 h-4 stroke-[2.5]" />
                 <span>Start Assessment</span>
@@ -144,7 +47,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onStartAnalysis, onExp
 
               <button
                 onClick={onExploreMethodology}
-                className="flex items-center space-x-2 px-6 py-3.5 rounded-full bg-[#D9DED4] hover:bg-[#CAD2C4] text-[#083C33] text-sm font-semibold transition-all hover:scale-[1.02] active:scale-[0.98]"
+                className="flex items-center space-x-2 px-5 sm:px-6 py-3 sm:py-3.5 rounded-full bg-[#D9DED4] hover:bg-[#CAD2C4] text-[#083C33] text-xs sm:text-sm font-semibold transition-all hover:scale-[1.02] active:scale-[0.98]"
               >
                 <FileSearch className="w-4 h-4 text-[#0D4F43]" />
                 <span>View Methodology</span>
@@ -152,68 +55,32 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onStartAnalysis, onExp
             </div>
 
             {/* Quick badges */}
-            <div className="pt-4 flex flex-wrap items-center gap-6 text-xs text-[#3D5A52] font-medium">
+            <div className="pt-2 sm:pt-4 flex flex-wrap items-center gap-4 sm:gap-6 text-xs text-[#3D5A52] font-medium">
               <span className="flex items-center space-x-1.5">
-                <CheckCircle2 className="w-4 h-4 text-[#0D4F43]" />
+                <CheckCircle2 className="w-4 h-4 text-[#0D4F43] shrink-0" />
                 <span>Spatial Rich Models (SRM)</span>
               </span>
               <span className="flex items-center space-x-1.5">
-                <CheckCircle2 className="w-4 h-4 text-[#0D4F43]" />
+                <CheckCircle2 className="w-4 h-4 text-[#0D4F43] shrink-0" />
                 <span>2D FFT & 2D DCT Analysis</span>
               </span>
               <span className="flex items-center space-x-1.5">
-                <CheckCircle2 className="w-4 h-4 text-[#0D4F43]" />
+                <CheckCircle2 className="w-4 h-4 text-[#0D4F43] shrink-0" />
                 <span>Video Temporal Stability</span>
               </span>
             </div>
           </div>
 
-          {/* Research Visual Container with Reference-Inspired Badges */}
-          <div className="lg:col-span-5 relative">
-            <div className="relative rounded-[32px] bg-[#EBF0E6] border border-[#D9DED4] p-3.5 shadow-sm">
-              <div className="relative aspect-square w-full rounded-[24px] overflow-hidden bg-[#083C33] border border-[#166355]">
-                <canvas
-                  ref={canvasRef}
-                  width={460}
-                  height={460}
-                  className="w-full h-full object-cover"
-                />
-                
-                {/* Spectral Domain Label */}
-                <div className="absolute top-4 left-4 px-3 py-1 rounded-full bg-[#083C33]/85 backdrop-blur-md border border-[#166355] text-[10px] font-mono text-[#F7F6F0] flex items-center space-x-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#D9DED4] animate-ping"></span>
-                  <span>SPECTRAL_RESIDUAL_MONITOR</span>
-                </div>
-              </div>
-
-              {/* Sample benchmark chip at bottom-left */}
-              <div className="absolute -bottom-4 left-6 flex items-center space-x-2 bg-white/95 backdrop-blur-md px-3.5 py-2 rounded-full border border-[#D9DED4] shadow-sm text-xs font-semibold text-[#083C33]">
-                <div className="flex -space-x-1.5">
-                  <span className="w-6 h-6 rounded-full bg-[#0D4F43] text-white text-[10px] flex items-center justify-center font-bold">FF</span>
-                  <span className="w-6 h-6 rounded-full bg-[#125B4D] text-white text-[10px] flex items-center justify-center font-bold">GI</span>
-                  <span className="w-6 h-6 rounded-full bg-[#2A6E5F] text-white text-[10px] flex items-center justify-center font-bold">DF</span>
-                </div>
-                <span className="pl-1">2.4k+ Benchmarked</span>
-              </div>
-
-              {/* Reference-matching Live Monitoring Badge at bottom-right */}
-              <div className="absolute -bottom-4 right-6 bg-white/95 backdrop-blur-md rounded-2xl px-4 py-2.5 border border-[#D9DED4] shadow-sm text-left">
-                <div className="flex items-center space-x-1.5 text-[11px] font-bold text-[#083C33]">
-                  <span className="w-2 h-2 rounded-full bg-[#0D4F43] animate-pulse"></span>
-                  <span>Live Monitoring</span>
-                </div>
-                <div className="text-[10px] text-[#4A635D] font-mono mt-0.5">
-                  Dual-Stream Analysis...
-                </div>
-              </div>
-            </div>
+          {/* Research Visual: Forensic Frequency Fingerprint Engine */}
+          <div className="w-full flex items-center justify-center min-w-0">
+            <ForensicFingerprintVisual />
           </div>
 
         </div>
       </section>
 
       {/* Signature Deep Forest Green Section matching reference image */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="site-container">
         <div className="deep-forest-panel rounded-[36px] p-8 sm:p-14 space-y-16 border border-[#166355] shadow-sm">
           
           {/* Section Header */}

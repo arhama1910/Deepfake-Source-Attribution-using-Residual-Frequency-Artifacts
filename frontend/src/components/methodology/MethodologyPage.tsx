@@ -3,7 +3,7 @@ import { Layers, Activity, GitBranch, ArrowDown, Cpu, Zap } from 'lucide-react';
 
 export const MethodologyPage: React.FC = () => {
   return (
-    <div className="max-w-6xl mx-auto space-y-12 py-8 px-4 sm:px-6">
+    <div className="site-container space-y-12 py-8">
       
       {/* Title */}
       <div className="text-center space-y-3">

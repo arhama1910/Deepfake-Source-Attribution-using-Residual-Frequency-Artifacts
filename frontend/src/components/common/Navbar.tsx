@@ -37,13 +37,13 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
 
   return (
     <>
-      <header className="sticky top-0 z-40 border-b border-[#D9DED4] bg-[#F7F6F0]/90 backdrop-blur-md">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <header className="sticky top-0 z-40 border-b border-[#D9DED4] bg-[#F7F6F0]/95 backdrop-blur-md">
+        <div className="navbar-inner h-20 flex items-center justify-between gap-4">
           
           {/* Brand Logo & Title */}
           <div 
             onClick={() => setActiveTab('landing')}
-            className="flex items-center space-x-3 cursor-pointer group"
+            className="flex items-center space-x-3 cursor-pointer group shrink-0"
           >
             <div className="relative flex items-center justify-center w-11 h-11 shrink-0">
               <img
@@ -72,28 +72,45 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
             </div>
           </div>
 
+          {/* Navigation Links in Center on Desktop */}
+          <div className="hidden lg:flex items-center justify-center">
+            <NavBar
+              items={navItems}
+              activeTab={tabNameMap[activeTab] || 'Overview'}
+              onTabChange={(name) => {
+                if (reverseTabMap[name]) {
+                  setActiveTab(reverseTabMap[name]);
+                }
+              }}
+              className="static p-0 m-0"
+            />
+          </div>
+
           {/* Engine Status Badge */}
-          <div className="flex items-center space-x-2 pl-4">
+          <div className="flex items-center space-x-2 shrink-0">
             <div className="flex items-center space-x-2 px-3 py-1.5 rounded-full bg-[#EBF0E6] border border-[#D9DED4] text-[#083C33] text-[11px] font-medium">
               <span className="w-2 h-2 rounded-full bg-[#0D4F43] animate-pulse"></span>
-              <span>Forensic Engine Active</span>
+              <span className="hidden sm:inline">Forensic Engine Active</span>
+              <span className="sm:hidden">Engine Active</span>
             </div>
           </div>
 
         </div>
-      </header>
 
-      {/* Floating Tubelight Navigation Bar */}
-      <NavBar
-        items={navItems}
-        activeTab={tabNameMap[activeTab] || 'Overview'}
-        onTabChange={(name) => {
-          if (reverseTabMap[name]) {
-            setActiveTab(reverseTabMap[name]);
-          }
-        }}
-        className="fixed top-2 sm:top-2 left-1/2 -translate-x-1/2 z-50 mb-0 sm:pt-0"
-      />
+        {/* Mobile Navigation Bar */}
+        <div className="lg:hidden fixed bottom-4 left-1/2 -translate-x-1/2 z-50">
+          <NavBar
+            items={navItems}
+            activeTab={tabNameMap[activeTab] || 'Overview'}
+            onTabChange={(name) => {
+              if (reverseTabMap[name]) {
+                setActiveTab(reverseTabMap[name]);
+              }
+            }}
+            className="static p-0 m-0 shadow-lg"
+          />
+        </div>
+      </header>
     </>
   );
 };

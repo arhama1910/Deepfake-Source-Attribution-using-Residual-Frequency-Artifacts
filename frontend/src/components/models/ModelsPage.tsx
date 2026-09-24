@@ -16,7 +16,7 @@ export const ModelsPage: React.FC = () => {
   }, []);
 
   return (
-    <div className="max-w-6xl mx-auto space-y-8 py-8 px-4 sm:px-6">
+    <div className="site-container space-y-8 py-8">
       
       <div>
         <h1 className="text-2xl sm:text-3xl font-extrabold text-[#083C33]">

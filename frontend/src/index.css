@@ -24,6 +24,19 @@
 }
 
 @layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
+  html,
+  body,
+  #root {
+    width: 100%;
+    min-height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
   :root {
     --bg-primary: #F7F6F0;
     --bg-card: #FFFFFF;
@@ -43,10 +56,27 @@
     overflow-x: hidden;
     margin: 0;
     padding: 0;
+    width: 100%;
   }
 
   code, pre, .font-mono {
     font-family: 'JetBrains Mono', 'Fira Code', Menlo, Monaco, Consolas, monospace;
+  }
+}
+
+/* Global Container Specification */
+.site-container,
+.navbar-inner {
+  max-width: 1320px;
+  width: min(1320px, calc(100% - 48px));
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (max-width: 640px) {
+  .site-container,
+  .navbar-inner {
+    width: calc(100% - 32px);
   }
 }
 

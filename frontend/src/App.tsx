@@ -49,7 +49,7 @@ export const App: React.FC = () => {
         )}
 
         {activeTab === 'analyze' && (
-          <div className="py-10 px-4 sm:px-6 lg:px-8">
+          <div className="site-container py-10">
             {!currentResult ? (
               <div className="space-y-6">
                 <div className="text-center space-y-2">
