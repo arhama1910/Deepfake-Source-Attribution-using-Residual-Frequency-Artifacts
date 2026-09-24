@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { History, Download, Trash2, ExternalLink, RefreshCw, FileImage, FileVideo, ShieldCheck, ShieldAlert, AlertTriangle } from 'lucide-react';
+import React, { useEffect, useState, useCallback } from 'react';
+import { Download, Trash2, RefreshCw, FileImage, FileVideo } from 'lucide-react';
 import { apiService } from '../../services/api';
-import { HistoryItem, AnalysisResult } from '../../types/forensics';
+import type { HistoryItem, AnalysisResult } from '../../types/forensics';
 
 interface HistoryPageProps {
   onSelectCase: (result: AnalysisResult) => void;
@@ -13,22 +13,22 @@ export const HistoryPage: React.FC<HistoryPageProps> = ({ onSelectCase }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [mediaFilter, setMediaFilter] = useState<string>('');
 
-  useEffect(() => {
-    fetchHistory();
-  }, [mediaFilter]);
-
-  const fetchHistory = async () => {
+  const fetchHistory = useCallback(async () => {
     setIsLoading(true);
     try {
       const res = await apiService.getHistory(25, 0, mediaFilter || undefined);
       setItems(res.items);
       setTotal(res.total);
-    } catch (e) {
-      console.error(e);
+    } catch {
+      // ignore
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [mediaFilter]);
+
+  useEffect(() => {
+    fetchHistory();
+  }, [fetchHistory]);
 
   const handleDelete = async (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -37,7 +37,7 @@ export const HistoryPage: React.FC<HistoryPageProps> = ({ onSelectCase }) => {
       await apiService.deleteAnalysis(id);
       setItems(items.filter((item) => item.id !== id));
       setTotal((prev) => Math.max(0, prev - 1));
-    } catch (e) {
+    } catch {
       alert('Failed to delete case.');
     }
   };
@@ -46,7 +46,7 @@ export const HistoryPage: React.FC<HistoryPageProps> = ({ onSelectCase }) => {
     try {
       const fullCase = await apiService.getAnalysis(id);
       onSelectCase(fullCase);
-    } catch (e) {
+    } catch {
       alert('Failed to load full analysis record.');
     }
   };

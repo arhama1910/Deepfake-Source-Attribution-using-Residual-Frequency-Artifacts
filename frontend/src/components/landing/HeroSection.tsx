@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { Shield, ArrowRight, Activity, Cpu, Layers, Sparkles, AlertCircle, FileSearch, Zap, CheckCircle2 } from 'lucide-react';
+import { Shield, ArrowRight, Activity, Layers, FileSearch, Zap, CheckCircle2 } from 'lucide-react';
 
 interface HeroSectionProps {
   onStartAnalysis: () => void;

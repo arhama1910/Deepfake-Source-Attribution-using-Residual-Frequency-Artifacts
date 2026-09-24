@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
-import { UploadCloud, FileVideo, FileImage, ShieldAlert, Sparkles, Check, Loader2, Play, Settings2, X } from 'lucide-react';
+import { UploadCloud, FileVideo, FileImage, ShieldAlert, Check, Loader2, Play, X } from 'lucide-react';
 import { apiService } from '../../services/api';
-import { AnalysisResult } from '../../types/forensics';
+import type { AnalysisResult } from '../../types/forensics';
 
 interface UploadZoneProps {
   onAnalysisComplete: (result: AnalysisResult) => void;

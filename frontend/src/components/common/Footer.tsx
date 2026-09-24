@@ -1,5 +1,5 @@
 import React from 'react';
-import { Shield, GitBranch, Cpu, Lock } from 'lucide-react';
+import { Shield, Cpu, Lock } from 'lucide-react';
 
 export const Footer: React.FC = () => {
   return (

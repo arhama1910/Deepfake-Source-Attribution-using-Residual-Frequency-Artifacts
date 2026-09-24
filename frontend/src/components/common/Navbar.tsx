@@ -1,6 +1,6 @@
 import React from 'react';
 import { Home, Shield, BookOpen, BarChart3, Cpu, History } from 'lucide-react';
-import { NavBar, NavItem } from '@/components/ui/tubelight-navbar';
+import { NavBar, type NavItem } from '@/components/ui/tubelight-navbar';
 
 interface NavbarProps {
   activeTab: string;
