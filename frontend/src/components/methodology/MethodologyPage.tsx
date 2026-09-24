@@ -1,5 +1,5 @@
 import React from 'react';
-import { Layers, Activity, GitBranch, ArrowDown, Cpu, Shield, Zap } from 'lucide-react';
+import { Layers, Activity, GitBranch, ArrowDown, Cpu, Zap } from 'lucide-react';
 
 export const MethodologyPage: React.FC = () => {
   return (
