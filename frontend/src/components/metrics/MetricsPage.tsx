@@ -1,27 +1,36 @@
 import React, { useEffect, useState } from 'react';
-import { BarChart3, AlertCircle, CheckCircle2, Database, Upload, RefreshCw } from 'lucide-react';
+import { BarChart3, AlertCircle, RefreshCw } from 'lucide-react';
 import { apiService } from '../../services/api';
-import { EvaluationMetricsData } from '../../types/forensics';
+import type { EvaluationMetricsData } from '../../types/forensics';
 
 export const MetricsPage: React.FC = () => {
   const [metricsData, setMetricsData] = useState<EvaluationMetricsData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    fetchMetrics();
-  }, []);
 
   const fetchMetrics = async () => {
     setIsLoading(true);
     try {
       const data = await apiService.getResearchMetrics();
       setMetricsData(data);
-    } catch (e) {
-      console.error(e);
+    } catch {
+      // ignore
     } finally {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    let ignore = false;
+    apiService.getResearchMetrics().then((data) => {
+      if (!ignore) {
+        setMetricsData(data);
+        setIsLoading(false);
+      }
+    }).catch(() => {
+      if (!ignore) setIsLoading(false);
+    });
+    return () => { ignore = true; };
+  }, []);
 
   const isEvaluated = metricsData?.status === 'evaluated';
 
@@ -41,10 +50,11 @@ export const MetricsPage: React.FC = () => {
 
         <button
           onClick={fetchMetrics}
-          className="flex items-center space-x-1.5 px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium self-start sm:self-auto"
+          disabled={isLoading}
+          className="flex items-center space-x-1.5 px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium self-start sm:self-auto disabled:opacity-50"
         >
-          <RefreshCw className="w-3.5 h-3.5" />
-          <span>Refresh</span>
+          <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? 'animate-spin' : ''}`} />
+          <span>{isLoading ? 'Refreshing...' : 'Refresh'}</span>
         </button>
       </div>
 

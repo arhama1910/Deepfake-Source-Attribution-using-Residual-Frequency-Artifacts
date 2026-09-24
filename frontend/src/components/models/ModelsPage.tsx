@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Cpu, Layers, HardDrive, CheckCircle2, AlertTriangle, ShieldCheck, Film } from 'lucide-react';
+import { Cpu, Layers, Film } from 'lucide-react';
 import { apiService } from '../../services/api';
-import { ModelMetadata } from '../../types/forensics';
+import type { ModelMetadata } from '../../types/forensics';
 
 export const ModelsPage: React.FC = () => {
   const [modelInfo, setModelInfo] = useState<{

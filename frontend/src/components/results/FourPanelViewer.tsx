@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { ZoomIn, Download, Maximize2, X, Eye } from 'lucide-react';
-import { VisualArtifacts } from '../../types/forensics';
+import { Download, Maximize2, X } from 'lucide-react';
+import type { VisualArtifacts } from '../../types/forensics';
 
 interface FourPanelViewerProps {
   artifacts: VisualArtifacts;

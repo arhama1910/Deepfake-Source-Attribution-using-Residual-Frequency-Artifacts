@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sparkles, AlertCircle, FileText, CheckCircle2 } from 'lucide-react';
+import { Sparkles, AlertCircle } from 'lucide-react';
 
 interface ExplainabilityCardProps {
   explanation: string;

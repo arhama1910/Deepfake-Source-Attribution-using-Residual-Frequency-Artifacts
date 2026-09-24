@@ -22,7 +22,7 @@ export interface NavBarProps {
 
 export function NavBar({ items, className, activeTab: controlledActiveTab, onTabChange }: NavBarProps) {
   const [internalActiveTab, setInternalActiveTab] = useState(items[0]?.name || "")
-  const [isMobile, setIsMobile] = useState(false)
+  const [_isMobile, setIsMobile] = useState(false)
 
   const activeTab = controlledActiveTab !== undefined ? controlledActiveTab : internalActiveTab
 

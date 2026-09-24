@@ -8,7 +8,7 @@ import { MethodologyPage } from './components/methodology/MethodologyPage';
 import { MetricsPage } from './components/metrics/MetricsPage';
 import { ModelsPage } from './components/models/ModelsPage';
 import { HistoryPage } from './components/history/HistoryPage';
-import { AnalysisResult } from './types/forensics';
+import type { AnalysisResult } from './types/forensics';
 
 export const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>('landing');

@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import {
-  LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, ReferenceLine
+  LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer
 } from 'recharts';
-import { Film, Activity, AlertTriangle, CheckCircle, Eye } from 'lucide-react';
-import { FrameItem, TemporalSummary } from '../../types/forensics';
+import { Film } from 'lucide-react';
+import type { FrameItem, TemporalSummary } from '../../types/forensics';
 
 interface FrameTimelineProps {
   frames: FrameItem[];

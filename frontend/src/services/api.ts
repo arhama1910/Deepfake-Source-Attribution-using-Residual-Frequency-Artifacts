@@ -1,4 +1,4 @@
-import { AnalysisResult, HistoryItem, ModelMetadata, EvaluationMetricsData } from '../types/forensics';
+import type { AnalysisResult, HistoryItem, ModelMetadata, EvaluationMetricsData } from '../types/forensics';
 
 const API_BASE = '/api/v1';
 

@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import {
-  Download, FileText, ChevronDown, ChevronUp, ShieldCheck, ShieldAlert,
-  AlertTriangle, Cpu, Layers, HardDrive, Clock, CheckCircle2, RefreshCw
+  Download, ChevronDown, ChevronUp, ShieldCheck, ShieldAlert,
+  AlertTriangle, HardDrive, RefreshCw
 } from 'lucide-react';
-import { AnalysisResult } from '../../types/forensics';
+import type { AnalysisResult } from '../../types/forensics';
 import { FourPanelViewer } from './FourPanelViewer';
 import { FrequencyCharts } from './FrequencyCharts';
 import { FrameTimeline } from './FrameTimeline';

@@ -3,8 +3,8 @@ import {
   AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer,
   BarChart, Bar, Cell
 } from 'recharts';
-import { Activity, BarChart2, Cpu, Gauge, Zap } from 'lucide-react';
-import { FrequencyMetrics, ResidualMetrics } from '../../types/forensics';
+import { Activity, BarChart2 } from 'lucide-react';
+import type { FrequencyMetrics, ResidualMetrics } from '../../types/forensics';
 
 interface FrequencyChartsProps {
   freqMetrics: FrequencyMetrics;
