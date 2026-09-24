@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Download, Trash2, RefreshCw, FileImage, FileVideo } from 'lucide-react';
 import { apiService } from '../../services/api';
 import type { HistoryItem, AnalysisResult } from '../../types/forensics';
@@ -13,7 +13,7 @@ export const HistoryPage: React.FC<HistoryPageProps> = ({ onSelectCase }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [mediaFilter, setMediaFilter] = useState<string>('');
 
-  const fetchHistory = useCallback(async () => {
+  const fetchHistory = async () => {
     setIsLoading(true);
     try {
       const res = await apiService.getHistory(25, 0, mediaFilter || undefined);
@@ -24,11 +24,21 @@ export const HistoryPage: React.FC<HistoryPageProps> = ({ onSelectCase }) => {
     } finally {
       setIsLoading(false);
     }
-  }, [mediaFilter]);
+  };
 
   useEffect(() => {
-    fetchHistory();
-  }, [fetchHistory]);
+    let ignore = false;
+    apiService.getHistory(25, 0, mediaFilter || undefined).then((res) => {
+      if (!ignore) {
+        setItems(res.items);
+        setTotal(res.total);
+        setIsLoading(false);
+      }
+    }).catch(() => {
+      if (!ignore) setIsLoading(false);
+    });
+    return () => { ignore = true; };
+  }, [mediaFilter]);
 
   const handleDelete = async (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
