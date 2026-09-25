@@ -110,10 +110,10 @@ export const ResultsDashboard: React.FC<ResultsDashboardProps> = ({ result, onRe
             Attributed Source Class
           </span>
           <p className="text-lg font-bold text-[#083C33] truncate">
-            {isLoaded ? pred?.source_class : 'Model Unweighted'}
+            {isLoaded ? pred?.source_class : 'Source attribution unavailable until a trained checkpoint is loaded.'}
           </p>
           <p className="text-[11px] text-[#3D5A52]">
-            {isLoaded ? 'Target generative architecture' : 'Awaiting trained checkpoint weights'}
+            {isLoaded ? 'Target generative architecture' : 'MODEL STATUS: NOT LOADED'}
           </p>
         </div>
 
@@ -123,23 +123,28 @@ export const ResultsDashboard: React.FC<ResultsDashboardProps> = ({ result, onRe
             Attribution Confidence
           </span>
           <p className="text-lg font-bold text-[#0D4F43] font-mono">
-            {isLoaded && pred?.source_confidence !== null ? `${pred.source_confidence}%` : 'Pending Evaluation'}
+            {isLoaded && pred?.source_confidence !== null ? `${pred.source_confidence}%` : 'Pending Trained Checkpoint'}
           </p>
           <p className="text-[11px] text-[#3D5A52]">
             {isLoaded ? 'Posterior class probability' : 'Zero hallucinated probabilities'}
           </p>
         </div>
 
-        {/* 4. ACTIVE MODEL */}
+        {/* 4. ACTIVE MODEL & STATUS */}
         <div className="bg-white rounded-2xl p-5 border border-[#D9DED4] shadow-sm space-y-1">
-          <span className="text-[11px] font-mono text-[#3D5A52] uppercase tracking-wider block">
-            Active Architecture
-          </span>
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-mono text-[#3D5A52] uppercase tracking-wider block">
+              Active Architecture
+            </span>
+            <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-full ${isLoaded ? 'bg-[#D6E6DF] text-[#0D4F43]' : 'bg-[#EBF0E6] text-[#8C5E58]'}`}>
+              {isLoaded ? 'TRAINED' : 'NOT LOADED'}
+            </span>
+          </div>
           <p className="text-sm font-bold text-[#083C33] truncate">
             {pred?.model_name || 'DeepTrace-SpatialFreq-ViT'}
           </p>
           <p className="text-[11px] text-[#3D5A52] font-mono">
-            Version: {pred?.model_version || 'v1.0.0'}
+            MODEL STATUS: {isLoaded ? 'TRAINED' : 'NOT LOADED'}
           </p>
         </div>
 
@@ -150,11 +155,9 @@ export const ResultsDashboard: React.FC<ResultsDashboardProps> = ({ result, onRe
         <div className="rounded-2xl p-5 bg-[#EBF0E6] border border-[#D9DED4] text-xs text-[#083C33] flex items-start space-x-3 shadow-sm">
           <AlertTriangle className="w-5 h-5 text-[#0D4F43] shrink-0 mt-0.5" />
           <div className="space-y-1">
-            <h4 className="font-bold text-[#083C33]">Research Integrity Guarantee</h4>
+            <h4 className="font-bold text-[#083C33]">MODEL STATUS: NOT LOADED</h4>
             <p className="text-[#3D5A52] leading-relaxed">
-              Full mathematical forensic feature extraction (SRM 3x3 high-pass residuals, 2D FFT power spectrum, 2D DCT coefficient matrices, 
-              and inter-frame temporal consistency) has completed on this media. Because deep neural attribution weights have not yet been mounted 
-              into the model registry, no arbitrary or fabricated attribution probabilities are displayed.
+              Source attribution unavailable until a trained checkpoint is loaded. Full mathematical forensic feature extraction (SRM 3x3 high-pass residuals, 2D FFT power spectrum, 2D DCT coefficient matrices, and inter-frame temporal consistency) has completed on this media.
             </p>
           </div>
         </div>

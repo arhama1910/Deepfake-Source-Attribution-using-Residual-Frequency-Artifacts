@@ -110,7 +110,7 @@ class DeepTraceAttributionNetwork(nn.Module):
         return det_logits, attr_logits
 
 class ImageAttributionModel(BaseAttributionModel):
-    def __init__(self):
+    def __init__(self, checkpoint_path: Optional[str] = None):
         self.device = torch.device(settings.MODEL_DEVICE if torch.cuda.is_available() and settings.MODEL_DEVICE == "cuda" else "cpu")
         self.model_name = "DeepTrace-SpatialFreq-ViT"
         self.model_version = "v1.0.0-unweighted"
@@ -118,19 +118,74 @@ class ImageAttributionModel(BaseAttributionModel):
         self.network = DeepTraceAttributionNetwork()
         self.network.to(self.device)
         self.is_loaded = False
+        self.checkpoint_identifier: Optional[str] = None
+        self.checkpoint_path: Optional[str] = None
+        self.checkpoint_metadata: Dict[str, Any] = {}
         
-        # Check if pre-trained weight checkpoint is supplied
-        weights_path = Path(settings.IMAGE_MODEL_PATH) if settings.IMAGE_MODEL_PATH else None
-        if weights_path and weights_path.is_file():
-            try:
-                state_dict = torch.load(weights_path, map_location=self.device)
-                self.network.load_state_dict(state_dict)
-                self.network.eval()
-                self.is_loaded = True
-                self.model_version = "v1.0.0-checkpoint"
-            except Exception as e:
-                print(f"[DeepTrace] Failed to load checkpoint {weights_path}: {e}")
+        # Attempt to load checkpoint from explicit path or default search paths
+        self.load_checkpoint(checkpoint_path)
+
+    def load_checkpoint(self, path: Optional[Union[str, Path]] = None) -> bool:
+        """
+        Load weights from checkpoint path or standard project locations.
+        Supports both raw PyTorch state_dict and structured DeepTrace checkpoint dicts.
+        """
+        candidate_paths: List[Path] = []
+        if path:
+            candidate_paths.append(Path(path))
+        if settings.IMAGE_MODEL_PATH:
+            candidate_paths.append(Path(settings.IMAGE_MODEL_PATH))
+            
+        here = Path(__file__).resolve().parent
+        candidate_paths.extend([
+            Path("models/image/best.pt"),
+            Path("backend/models/image/best.pt"),
+            here.parent.parent / "models" / "image" / "best.pt",
+            here.parent.parent.parent / "models" / "image" / "best.pt",
+            Path("checkpoints/deeptrace_best.pth")
+        ])
+        
+        target_path: Optional[Path] = None
+        for cand in candidate_paths:
+            if cand and cand.is_file():
+                target_path = cand
+                break
+                
+        if not target_path:
+            self.is_loaded = False
+            return False
+
+        try:
+            ckpt = torch.load(target_path, map_location=self.device)
+            if isinstance(ckpt, dict) and "state_dict" in ckpt:
+                state_dict = ckpt["state_dict"]
+                self.checkpoint_metadata = {k: v for k, v in ckpt.items() if k not in ("state_dict", "optimizer_state_dict")}
+                self.model_version = f"epoch_{ckpt.get('epoch', 'checkpoint')}"
+                if "training_dataset" in ckpt:
+                    self.training_dataset = str(ckpt["training_dataset"])
+                if "model_architecture" in ckpt:
+                    self.model_name = str(ckpt["model_architecture"])
+                if "classes" in ckpt:
+                    ckpt_classes = ckpt["classes"]
+                    if len(ckpt_classes) != len(ATTRIBUTION_CLASSES):
+                        print(f"[DeepTrace] Checkpoint class count mismatch: {len(ckpt_classes)} vs expected {len(ATTRIBUTION_CLASSES)}")
+            elif isinstance(ckpt, dict):
+                state_dict = ckpt
+                self.checkpoint_metadata = {"type": "raw_state_dict"}
+            else:
                 self.is_loaded = False
+                return False
+
+            self.network.load_state_dict(state_dict)
+            self.network.eval()
+            self.is_loaded = True
+            self.checkpoint_path = str(target_path.resolve())
+            self.checkpoint_identifier = target_path.name
+            return True
+        except Exception as e:
+            print(f"[DeepTrace] Failed to load checkpoint {target_path}: {e}")
+            self.is_loaded = False
+            return False
 
     def predict(
         self,
@@ -144,17 +199,22 @@ class ImageAttributionModel(BaseAttributionModel):
         Never fabricate random confidence scores or fake predictions.
         """
         if not self.is_loaded:
+            self.load_checkpoint()
+            
+        if not self.is_loaded:
             return {
                 "model_name": self.model_name,
                 "model_version": self.model_version,
                 "model_status": "not_loaded",
+                "checkpoint_identifier": None,
                 "training_dataset": self.training_dataset,
-                "message": "Research Demo Mode: Preprocessing & frequency extraction completed. Trained attribution model is not currently loaded.",
+                "message": "Attribution unavailable: trained checkpoint not loaded.",
                 "is_synthetic": None,
                 "synthetic_probability": None,
-                "source_class": "Model Not Loaded",
+                "source_class": "Attribution unavailable: trained checkpoint not loaded.",
                 "source_confidence": None,
-                "class_probabilities": {cls_name: None for cls_name in ATTRIBUTION_CLASSES}
+                "class_probabilities": {cls_name: None for cls_name in ATTRIBUTION_CLASSES},
+                "evidence_features": None
             }
             
         if rgb_tensor is None:
@@ -221,13 +281,20 @@ class ImageAttributionModel(BaseAttributionModel):
                 "model_name": self.model_name,
                 "model_version": self.model_version,
                 "model_status": "loaded",
+                "checkpoint_identifier": self.checkpoint_identifier or "best.pt",
                 "training_dataset": self.training_dataset,
                 "message": "Model inference completed using spatial-frequency fusion checkpoint.",
                 "is_synthetic": is_synth,
                 "synthetic_probability": round(synth_prob * 100.0, 2),
                 "source_class": source_class,
                 "source_confidence": round(source_confidence * 100.0, 2),
-                "class_probabilities": prob_dict
+                "class_probabilities": prob_dict,
+                "evidence_features": {
+                    "spatial_shape": list(rgb.shape),
+                    "frequency_shape": list(freq_maps.shape),
+                    "detection_classes": ["Real", "Synthetic"],
+                    "attribution_classes": ATTRIBUTION_CLASSES
+                }
             }
 
     def get_metadata(self) -> Dict[str, Any]:
@@ -235,11 +302,13 @@ class ImageAttributionModel(BaseAttributionModel):
             "model_name": self.model_name,
             "model_version": self.model_version,
             "model_status": "loaded" if self.is_loaded else "not_loaded",
+            "checkpoint_identifier": self.checkpoint_identifier,
             "architecture": "Vision Transformer + Frequency Branch + Cross-Attention",
             "training_dataset": self.training_dataset,
             "supported_classes": ATTRIBUTION_CLASSES,
             "input_resolution": "512x512",
-            "inference_device": str(self.device)
+            "inference_device": str(self.device),
+            "checkpoint_metadata": self.checkpoint_metadata
         }
 
 def prepare_image_tensors(

@@ -62,7 +62,7 @@ def test_image_inference_tensor_construction():
     # Test safe response when model is not loaded
     pred = image_model.predict(rgb_tensor=rgb_t, residual_tensor=res_t, fft_tensor=fft_t, dct_tensor=dct_t)
     assert pred["model_status"] == "not_loaded"
-    assert pred["source_class"] == "Model Not Loaded"
+    assert pred["source_class"] in ["Model Not Loaded", "Attribution unavailable: trained checkpoint not loaded."]
     assert pred["is_synthetic"] is None
 
     # Test forward pass with real tensors when loaded (no AttributeError)
@@ -98,7 +98,7 @@ def test_video_inference_tensor_construction():
     # Test safe prediction when model is not loaded
     pred = video_model.predict(temporal_tensor=temp_tensor)
     assert pred["model_status"] == "not_loaded"
-    assert pred["source_class"] == "Model Not Loaded"
+    assert pred["source_class"] in ["Model Not Loaded", "Attribution unavailable: trained checkpoint not loaded."]
 
     # Test forward pass with temporal tensor when loaded (no AttributeError)
     orig_loaded = video_model.is_loaded

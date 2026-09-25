@@ -43,18 +43,63 @@ class VideoAttributionModel(BaseAttributionModel):
         self.network = VideoTemporalPoolingHead()
         self.network.to(self.device)
         self.is_loaded = False
+        self.checkpoint_identifier: Optional[str] = None
+        self.checkpoint_path: Optional[str] = None
+        self.checkpoint_metadata: Dict[str, Any] = {}
         
-        weights_path = Path(settings.VIDEO_MODEL_PATH) if settings.VIDEO_MODEL_PATH else None
-        if weights_path and weights_path.is_file():
-            try:
-                state_dict = torch.load(weights_path, map_location=self.device)
-                self.network.load_state_dict(state_dict)
-                self.network.eval()
-                self.is_loaded = True
-                self.model_version = "v1.0.0-checkpoint"
-            except Exception as e:
-                print(f"[DeepTrace] Failed to load video checkpoint {weights_path}: {e}")
+        self.load_checkpoint(settings.VIDEO_MODEL_PATH)
+
+    def load_checkpoint(self, path: Optional[Union[str, Path]] = None) -> bool:
+        candidate_paths: List[Path] = []
+        if path:
+            candidate_paths.append(Path(path))
+        if settings.VIDEO_MODEL_PATH:
+            candidate_paths.append(Path(settings.VIDEO_MODEL_PATH))
+            
+        here = Path(__file__).resolve().parent
+        candidate_paths.extend([
+            Path("models/video/best.pt"),
+            Path("backend/models/video/best.pt"),
+            here.parent.parent / "models" / "video" / "best.pt",
+            here.parent.parent.parent / "models" / "video" / "best.pt",
+            Path("checkpoints/deeptrace_video_best.pth")
+        ])
+        
+        target_path: Optional[Path] = None
+        for cand in candidate_paths:
+            if cand and cand.is_file():
+                target_path = cand
+                break
+                
+        if not target_path:
+            self.is_loaded = False
+            return False
+            
+        try:
+            ckpt = torch.load(target_path, map_location=self.device)
+            if isinstance(ckpt, dict) and "state_dict" in ckpt:
+                state_dict = ckpt["state_dict"]
+                self.checkpoint_metadata = {k: v for k, v in ckpt.items() if k not in ("state_dict", "optimizer_state_dict")}
+                self.model_version = f"epoch_{ckpt.get('epoch', 'checkpoint')}"
+                if "training_dataset" in ckpt:
+                    self.training_dataset = str(ckpt["training_dataset"])
+            elif isinstance(ckpt, dict):
+                state_dict = ckpt
+                self.checkpoint_metadata = {"type": "raw_state_dict"}
+            else:
                 self.is_loaded = False
+                return False
+                
+            self.network.load_state_dict(state_dict)
+            self.network.eval()
+            self.is_loaded = True
+            self.checkpoint_path = str(target_path.resolve())
+            self.checkpoint_identifier = target_path.name
+            return True
+        except Exception as e:
+            print(f"[DeepTrace] Failed to load video checkpoint {target_path}: {e}")
+            self.is_loaded = False
+            return False
 
     def predict(
         self,
@@ -67,17 +112,22 @@ class VideoAttributionModel(BaseAttributionModel):
     ) -> Dict[str, Any]:
         """Video frame sequence prediction."""
         if not self.is_loaded:
+            self.load_checkpoint()
+            
+        if not self.is_loaded:
             return {
                 "model_name": self.model_name,
                 "model_version": self.model_version,
                 "model_status": "not_loaded",
+                "checkpoint_identifier": None,
                 "training_dataset": self.training_dataset,
-                "message": "Research Demo Mode: Video frame sampling & temporal frequency extraction completed. Video attribution checkpoint is not loaded.",
+                "message": "Attribution unavailable: trained checkpoint not loaded.",
                 "is_synthetic": None,
                 "synthetic_probability": None,
-                "source_class": "Model Not Loaded",
+                "source_class": "Attribution unavailable: trained checkpoint not loaded.",
                 "source_confidence": None,
-                "class_probabilities": {cls_name: None for cls_name in ATTRIBUTION_CLASSES}
+                "class_probabilities": {cls_name: None for cls_name in ATTRIBUTION_CLASSES},
+                "evidence_features": None
             }
             
         inp = temporal_tensor if temporal_tensor is not None else rgb_tensor
