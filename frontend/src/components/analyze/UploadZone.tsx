@@ -304,14 +304,33 @@ export const UploadZone: React.FC<UploadZoneProps> = ({ onAnalysisComplete }) =>
         </div>
 
         {/* ========================================================================= */}
-        {/* 4. DECORATIVE FORENSIC TELEMETRY CARD (MATCHING USER REFERENCE)            */}
+        {/* 4. FLOATING FORMAT BUBBLES (LEFT) + FORENSIC TELEMETRY CARD (RIGHT)        */}
         {/* ========================================================================= */}
-        <div className="flex justify-center sm:justify-end w-full -mb-9 sm:-mb-13 pr-2 sm:pr-6 z-20 relative pointer-events-none">
+        <div className="flex flex-col md:flex-row items-center md:items-end justify-between w-full -mb-5 sm:-mb-7 px-2 sm:px-6 z-20 relative pointer-events-none gap-3">
+          
+          {/* LEFT: Floating Transparent Format Bubbles (Outside the Box in Background) */}
+          <div className="flex items-center flex-wrap justify-center md:justify-start gap-1.5 pointer-events-auto">
+            <span className="text-[10px] font-mono uppercase tracking-[0.18em] text-[#52706A] font-bold mr-1">
+              FORMATS //
+            </span>
+            {SUPPORTED_FORMATS.map((fmt, i) => (
+              <motion.span
+                key={fmt}
+                animate={{ y: [0, (i % 2 === 0 ? -4 : 4), 0] }}
+                transition={{ duration: 4.2 + (i * 0.35), repeat: Infinity, ease: 'easeInOut' }}
+                className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-semibold tracking-wider bg-white/80 backdrop-blur-xs border border-[#D5D9D1] text-[#083C33] shadow-[0_2px_10px_rgba(8,60,51,0.03)] hover:border-[#0D5145] transition-colors"
+              >
+                {fmt}
+              </motion.span>
+            ))}
+          </div>
+
+          {/* RIGHT: Forensic Telemetry Card */}
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.15 }}
-            className="bg-white/95 backdrop-blur-xs rounded-[24px] border border-[#D5D9D1] p-3.5 sm:p-4 shadow-[0_8px_30px_rgba(8,60,51,0.05)] w-full max-w-[340px]"
+            className="bg-white/95 backdrop-blur-xs rounded-[24px] border border-[#D5D9D1] p-3.5 sm:p-4 shadow-[0_8px_30px_rgba(8,60,51,0.05)] w-full max-w-[340px] pointer-events-auto"
           >
             <div className="flex items-center space-x-3 sm:space-x-3.5">
               
@@ -446,6 +465,8 @@ export const UploadZone: React.FC<UploadZoneProps> = ({ onAnalysisComplete }) =>
                       : 'border-[#D5D9D1] bg-[#FAFAF7]/50 hover:bg-white hover:border-[#0D5145] hover:shadow-xs'
                   }`}
                 >
+
+
                   {/* Subtle decorative forensic waveform along the lower portion */}
                   <svg
                     className="absolute bottom-0 left-0 right-0 w-full h-24 pointer-events-none opacity-20 overflow-hidden"
@@ -823,66 +844,52 @@ export const UploadZone: React.FC<UploadZoneProps> = ({ onAnalysisComplete }) =>
         {/* ========================================================================= */}
         {/* 9. SUPPORTED FORMATS & EXAMPLE INPUTS (SECONDARY HORIZONTAL PANEL)        */}
         {/* ========================================================================= */}
+        {/* 9. EXAMPLE INPUTS GALLERY (HORIZONTAL PANEL)                              */}
+        {/* ========================================================================= */}
         <motion.div
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-          className="bg-white rounded-[24px] border border-[#D5D9D1] p-6 shadow-[0_4px_24px_rgba(8,60,51,0.04)]"
+          className="bg-white rounded-[24px] border border-[#D5D9D1] p-5 sm:p-6 shadow-[0_4px_24px_rgba(8,60,51,0.04)]"
         >
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
-            
-            {/* Left: SUPPORTED FORMATS */}
-            <div className="lg:col-span-6 space-y-2.5">
-              <div className="text-[11px] font-mono uppercase tracking-[0.16em] text-[#52706A] font-semibold">
-                SUPPORTED FORMATS
-              </div>
-              <div className="flex flex-wrap items-center gap-2">
-                {SUPPORTED_FORMATS.map((fmt) => (
-                  <span
-                    key={fmt}
-                    className="inline-flex items-center px-3 py-1 rounded-full border border-[#D5D9D1] text-[11px] font-mono font-semibold text-[#083C33] bg-[#FAFAF7] hover:border-[#0D5145] transition-colors"
-                  >
-                    {fmt}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            {/* Right: EXAMPLE INPUTS */}
-            <div className="lg:col-span-6 space-y-2.5 lg:border-l lg:border-[#D5D9D1]/80 lg:pl-6">
-              <div className="flex items-center justify-between">
-                <div className="text-[11px] font-mono uppercase tracking-[0.16em] text-[#52706A] font-semibold">
+          <div className="space-y-3.5">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#0D5145]" />
+                <div className="text-[11px] font-mono uppercase tracking-[0.16em] text-[#083C33] font-bold">
                   EXAMPLE INPUTS
                 </div>
-                <span className="text-[10px] font-mono text-[#52706A]/70 hidden sm:inline">
-                  Click to inspect sample
-                </span>
               </div>
-
-              <div className="grid grid-cols-4 gap-2.5">
-                {EXAMPLE_SAMPLES.map((sample) => (
-                  <button
-                    key={sample.id}
-                    type="button"
-                    onClick={() => loadExampleSample(sample)}
-                    title={`Load ${sample.label} (${sample.sublabel})`}
-                    className="group relative rounded-xl border border-[#D5D9D1] overflow-hidden aspect-square bg-[#083C33] hover:border-[#0D5145] hover:shadow-xs transition-all duration-200 focus:outline-hidden text-left"
-                  >
-                    <img
-                      src={sample.src}
-                      alt={sample.label}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 opacity-90 group-hover:opacity-100"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#083C33]/90 via-transparent to-transparent flex flex-col justify-end p-1.5 opacity-90 group-hover:opacity-100 transition-opacity">
-                      <span className="text-[9px] font-mono font-bold text-white truncate leading-tight">
-                        {sample.label}
-                      </span>
-                    </div>
-                  </button>
-                ))}
-              </div>
+              <span className="text-[10px] font-mono text-[#52706A]/80 hidden sm:inline">
+                Click any specimen to load into forensic stream
+              </span>
             </div>
 
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+              {EXAMPLE_SAMPLES.map((sample) => (
+                <button
+                  key={sample.id}
+                  type="button"
+                  onClick={() => loadExampleSample(sample)}
+                  title={`Load ${sample.label} (${sample.sublabel})`}
+                  className="group relative rounded-xl border border-[#D5D9D1] overflow-hidden aspect-[4/3] bg-[#083C33] hover:border-[#0D5145] hover:shadow-xs transition-all duration-200 focus:outline-hidden text-left"
+                >
+                  <img
+                    src={sample.src}
+                    alt={sample.label}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 opacity-90 group-hover:opacity-100"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#083C33]/90 via-transparent to-transparent flex flex-col justify-end p-2 opacity-90 group-hover:opacity-100 transition-opacity">
+                    <span className="text-[10px] font-mono font-bold text-white truncate leading-tight">
+                      {sample.label}
+                    </span>
+                    <span className="text-[8px] font-mono text-[#D5D9D1]/90 truncate">
+                      {sample.sublabel}
+                    </span>
+                  </div>
+                </button>
+              ))}
+            </div>
           </div>
         </motion.div>
 

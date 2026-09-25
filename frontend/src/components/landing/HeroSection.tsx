@@ -311,7 +311,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onStartAnalysis, onExp
 
                 {/* Bottom: Main Value Focus & Supporting Technical Annotation */}
                 <div className="space-y-2 pt-6 sm:pt-8">
-                  <h3 className="text-xl sm:text-2xl font-bold text-[#F7F6F0] leading-tight tracking-tight uppercase font-sans">
+                  <h3 className="text-xl sm:text-2xl font-bold text-[#F7F6F0] leading-tight tracking-tight uppercase">
                     {item.value}
                   </h3>
                   <p className="text-xs text-[#D9DED4]/75 leading-relaxed font-normal">
@@ -506,7 +506,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onStartAnalysis, onExp
                   <div className="w-8 h-px bg-[#166355] group-hover:w-12 group-hover:bg-[#A3C2B8] transition-all duration-300" />
 
                   {/* Domain Title */}
-                  <h4 className="text-lg sm:text-xl font-bold text-[#F7F6F0] leading-snug tracking-tight uppercase font-sans pt-1 group-hover:text-white transition-colors duration-200">
+                  <h4 className="text-lg sm:text-xl font-bold text-[#F7F6F0] leading-snug tracking-tight uppercase pt-1 group-hover:text-white transition-colors duration-200">
                     {domain.title}
                   </h4>
 
