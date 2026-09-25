@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { ReactLenis } from 'lenis/react';
 import { Navbar } from './components/common/Navbar';
 import { Footer } from './components/common/Footer';
 import { HeroSection } from './components/landing/HeroSection';
@@ -37,8 +38,10 @@ export const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#F7F6F0] text-[#083C33] forensic-grid selection:bg-[#0D4F43]/20 selection:text-[#083C33]">
-      <Navbar activeTab={activeTab} setActiveTab={setActiveTab} />
+    <ReactLenis root options={{ lerp: 0.1, duration: 1.2, smoothWheel: true }}>
+      <div className="min-h-screen flex flex-col bg-[#F7F6F0] text-[#083C33] forensic-grid selection:bg-[#0D4F43]/20 selection:text-[#083C33]">
+        <Navbar activeTab={activeTab} setActiveTab={setActiveTab} />
+
 
       <main className="flex-1">
         {activeTab === 'landing' && (
@@ -78,8 +81,10 @@ export const App: React.FC = () => {
       </main>
 
       <Footer />
-    </div>
+      </div>
+    </ReactLenis>
   );
 };
 
 export default App;
+
