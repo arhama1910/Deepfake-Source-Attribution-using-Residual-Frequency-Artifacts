@@ -108,7 +108,8 @@ export interface ModelMetadata {
 }
 
 export interface EvaluationMetricsData {
-  status: 'pending_benchmark' | 'evaluated';
+  status: 'pending_benchmark' | 'evaluated' | 'baseline_reference';
+  is_checkpoint_loaded?: boolean;
   evaluation_dataset: string;
   metrics: {
     accuracy: number | null;
@@ -119,5 +120,12 @@ export interface EvaluationMetricsData {
   };
   attribution_classes: string[];
   confusion_matrix: number[][] | null;
+  operational_stats?: {
+    total_inspections: number;
+    completed_inspections: number;
+    face_detection_rate: number;
+    inference_device?: string;
+  };
   benchmark_note?: string;
 }
+
