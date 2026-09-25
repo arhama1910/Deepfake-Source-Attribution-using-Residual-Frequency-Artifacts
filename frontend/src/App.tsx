@@ -115,19 +115,13 @@ export const App: React.FC = () => {
         )}
 
         {activeTab === 'analyze' && (
-          <div className="site-container py-10">
+          <div className="w-full">
             {!currentResult ? (
-              <div className="space-y-6">
-                <div className="text-center space-y-2">
-                  <h1 className="text-3xl sm:text-4xl font-extrabold text-[#083C33]">Forensic Media Inspection</h1>
-                  <p className="text-xs sm:text-sm text-[#3D5A52] max-w-lg mx-auto">
-                    Upload an image or video to extract SRM high-pass residuals, 2D FFT spectra, 2D DCT matrices, and temporal stability.
-                  </p>
-                </div>
-                <UploadZone onAnalysisComplete={handleAnalysisComplete} />
-              </div>
+              <UploadZone onAnalysisComplete={handleAnalysisComplete} />
             ) : (
-              <ResultsDashboard result={currentResult} onReset={handleResetAnalysis} />
+              <div className="site-container py-10">
+                <ResultsDashboard result={currentResult} onReset={handleResetAnalysis} />
+              </div>
             )}
           </div>
         )}
