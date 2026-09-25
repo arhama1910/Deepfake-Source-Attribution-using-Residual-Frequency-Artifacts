@@ -25,3 +25,14 @@ def get_db():
 
 def init_db():
     Base.metadata.create_all(bind=engine)
+    # Lightweight schema migration for SQLite
+    try:
+        from sqlalchemy import text
+        with engine.connect() as conn:
+            columns = [row[1] for row in conn.execute(text("PRAGMA table_info(frequency_analyses)")).fetchall()]
+            if "residual_variance" not in columns:
+                conn.execute(text("ALTER TABLE frequency_analyses ADD COLUMN residual_variance FLOAT"))
+                conn.commit()
+    except Exception as e:
+        # Ignore for postgres / if table doesn't support pragma
+        pass

@@ -63,6 +63,7 @@ class FrequencyAnalysis(Base):
     spectral_entropy = Column(Float, nullable=False)
     dct_total_energy = Column(Float, nullable=False)
     dct_high_frequency_ratio = Column(Float, nullable=False)
+    residual_variance = Column(Float, nullable=True)
     radial_profile = Column(Text, nullable=True)  # JSON array for frequency curve plotting
     
     analysis = relationship("Analysis", back_populates="frequency_analysis")
