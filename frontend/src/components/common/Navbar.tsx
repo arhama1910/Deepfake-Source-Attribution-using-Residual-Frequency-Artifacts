@@ -63,7 +63,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
                   DeepTrace <span className="text-[#0D4F43]">AI</span>
                 </span>
                 <span className="px-2 py-0.5 text-[10px] uppercase font-mono font-semibold rounded-full border border-[#D9DED4] text-[#083C33] bg-[#EBF0E6]">
-                  v1.0-MTech
+                  v1.0
                 </span>
               </div>
               <p className="text-[11px] text-[#3D5A52] font-medium hidden sm:block">

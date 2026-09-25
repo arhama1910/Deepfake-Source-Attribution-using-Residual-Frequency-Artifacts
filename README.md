@@ -2,7 +2,7 @@
 
 ## Deepfake Source Attribution Using Residual Frequency Artifacts
 
-> **M.Tech Research Project & Production-Quality Multimedia Forensic System**  
+> **Multimedia Forensics & Source Attribution Research System**  
 > *"Tracing Synthetic Media Beyond the Surface."*
 
 [![Python](https://img.shields.io/badge/Python-3.11%20%7C%203.14-blue?logo=python)](https://python.org)
@@ -306,7 +306,7 @@ for rgb_batch, labels in dataloader:
   title={DeepTrace AI: Deepfake Source Attribution Using Residual Frequency Artifacts},
   author={DeepTrace AI Research Group},
   year={2026},
-  institution={M.Tech Multimedia Forensics & Cybersecurity Laboratory}
+  institution={Multimedia Forensics & Cybersecurity Research Group}
 }
 ```
 

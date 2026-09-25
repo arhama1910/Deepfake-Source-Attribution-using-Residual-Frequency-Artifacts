@@ -18,7 +18,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onStartAnalysis, onExp
           <div className="hero-content max-w-[680px] space-y-6 min-w-0">
             <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-[#EBF0E6] border border-[#D9DED4] text-[#0D4F43] text-xs font-semibold">
               <span className="w-2 h-2 rounded-full bg-[#0D4F43] animate-pulse"></span>
-              <span>M.Tech Multimedia Forensics & Attribution Lab</span>
+              <span>Multimedia Forensics & Attribution Lab</span>
             </div>
 
             <div className="space-y-2">

@@ -45,7 +45,7 @@ export const Footer: React.FC = () => {
         </div>
 
         <div className="flex flex-col sm:flex-row items-center justify-between text-[#D9DED4]/70 text-[11px] font-mono pt-2">
-          <p>© {new Date().getFullYear()} DeepTrace AI Research Project. M.Tech Thesis Implementation.</p>
+          <p>© {new Date().getFullYear()} DeepTrace AI Research Project.</p>
           <p className="mt-2 sm:mt-0">FastAPI • PyTorch • OpenCV • React • TypeScript</p>
         </div>
 
