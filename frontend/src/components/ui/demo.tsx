@@ -1,11 +1,7 @@
-import React from 'react';
-import Component from './smooth-scroll';
+import KineticDotsLoader from "./kinetic-dots-loader";
 
-function ComponentDemo() {
-  return (
-    <Component />
-  );
+export default function DemoOne() {
+  return <KineticDotsLoader />;
 }
 
-export { ComponentDemo as DemoOne };
-export default ComponentDemo;
+export { DemoOne };
