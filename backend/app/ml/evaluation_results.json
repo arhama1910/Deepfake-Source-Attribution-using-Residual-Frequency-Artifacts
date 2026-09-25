@@ -1,0 +1,20 @@
+{
+  "status": "awaiting_trained_evaluation",
+  "experimental_model": {
+    "status": "Not evaluated",
+    "checkpoint": "Not available",
+    "evaluation_status": "Awaiting trained evaluation",
+    "message": "Evaluation requires a mounted, genuinely trained checkpoint."
+  },
+  "baseline_mode": "spatial_frequency_cross_attention",
+  "classes": [
+    "Real",
+    "StyleGAN2",
+    "StyleGAN3",
+    "ProGAN",
+    "Stable Diffusion v1.5",
+    "Stable Diffusion XL",
+    "Latent Diffusion",
+    "Midjourney v5"
+  ]
+}

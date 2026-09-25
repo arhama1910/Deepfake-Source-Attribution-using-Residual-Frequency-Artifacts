@@ -49,12 +49,12 @@ const PIPELINE_STAGES: PipelineStageDetail[] = [
     tensorInput: 'Raw Media [H, W, 3] uint8',
     tensorOutput: 'Aligned Crop [B, 3, 512, 512] float32',
     pytorchClass: 'detect_and_align_face(rgb_img, target_size=512)',
-    mathFormula: 'I_{aligned} = \\mathcal{W}(I_{raw}, \\mathbf{M}_{affine}) \\quad \\text{where } \\mathbf{M}_{affine} \\in \\mathbb{R}^{2 \\times 3}',
-    formulaTitle: 'Affine Landmark Canonical Normalization',
-    description: 'Validates MIME magic bytes, detects 68 canonical facial landmark coordinates, and executes an affine transformation that canonicalizes inter-pupillary eye distance and nose-bridge alignment to a fixed 512×512 grid.',
+    mathFormula: '\\mathbf{B}_{ROI} = [x - 0.2w, y - 0.2h, w + 0.4w, h + 0.4h] \\rightarrow \\text{Resize}(512 \\times 512)',
+    formulaTitle: 'Haar Cascade Face Detection & Margin ROI Extraction',
+    description: 'Validates MIME magic bytes, detects facial bounding boxes using OpenCV Haar Cascade classifiers with a 20% contextual boundary margin, or seamlessly falls back to square center-cropping on general non-facial synthetic media before resizing to 512×512.',
     keyInsights: [
-      'Eliminates head pose variance that could corrupt spatial frequency symmetry',
-      'Normalizes illumination channels to [0.0, 1.0] floating point tensors',
+      'Extracts contextual face ROI with 20% margin to capture hairline and boundary blending artifacts',
+      'Provides automatic square center-crop fallback for non-facial generative images (e.g. landscapes, objects)',
       'Standardizes resolution to preserve 2D FFT spectral bin scaling across media'
     ],
     codeSnippet: `aligned_roi, face_found, face_count, bboxes = detect_and_align_face(

@@ -1,0 +1,64 @@
+# DeepTrace AI - ML Training & Evaluation Configuration
+experiment_name: "deeptrace_spatial_frequency_attribution"
+
+# Model Architecture
+architecture:
+  model_name: "DeepTrace-SpatialFreq-ViT"
+  baseline_mode: "spatial_frequency_cross_attention"  # Options: spatial_only, frequency_only, residual_frequency, spatial_frequency, spatial_frequency_cross_attention
+  num_classes: 8
+  input_resolution: 512
+  emb_dim: 256
+  device: "cpu"  # "cuda" or "cpu"
+
+# Classes
+classes:
+  - "Real"
+  - "StyleGAN2"
+  - "StyleGAN3"
+  - "ProGAN"
+  - "Stable Diffusion v1.5"
+  - "Stable Diffusion XL"
+  - "Latent Diffusion"
+  - "Midjourney v5"
+
+# Dataset Specification
+dataset:
+  data_dir: "dataset"
+  train_split: "train"
+  val_split: "val"
+  test_split: "test"
+  num_workers: 2
+  target_size: 512
+  augment: true
+  split_ratios:
+    train: 0.70
+    val: 0.15
+    test: 0.15
+
+# Training Hyperparameters
+training:
+  batch_size: 16
+  epochs: 20
+  learning_rate: 0.0001
+  weight_decay: 0.0001
+  scheduler: "cosine"  # "cosine" or "step"
+  warmup_epochs: 2
+  early_stopping_patience: 5
+  seed: 42
+
+# Dual Forensic Loss Weights
+loss:
+  detection_weight: 0.5
+  attribution_weight: 1.0
+  label_smoothing: 0.05
+
+# Checkpoints & Artifacts
+checkpoints:
+  save_dir: "checkpoints"
+  best_checkpoint_name: "deeptrace_best.pth"
+  last_checkpoint_name: "deeptrace_last.pth"
+  save_every_epochs: 1
+
+# Evaluation Output
+evaluation:
+  output_json: "evaluation_results.json"

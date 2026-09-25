@@ -58,10 +58,12 @@ class VideoAttributionModel(BaseAttributionModel):
 
     def predict(
         self,
-        rgb_tensor: torch.Tensor,
+        temporal_tensor: Optional[torch.Tensor] = None,
+        rgb_tensor: Optional[torch.Tensor] = None,
         residual_tensor: Optional[torch.Tensor] = None,
         fft_tensor: Optional[torch.Tensor] = None,
-        dct_tensor: Optional[torch.Tensor] = None
+        dct_tensor: Optional[torch.Tensor] = None,
+        **kwargs
     ) -> Dict[str, Any]:
         """Video frame sequence prediction."""
         if not self.is_loaded:
@@ -78,10 +80,25 @@ class VideoAttributionModel(BaseAttributionModel):
                 "class_probabilities": {cls_name: None for cls_name in ATTRIBUTION_CLASSES}
             }
             
+        inp = temporal_tensor if temporal_tensor is not None else rgb_tensor
+        if inp is None:
+            raise ValueError("temporal_tensor or rgb_tensor must be provided when video model checkpoint is loaded.")
+            
         # If loaded, run forward pass
         self.network.eval()
         with torch.no_grad():
-            det_logits, attr_logits = self.network(rgb_tensor.to(self.device))
+            t_input = inp.to(self.device)
+            if t_input.dim() == 2:
+                # [T, emb_dim] -> [1, T, emb_dim]
+                t_input = t_input.unsqueeze(0)
+            elif t_input.dim() == 4:
+                # [T, C, H, W] -> project or average pool if passed raw frames
+                t_input = F.adaptive_avg_pool2d(t_input, (1, 1)).flatten(1) # [T, C]
+                if t_input.shape[1] != 256:
+                    t_input = F.pad(t_input, (0, max(0, 256 - t_input.shape[1])))[:, :256]
+                t_input = t_input.unsqueeze(0)
+                
+            det_logits, attr_logits = self.network(t_input)
             det_probs = F.softmax(det_logits, dim=-1)[0].cpu().numpy()
             attr_probs = F.softmax(attr_logits, dim=-1)[0].cpu().numpy()
             
@@ -112,5 +129,84 @@ class VideoAttributionModel(BaseAttributionModel):
             "supported_classes": ATTRIBUTION_CLASSES,
             "inference_device": str(self.device)
         }
+
+def build_temporal_feature_tensor(
+    frame_tensor_list: List[Dict[str, Any]],
+    image_network: Optional[nn.Module] = None,
+    device: Optional[torch.device] = None
+) -> torch.Tensor:
+    """
+    Build a temporal feature sequence tensor [1, T, 256] from sampled video frames.
+    Extracts spatial-frequency embeddings for each frame using the image architecture.
+    """
+    if not frame_tensor_list:
+        return torch.zeros((1, 1, 256), dtype=torch.float32)
+        
+    dev = device or torch.device("cpu")
+    embeddings = []
+    
+    mean = torch.tensor([0.485, 0.456, 0.406]).view(1, 3, 1, 1)
+    std = torch.tensor([0.229, 0.224, 0.225]).view(1, 3, 1, 1)
+    
+    with torch.no_grad():
+        for frame_dict in frame_tensor_list:
+            roi = frame_dict["roi"]
+            res = frame_dict.get("res")
+            fft = frame_dict.get("fft")
+            dct = frame_dict.get("dct")
+            
+            # 1. RGB tensor
+            rgb_t = torch.from_numpy(roi).permute(2, 0, 1).unsqueeze(0).float() / 255.0
+            norm_rgb = (rgb_t - mean) / std
+            
+            # 2. Residual tensor (3ch)
+            if res is not None:
+                res_t = torch.from_numpy(res).permute(2, 0, 1).unsqueeze(0).float() / 255.0
+            else:
+                res_t = torch.zeros_like(rgb_t)
+                
+            # 3. FFT (1ch)
+            if fft is not None:
+                import cv2
+                fft_g = cv2.cvtColor(fft, cv2.COLOR_RGB2GRAY) if fft.ndim == 3 else fft
+                fft_t = torch.from_numpy(fft_g).unsqueeze(0).unsqueeze(0).float() / 255.0
+            else:
+                fft_t = torch.zeros((1, 1, rgb_t.shape[2], rgb_t.shape[3]))
+                
+            # 4. DCT (1ch)
+            if dct is not None:
+                import cv2
+                dct_g = cv2.cvtColor(dct, cv2.COLOR_RGB2GRAY) if dct.ndim == 3 else dct
+                dct_t = torch.from_numpy(dct_g).unsqueeze(0).unsqueeze(0).float() / 255.0
+            else:
+                dct_t = torch.zeros((1, 1, rgb_t.shape[2], rgb_t.shape[3]))
+                
+            # Match spatial dimensions if needed
+            if res_t.shape[2:] != norm_rgb.shape[2:]:
+                res_t = F.interpolate(res_t, size=norm_rgb.shape[2:], mode="bilinear", align_corners=False)
+            if fft_t.shape[2:] != norm_rgb.shape[2:]:
+                fft_t = F.interpolate(fft_t, size=norm_rgb.shape[2:], mode="bilinear", align_corners=False)
+            if dct_t.shape[2:] != norm_rgb.shape[2:]:
+                dct_t = F.interpolate(dct_t, size=norm_rgb.shape[2:], mode="bilinear", align_corners=False)
+                
+            freq_maps = torch.cat([res_t, fft_t, dct_t], dim=1)
+            
+            if image_network is not None:
+                spatial_emb = image_network.spatial_encoder(norm_rgb.to(dev))
+                freq_emb = image_network.frequency_encoder(freq_maps.to(dev))
+                fused = image_network.fusion(spatial_emb, freq_emb)
+                embeddings.append(fused.cpu())
+            else:
+                # Spatial pooling fallback embedding [1, 256]
+                pooled = F.adaptive_avg_pool2d(norm_rgb, (16, 16)).flatten(1)
+                if pooled.shape[1] > 256:
+                    pooled = pooled[:, :256]
+                elif pooled.shape[1] < 256:
+                    pooled = F.pad(pooled, (0, 256 - pooled.shape[1]))
+                embeddings.append(pooled)
+                
+    # Stack over time dimension: [1, T, 256]
+    temporal_tensor = torch.cat(embeddings, dim=0).unsqueeze(0)
+    return temporal_tensor
 
 video_model = VideoAttributionModel()

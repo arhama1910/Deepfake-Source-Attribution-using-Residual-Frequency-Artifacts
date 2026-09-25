@@ -39,7 +39,7 @@ async def download_forensic_report(analysis_id: str, db: Session = Depends(get_d
             "dct_high_frequency_ratio": freq.dct_high_frequency_ratio if freq else 0.0
         },
         "residual_metrics": {
-            "residual_variance": 0.042
+            "residual_variance": freq.residual_variance if freq and freq.residual_variance is not None else 0.0
         }
     }
     

@@ -108,9 +108,32 @@ export interface ModelMetadata {
 }
 
 export interface EvaluationMetricsData {
-  status: 'pending_benchmark' | 'evaluated' | 'baseline_reference';
+  status: 'pending_benchmark' | 'evaluated' | 'baseline_reference' | 'awaiting_evaluation';
   is_checkpoint_loaded?: boolean;
   evaluation_dataset: string;
+  experimental_model?: {
+    status: string;
+    checkpoint: string;
+    evaluation_status: string;
+    metrics?: {
+      accuracy: number | null;
+      precision: number | null;
+      recall: number | null;
+      f1_score: number | null;
+      roc_auc: number | null;
+    } | null;
+    note?: string;
+  };
+  literature_reference_metrics?: {
+    citation: string;
+    dataset: string;
+    accuracy: number;
+    precision: number;
+    recall: number;
+    f1_score: number;
+    roc_auc: number;
+    confusion_matrix: number[][];
+  };
   metrics: {
     accuracy: number | null;
     precision: number | null;

@@ -240,6 +240,49 @@ export const MetricsPage: React.FC = () => {
     <div className="site-container py-10 space-y-16 animate-fadeIn text-[#2D3F3A]">
       
       {/* ========================================================================= */}
+      {/* 0. RESEARCH INTEGRITY AUDIT SPECIFICATION BANNER                             */}
+      {/* ========================================================================= */}
+      <div className="rounded-2xl border border-amber-300/80 bg-amber-50/90 p-5 shadow-2xs">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-5">
+          <div className="space-y-1.5">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider bg-amber-200/90 text-amber-950 border border-amber-300">
+                RESEARCH INTEGRITY AUDIT SPECIFICATION
+              </span>
+              <span className="text-xs font-semibold text-amber-950">
+                Evaluation Architecture &amp; Provenance
+              </span>
+            </div>
+            <p className="text-xs text-amber-900 leading-relaxed max-w-3xl">
+              DeepTrace AI strictly distinguishes between <strong>Published Literature Reference Baselines</strong> (academic studies on FaceForensics++ and GenImage) 
+              and <strong>DeepTrace Experimental Model Results</strong>. No synthetic or unverified evaluation metrics are fabricated.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-3 gap-3 shrink-0 bg-white/95 p-3.5 rounded-xl border border-amber-200 text-center font-mono shadow-2xs">
+            <div>
+              <span className="text-[9px] uppercase tracking-wider text-[#52706A] block font-semibold">Experimental Model</span>
+              <span className="text-xs font-bold text-amber-900">
+                {metricsData?.experimental_model?.status || (metricsData?.is_checkpoint_loaded ? 'Evaluated' : 'Not evaluated')}
+              </span>
+            </div>
+            <div className="border-x border-amber-200 px-3">
+              <span className="text-[9px] uppercase tracking-wider text-[#52706A] block font-semibold">Checkpoint</span>
+              <span className="text-xs font-bold text-amber-900">
+                {metricsData?.experimental_model?.checkpoint || (metricsData?.is_checkpoint_loaded ? 'Available' : 'Not available')}
+              </span>
+            </div>
+            <div>
+              <span className="text-[9px] uppercase tracking-wider text-[#52706A] block font-semibold">Status</span>
+              <span className="text-xs font-bold text-amber-900">
+                {metricsData?.experimental_model?.evaluation_status || (metricsData?.is_checkpoint_loaded ? 'Completed' : 'Awaiting trained evaluation')}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ========================================================================= */}
       {/* 1. EDITORIAL HERO & SIGNATURE ROC SEPARABILITY VISUAL                      */}
       {/* ========================================================================= */}
       <section className="relative">
@@ -251,10 +294,10 @@ export const MetricsPage: React.FC = () => {
             <div className="space-y-4">
               <div className="flex flex-wrap items-center gap-2">
                 <span className="px-3.5 py-1 rounded-full text-[11px] font-mono font-bold tracking-wider uppercase bg-[#0D5145]/10 text-[#0D5145] border border-[#0D5145]/20">
-                  EMPIRICAL BENCHMARK SPECIFICATION
+                  LITERATURE / REFERENCE METRICS
                 </span>
                 <span className="px-3 py-1 rounded-full text-[11px] font-mono text-[#52706A] bg-white border border-[#D5D9D1] shadow-2xs">
-                  FF++ (c23) &amp; GENIMAGE
+                  FF++ (c23) &amp; GENIMAGE CITATIONS
                 </span>
                 <span className="inline-flex items-center text-[11px] font-mono text-emerald-800 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200 shadow-2xs">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 mr-2 animate-pulse" />
@@ -264,16 +307,17 @@ export const MetricsPage: React.FC = () => {
 
               <div className="space-y-2">
                 <h1 className="text-3xl sm:text-4xl lg:text-[3.25rem] font-bold text-[#083C33] tracking-tight leading-[1.1] font-serif">
-                  Empirical Benchmark &amp; Forensic Metrics
+                  Literature Benchmarks &amp; Forensic Metrics
                 </h1>
                 <p className="text-base sm:text-lg text-[#166355] font-medium font-serif italic">
-                  Rigorous verification across 1.2M multi-generator samples &amp; high-compression video datasets.
+                  Academic reference baselines across multi-generator &amp; high-compression benchmarks.
                 </p>
               </div>
 
               <p className="text-sm sm:text-base text-[#52706A] leading-relaxed max-w-2xl">
-                DeepTrace decouples low-frequency semantic facial appearance from high-pass sensor noise residuals. 
-                Below is the verified performance profile quantifying our dual-stream cross-attention model against state-of-the-art benchmarks.
+                DeepTrace decouples low-frequency semantic appearance from high-pass sensor noise residuals. 
+                Below are published reference literature benchmarks quantifying dual-stream cross-attention architectures 
+                against established baselines (Wang et al., Ojha et al.). DeepTrace experimental weights require trained checkpoints before evaluation.
               </p>
             </div>
 
@@ -421,14 +465,14 @@ export const MetricsPage: React.FC = () => {
         <div className="border-b border-[#D5D9D1] pb-3 flex flex-col sm:flex-row sm:items-end justify-between gap-2">
           <div>
             <span className="text-[11px] font-mono uppercase tracking-[0.18em] text-[#0D5145] font-semibold block">
-              PRIMARY QUANTITATIVE CRITERIA
+              LITERATURE REFERENCE BENCHMARK CRITERIA
             </span>
             <h2 className="text-2xl sm:text-3xl font-bold text-[#083C33] tracking-tight font-serif mt-1">
-              Benchmark Key Performance Indicators
+              Literature Baseline Key Performance Indicators
             </h2>
           </div>
           <span className="text-xs font-mono text-[#52706A]">
-            Dataset: <strong className="text-[#083C33]">FaceForensics++ (c23) Test Split</strong>
+            Citations: <strong className="text-[#083C33]">FaceForensics++ (c23) &amp; GenImage Academic Baselines</strong>
           </span>
         </div>
 

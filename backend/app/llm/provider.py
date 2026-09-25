@@ -93,6 +93,7 @@ class DeterministicForensicExplainer(BaseLLMProvider):
                 f"**Attribution Model Status:**\n"
                 f"The system executed full empirical feature extraction (SRM residuals, 2D FFT, 2D DCT, and spectral entropy). "
                 f"However, the deep neural attribution classifier is currently running in **Research Demo Mode** (no pre-trained checkpoint loaded). "
+                f"Source attribution is currently unavailable. "
                 f"As per research integrity standards, no speculative attribution label or artificial confidence score has been fabricated."
             )
             
@@ -109,12 +110,15 @@ class OpenAICompatibleLLM(BaseLLMProvider):
         prompt = (
             "You are a Senior Digital Forensics and Multimedia AI Researcher specializing in deepfake source attribution.\n"
             "Explain the following empirical forensic findings based ONLY on the provided structured metrics. "
-            "Do NOT invent or hallucinate visual artifacts not supported by the data.\n\n"
+            "Do NOT invent or hallucinate visual artifacts not supported by the data.\n"
+            "CRITICAL INTEGRITY REQUIREMENT: You must NEVER independently invent or speculate source attribution. "
+            "If model_status is 'not_loaded' or prediction source_class is 'Model Not Loaded', you MUST explicitly state "
+            "that source attribution is currently unavailable because a trained attribution checkpoint has not been loaded.\n\n"
             f"Evidence JSON:\n{evidence}\n\n"
             "Provide a concise, rigorous 3-paragraph scientific report explaining:\n"
-            "1. Spatial residual analysis (SRM filters).\n"
+            "1. Spatial residual analysis (SRM filters and residual variance).\n"
             "2. Frequency domain metrics (FFT high-frequency ratio, DCT coefficients, spectral entropy).\n"
-            "3. Source attribution interpretation based strictly on model status.\n"
+            "3. Source attribution interpretation based strictly on model status (explicitly stating attribution is unavailable if no trained model exists).\n"
         )
         
         headers = {
@@ -124,7 +128,7 @@ class OpenAICompatibleLLM(BaseLLMProvider):
         payload = {
             "model": self.model_name,
             "messages": [
-                {"role": "system", "content": "You are a multimedia forensic scientist. Only describe empirical facts from the provided data."},
+                {"role": "system", "content": "You are a multimedia forensic scientist. Only describe empirical facts from the provided data. Never fabricate attribution if model weights are not loaded."},
                 {"role": "user", "content": prompt}
             ],
             "temperature": 0.2,

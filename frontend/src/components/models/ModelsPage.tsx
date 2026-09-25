@@ -42,7 +42,7 @@ const ARCHITECTURE_COMPONENTS: ArchitectureComponent[] = [
     tensorInput: 'Aligned Facial ROI [B, 3, 512, 512] float32',
     tensorOutput: 'Spatial Embedding F_s [B, 256] float32',
     paramCount: '23.5M Parameters',
-    description: 'Deep convolutional residual network pre-trained on high-resolution facial datasets. Extracts fine-grained facial landmarks, blending seams, warping artifacts, and edge discontinuities.',
+    description: 'Deep convolutional residual network pre-trained on high-resolution facial datasets. Extracts fine-grained facial and spatial features, blending seams, warping artifacts, and edge discontinuities.',
     codeSnippet: `class SpatialBackbone(nn.Module):
     def __init__(self, out_dim=256):
         super().__init__()

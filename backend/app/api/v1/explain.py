@@ -41,7 +41,9 @@ async def explain_analysis_endpoint(
             "low_frequency_energy": freq.low_frequency_energy if freq else 0.0,
             "dct_high_frequency_ratio": freq.dct_high_frequency_ratio if freq else 0.0
         },
-        "residual_metrics": {"residual_variance": 0.045}
+        "residual_metrics": {
+            "residual_variance": freq.residual_variance if freq and freq.residual_variance is not None else 0.0
+        }
     }
     
     explanation_text = await llm_service.generate_explanation(evidence)

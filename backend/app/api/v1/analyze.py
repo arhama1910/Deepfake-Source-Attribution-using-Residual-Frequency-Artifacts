@@ -18,8 +18,8 @@ from app.forensics.residual import extract_residual_pipeline
 from app.forensics.fft_analysis import analyze_fft_pipeline
 from app.forensics.dct_analysis import analyze_dct_pipeline
 from app.forensics.video_processor import extract_video_metadata, process_video_frames
-from app.ml.image_model import image_model
-from app.ml.video_model import video_model
+from app.ml.image_model import image_model, prepare_image_tensors
+from app.ml.video_model import video_model, build_temporal_feature_tensor
 from app.llm.provider import llm_service
 from app.storage.local import storage
 
@@ -111,8 +111,14 @@ async def analyze_image_endpoint(
         
         # Step 6: Machine Learning Source Attribution
         analysis_record.stage = "Source Attribution"
+        rgb_tensor, res_tensor, fft_tensor, dct_tensor = prepare_image_tensors(
+            aligned_roi, vis_residual, vis_fft, vis_dct
+        )
         prediction_result = image_model.predict(
-            rgb_tensor=None  # Model inspects loaded weights or emits Research Demo status
+            rgb_tensor=rgb_tensor,
+            residual_tensor=res_tensor,
+            fft_tensor=fft_tensor,
+            dct_tensor=dct_tensor
         )
         
         pred_record = Prediction(
@@ -137,6 +143,7 @@ async def analyze_image_endpoint(
             spectral_entropy=fft_metrics["spectral_entropy"],
             dct_total_energy=dct_metrics["dct_total_energy"],
             dct_high_frequency_ratio=dct_metrics["dct_high_frequency_ratio"],
+            residual_variance=residual_metrics.get("residual_variance", 0.0),
             radial_profile=json.dumps(radial_profile)
         )
         db.add(freq_record)
@@ -154,7 +161,7 @@ async def analyze_image_endpoint(
         # Finalize record
         analysis_record.status = "completed"
         analysis_record.stage = "Completed"
-        analysis_record.completed_at = datetime.datetime.utcnow()
+        analysis_record.completed_at = datetime.datetime.now(datetime.timezone.utc)
         db.commit()
         
         return {
@@ -185,7 +192,7 @@ async def analyze_image_endpoint(
                 "explanation": explanation_text
             },
             "error": None,
-            "timestamp": datetime.datetime.utcnow().isoformat()
+            "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat()
         }
         
     except Exception as e:
@@ -253,7 +260,7 @@ async def analyze_video_endpoint(
     
     try:
         # Sample frames and extract frame-level forensics
-        sampled_frames, temporal_summary = process_video_frames(
+        sampled_frames, temporal_summary, frame_tensor_list = process_video_frames(
             temp_video_path,
             analysis_id,
             num_samples=min(max(num_frames, 8), 64)
@@ -286,23 +293,29 @@ async def analyze_video_endpoint(
             )
             db.add(fa)
             
-        # Frequency analysis averages
+        # Frequency analysis averages computed from real sampled frames
         freq_record = FrequencyAnalysis(
             analysis_id=analysis_id,
-            low_frequency_energy=0.35,  # aggregate placeholder
-            mid_frequency_energy=0.35,
-            high_frequency_energy=temporal_summary["mean_high_freq_ratio"],
+            low_frequency_energy=temporal_summary["mean_low_freq_energy"],
+            mid_frequency_energy=temporal_summary["mean_mid_freq_energy"],
+            high_frequency_energy=temporal_summary["mean_high_freq_energy"],
             high_frequency_ratio=temporal_summary["mean_high_freq_ratio"],
             spectral_entropy=temporal_summary["mean_spectral_entropy"],
-            dct_total_energy=100.0,
-            dct_high_frequency_ratio=0.15,
-            radial_profile=json.dumps([])
+            dct_total_energy=temporal_summary["mean_dct_total_energy"],
+            dct_high_frequency_ratio=temporal_summary["mean_dct_high_freq_ratio"],
+            residual_variance=temporal_summary["mean_residual_variance"],
+            radial_profile=json.dumps(temporal_summary.get("radial_profile", []))
         )
         db.add(freq_record)
         
-        # Attribution Model
+        # Attribution Model: Construct temporal sequence tensor from sampled frames
         analysis_record.stage = "Temporal Attribution"
-        prediction_result = video_model.predict(rgb_tensor=None)
+        temporal_tensor = build_temporal_feature_tensor(
+            frame_tensor_list,
+            image_network=image_model.network,
+            device=video_model.device
+        )
+        prediction_result = video_model.predict(temporal_tensor=temporal_tensor)
         
         pred_record = Prediction(
             analysis_id=analysis_id,
@@ -317,23 +330,28 @@ async def analyze_video_endpoint(
         )
         db.add(pred_record)
         
-        # LLM Explanation
+        # LLM Explanation with real empirical measurements
         analysis_record.stage = "Explainability"
         evidence_dict = {
             "media_type": "video",
             "prediction": prediction_result,
             "frequency_metrics": {
+                "low_frequency_energy": temporal_summary["mean_low_freq_energy"],
+                "mid_frequency_energy": temporal_summary["mean_mid_freq_energy"],
                 "high_frequency_ratio": temporal_summary["mean_high_freq_ratio"],
-                "spectral_entropy": temporal_summary["mean_spectral_entropy"]
+                "spectral_entropy": temporal_summary["mean_spectral_entropy"],
+                "dct_high_frequency_ratio": temporal_summary["mean_dct_high_freq_ratio"]
             },
-            "residual_metrics": {"residual_variance": 0.05},
+            "residual_metrics": {
+                "residual_variance": temporal_summary["mean_residual_variance"]
+            },
             "temporal_metrics": temporal_summary
         }
         explanation_text = await llm_service.generate_explanation(evidence_dict)
         
         analysis_record.status = "completed"
         analysis_record.stage = "Completed"
-        analysis_record.completed_at = datetime.datetime.utcnow()
+        analysis_record.completed_at = datetime.datetime.now(datetime.timezone.utc)
         db.commit()
         
         # Cleanup uploaded raw video after analysis
@@ -369,7 +387,7 @@ async def analyze_video_endpoint(
                 "explanation": explanation_text
             },
             "error": None,
-            "timestamp": datetime.datetime.utcnow().isoformat()
+            "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat()
         }
         
     except Exception as e:
@@ -467,7 +485,11 @@ def get_analysis_by_id(analysis_id: str, db: Session = Depends(get_db)):
                 "spectral_entropy": freq.spectral_entropy if freq else 0.0,
                 "dct_total_energy": freq.dct_total_energy if freq else 0.0,
                 "dct_high_frequency_ratio": freq.dct_high_frequency_ratio if freq else 0.0,
+                "residual_variance": freq.residual_variance if freq and freq.residual_variance is not None else 0.0,
                 "radial_profile": radial_prof
+            } if freq else {},
+            "residual_metrics": {
+                "residual_variance": freq.residual_variance if freq and freq.residual_variance is not None else 0.0
             } if freq else {},
             "prediction": {
                 "model_name": pred.model_name if pred else None,

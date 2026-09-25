@@ -19,7 +19,7 @@ class Analysis(Base):
     error_message = Column(Text, nullable=True)
     face_detected = Column(Boolean, default=False)
     face_count = Column(Integer, default=0)
-    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    created_at = Column(DateTime, default=lambda: datetime.datetime.now(datetime.timezone.utc))
     completed_at = Column(DateTime, nullable=True)
     
     # Forensic visualization URLs / filenames stored in static/
@@ -99,7 +99,7 @@ class ModelRegistryEntry(Base):
     model_status = Column(String(50), default="unweighted")
     description = Column(Text, nullable=True)
     supported_classes = Column(Text, nullable=False)  # JSON list
-    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    created_at = Column(DateTime, default=lambda: datetime.datetime.now(datetime.timezone.utc))
 
 class EvaluationMetric(Base):
     __tablename__ = "evaluation_metrics"
@@ -113,4 +113,4 @@ class EvaluationMetric(Base):
     f1_score = Column(Float, nullable=True)
     roc_auc = Column(Float, nullable=True)
     confusion_matrix = Column(Text, nullable=True)  # JSON 2D array
-    evaluated_at = Column(DateTime, default=datetime.datetime.utcnow)
+    evaluated_at = Column(DateTime, default=lambda: datetime.datetime.now(datetime.timezone.utc))

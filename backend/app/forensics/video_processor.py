@@ -60,8 +60,16 @@ def process_video_frames(
         
     sampled_results = []
     hf_ratios = []
+    low_freq_energies = []
+    mid_freq_energies = []
+    high_freq_energies = []
     spectral_entropies = []
+    dct_total_energies = []
+    dct_high_freq_ratios = []
+    residual_variances = []
     residual_energies = []
+    radial_profiles = []
+    frame_tensor_list = []
     
     for idx, frame_no in enumerate(frame_indices):
         cap.set(cv2.CAP_PROP_POS_FRAMES, frame_no)
@@ -74,7 +82,7 @@ def process_video_frames(
         
         # Run forensic sub-pipelines
         vis_res, res_metrics = extract_residual_pipeline(aligned_roi)
-        vis_fft, fft_metrics, _ = analyze_fft_pipeline(aligned_roi)
+        vis_fft, fft_metrics, rad_prof = analyze_fft_pipeline(aligned_roi)
         vis_dct, dct_metrics = analyze_dct_pipeline(aligned_roi)
         
         # Save individual frame artifacts for frame inspector
@@ -93,10 +101,27 @@ def process_video_frames(
         hf_ratio = fft_metrics["high_frequency_ratio"]
         entropy = fft_metrics["spectral_entropy"]
         res_energy = res_metrics["mean_energy"]
+        res_var = res_metrics["residual_variance"]
         
+        low_freq_energies.append(fft_metrics.get("low_frequency_energy", 0.0))
+        mid_freq_energies.append(fft_metrics.get("mid_frequency_energy", 0.0))
+        high_freq_energies.append(fft_metrics.get("high_frequency_energy", 0.0))
         hf_ratios.append(hf_ratio)
         spectral_entropies.append(entropy)
+        dct_total_energies.append(dct_metrics.get("dct_total_energy", 0.0))
+        dct_high_freq_ratios.append(dct_metrics.get("dct_high_frequency_ratio", 0.0))
+        residual_variances.append(res_var)
         residual_energies.append(res_energy)
+        if rad_prof:
+            radial_profiles.append(rad_prof)
+            
+        # Store frame representations for temporal model feature extraction
+        frame_tensor_list.append({
+            "roi": aligned_roi,
+            "res": vis_res,
+            "fft": vis_fft,
+            "dct": vis_dct
+        })
         
         sampled_results.append({
             "frame_number": idx + 1,
@@ -106,6 +131,11 @@ def process_video_frames(
             "high_frequency_ratio": hf_ratio,
             "spectral_entropy": entropy,
             "residual_energy": res_energy,
+            "residual_variance": res_var,
+            "low_frequency_energy": fft_metrics.get("low_frequency_energy", 0.0),
+            "mid_frequency_energy": fft_metrics.get("mid_frequency_energy", 0.0),
+            "dct_total_energy": dct_metrics.get("dct_total_energy", 0.0),
+            "dct_high_frequency_ratio": dct_metrics.get("dct_high_frequency_ratio", 0.0),
             "thumbnail_url": thumb_url,
             "residual_url": res_url,
             "fft_url": fft_url,
@@ -118,7 +148,6 @@ def process_video_frames(
         raise ValueError("Failed to extract any valid frames from the video.")
         
     # Calculate temporal stability
-    # Temporal variance across consecutive frames: high variance signals synthetic flickering / temporal artifacts
     if len(hf_ratios) > 1:
         hf_diffs = np.diff(hf_ratios)
         temporal_jitter = float(np.std(hf_diffs))
@@ -129,13 +158,24 @@ def process_video_frames(
         entropy_variance = 0.0
         temporal_consistency_score = 1.0
         
+    avg_radial_profile = []
+    if radial_profiles:
+        avg_radial_profile = [float(x) for x in np.mean(np.array(radial_profiles), axis=0).tolist()]
+        
     temporal_summary = {
         "sampled_count": len(sampled_results),
         "temporal_jitter": round(temporal_jitter, 5),
         "entropy_variance": round(entropy_variance, 5),
         "temporal_consistency_score": round(temporal_consistency_score, 4),
         "mean_high_freq_ratio": round(float(np.mean(hf_ratios)), 4),
-        "mean_spectral_entropy": round(float(np.mean(spectral_entropies)), 4)
+        "mean_high_freq_energy": round(float(np.mean(high_freq_energies)), 4),
+        "mean_low_freq_energy": round(float(np.mean(low_freq_energies)), 4),
+        "mean_mid_freq_energy": round(float(np.mean(mid_freq_energies)), 4),
+        "mean_spectral_entropy": round(float(np.mean(spectral_entropies)), 4),
+        "mean_dct_total_energy": round(float(np.mean(dct_total_energies)), 2),
+        "mean_dct_high_freq_ratio": round(float(np.mean(dct_high_freq_ratios)), 4),
+        "mean_residual_variance": round(float(np.mean(residual_variances)), 4),
+        "radial_profile": avg_radial_profile
     }
     
-    return sampled_results, temporal_summary
+    return sampled_results, temporal_summary, frame_tensor_list
