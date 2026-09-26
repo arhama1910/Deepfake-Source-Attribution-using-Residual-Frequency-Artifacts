@@ -1311,34 +1311,45 @@ export const MetricsPage: React.FC = () => {
       {/* ========================================================================= */}
       {/* 4. MULTI-CLASS 8×8 PROVENANCE ATTRIBUTION MATRIX                          */}
       {/* ========================================================================= */}
-      <section className="rounded-[32px] bg-white p-7 sm:p-10 border border-[#D5D9D1] shadow-xs space-y-6">
+      <section className="rounded-[34px] bg-gradient-to-b from-white via-[#FCFCFA] to-[#F7F6F0] p-7 sm:p-10 border border-[#D9DED4] shadow-[0_8px_30px_rgba(8,60,51,0.04)] relative overflow-hidden space-y-8">
         
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#D5D9D1]">
+        {/* Subtle decorative atmospheric glows */}
+        <div className="absolute -top-28 -right-28 w-88 h-88 rounded-full bg-emerald-500/5 blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-28 -left-28 w-88 h-88 rounded-full bg-teal-500/5 blur-3xl pointer-events-none" />
+
+        {/* Section Header */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-5 pb-6 border-b border-[#D5D9D1]/80 relative z-10">
           <div>
-            <span className="text-[11px] font-mono uppercase tracking-[0.18em] text-[#0D5145] font-semibold block">
-              SOURCE IDENTIFICATION HEATMAP
-            </span>
-            <h2 className="text-2xl font-bold text-[#083C33] tracking-tight font-serif mt-1 flex items-center space-x-2.5">
-              <BarChart3 className="w-5 h-5 text-[#0D5145]" />
+            <div className="flex items-center gap-2 mb-1.5">
+              <span className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase tracking-[0.16em] bg-[#0D5145]/10 text-[#0D5145] border border-[#0D5145]/20">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#0D5145] animate-pulse" />
+                Source Identification Heatmap · 8×8 Provenance Grid
+              </span>
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-bold text-[#083C33] tracking-tight font-serif flex items-center gap-3">
+              <span className="p-2 rounded-xl bg-[#083C33] text-white shadow-sm inline-flex">
+                <BarChart3 className="w-5 h-5 text-emerald-300" />
+              </span>
               <span>Multi-Class Source Attribution Matrix (8×8)</span>
             </h2>
-            <p className="text-xs sm:text-sm text-[#52706A] mt-1 max-w-2xl leading-relaxed">
+            <p className="text-xs sm:text-sm text-[#52706A] mt-2 max-w-2xl leading-relaxed">
               Discrete classification distribution between pristine sensor captures, generative adversarial upsamplers, and latent diffusion engines.
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-3 text-xs font-mono text-[#52706A]">
-            <span className="flex items-center space-x-1.5">
-              <span className="w-3.5 h-3.5 rounded-md bg-[#0D5145] inline-block shadow-2xs" />
-              <span className="text-[#083C33] font-medium">&gt; 90% (True Positive)</span>
+          {/* Interactive Legend Box */}
+          <div className="flex flex-wrap items-center gap-2.5 text-xs font-mono bg-white/90 backdrop-blur-sm p-2.5 sm:p-3 rounded-2xl border border-[#D5DCD6] shadow-xs shrink-0">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-gradient-to-r from-[#083C33] to-[#0D5145] text-white text-[10px] font-bold shadow-2xs">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+              &gt;90% True Positive
             </span>
-            <span className="flex items-center space-x-1.5">
-              <span className="w-3.5 h-3.5 rounded-md bg-amber-100 border border-amber-300 inline-block shadow-2xs" />
-              <span>&gt; 2% (Cross-Model Leakage)</span>
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-amber-100/90 text-amber-950 border border-amber-300 text-[10px] font-bold shadow-2xs">
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+              ≥2% Cross-Leak
             </span>
-            <span className="flex items-center space-x-1.5">
-              <span className="w-3.5 h-3.5 rounded-md bg-[#F7F6F0] border border-[#D5D9D1] inline-block" />
-              <span>&le; 1% (Zero Leak)</span>
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-[#F0F4F1] text-[#52706A] border border-[#D5DCD6] text-[10px] font-semibold">
+              <span className="w-1.5 h-1.5 rounded-full bg-slate-400" />
+              ≤1% Orthogonal
             </span>
           </div>
         </div>
@@ -1347,53 +1358,83 @@ export const MetricsPage: React.FC = () => {
         <AnimatePresence>
           {selectedCell && (
             <motion.div 
-              initial={{ opacity: 0, y: -6 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -6 }}
-              className="p-4 bg-[#F7F6F0] rounded-[22px] border border-[#D5D9D1] text-xs font-mono text-[#083C33] space-y-2 shadow-2xs"
+              initial={{ opacity: 0, y: -8, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -8, scale: 0.98 }}
+              className="relative overflow-hidden rounded-[24px] bg-gradient-to-r from-[#041B17] via-[#082E26] to-[#041814] text-white p-5 sm:p-6 border border-emerald-500/30 shadow-[0_12px_32px_rgba(8,60,51,0.28)] space-y-3 relative z-10"
             >
-              <div className="flex items-center justify-between border-b border-[#D5D9D1] pb-2">
-                <div className="flex items-center space-x-2">
-                  <Info className="w-4 h-4 text-[#0D5145]" />
-                  <span>
-                    Ground Truth: <strong className="text-[#0D5145] text-sm">{selectedCell.actual}</strong> → 
-                    Attributed As: <strong className="text-[#0D5145] text-sm">{selectedCell.pred}</strong>
-                  </span>
+              {/* Subtle tech watermark */}
+              <div className="absolute -right-8 -bottom-8 w-44 h-44 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none" />
+
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-emerald-500/20 pb-3 relative z-10">
+                <div className="flex flex-wrap items-center gap-2.5">
+                  <div className="p-1.5 rounded-lg bg-emerald-500/20 text-emerald-300">
+                    <Info className="w-4 h-4" />
+                  </div>
+                  <div className="flex items-center gap-2 text-xs font-mono">
+                    <span className="text-emerald-300 font-semibold uppercase tracking-wider">Ground Truth:</span>
+                    <span className="px-2.5 py-0.5 rounded-md bg-white/10 text-white font-bold border border-white/20">
+                      {selectedCell.actual}
+                    </span>
+                    <ArrowRight className="w-3.5 h-3.5 text-emerald-400" />
+                    <span className="text-emerald-300 font-semibold uppercase tracking-wider">Attributed As:</span>
+                    <span className="px-2.5 py-0.5 rounded-md bg-emerald-500/20 text-emerald-200 font-bold border border-emerald-500/40">
+                      {selectedCell.pred}
+                    </span>
+                  </div>
                 </div>
-                <div className="flex items-center space-x-2">
-                  <span className="font-bold bg-white px-3 py-1 rounded-lg border border-[#D5D9D1] shadow-2xs text-xs">
-                    Attribution Rate: {selectedCell.value}%
-                  </span>
+
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2 bg-black/40 px-3.5 py-1 rounded-xl border border-emerald-500/30">
+                    <span className="text-[10px] font-mono uppercase text-emerald-300">Attribution Rate:</span>
+                    <span className="text-base font-extrabold font-mono text-emerald-300 drop-shadow-[0_0_8px_rgba(52,211,153,0.4)]">
+                      {selectedCell.value}%
+                    </span>
+                  </div>
                   <button 
                     onClick={() => setSelectedCell(null)}
-                    className="text-[#52706A] hover:text-[#083C33] px-2 py-0.5 rounded text-[11px]"
+                    className="text-emerald-200/70 hover:text-white hover:bg-white/10 px-2.5 py-1 rounded-lg text-xs font-mono transition-colors cursor-pointer border border-transparent hover:border-white/20"
                   >
-                    Close
+                    Dismiss ✕
                   </button>
                 </div>
               </div>
-              <p className="text-[12px] text-[#2D3F3A] font-sans leading-relaxed">
-                <strong>Forensic Diagnostic:</strong> {getCellDiagnosis(selectedCell.actual, selectedCell.pred, selectedCell.value)}
-              </p>
+
+              <div className="relative z-10 space-y-1">
+                <span className="text-[10px] font-mono uppercase tracking-wider text-emerald-300/80 font-bold block">
+                  Forensic Diagnostic Rationale
+                </span>
+                <p className="text-xs sm:text-sm text-emerald-100/90 leading-relaxed font-sans">
+                  {getCellDiagnosis(selectedCell.actual, selectedCell.pred, selectedCell.value)}
+                </p>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
 
-        {/* Matrix Grid */}
-        <div className="overflow-x-auto">
-          <div className="min-w-[780px] border border-[#D5D9D1] rounded-[22px] overflow-hidden bg-white shadow-2xs">
+        {/* Matrix Grid Box */}
+        <div className="overflow-x-auto relative z-10">
+          <div className="min-w-[800px] border border-[#D5DCD6] rounded-[24px] overflow-hidden bg-white/95 backdrop-blur-md shadow-[0_4px_24px_rgba(8,60,51,0.03)]">
             <table className="w-full text-xs text-center border-collapse font-mono">
               <thead>
-                <tr className="bg-[#F7F6F0] text-[#52706A] border-b border-[#D5D9D1]">
-                  <th className="p-3.5 text-left font-bold text-[11px] uppercase tracking-wider text-[#083C33]">
+                <tr className="bg-gradient-to-r from-[#F4F7F4] via-[#F8FAF7] to-[#EFF4F0] text-[#52706A] border-b border-[#D5DCD6]">
+                  <th className="p-3.5 text-left font-bold text-[11px] uppercase tracking-wider text-[#083C33] border-r border-[#D5DCD6]">
                     Ground Truth \ Attributed
                   </th>
-                  {classes.map((cls, i) => (
-                    <th key={i} className="p-3 text-[11px] font-bold text-[#083C33] border-l border-[#D5D9D1]/60">
-                      {cls}
-                    </th>
-                  ))}
-                  <th className="p-3 text-[10px] font-bold text-[#0D5145] border-l border-[#D5D9D1] bg-[#EBF0E6]/50">
+                  {classes.map((cls, i) => {
+                    const fam = getGeneratorFamily(cls);
+                    return (
+                      <th key={i} className="p-3 text-[11px] font-bold text-[#083C33] border-l border-[#D5DCD6]/60">
+                        <div className="flex flex-col items-center gap-1">
+                          <span>{cls}</span>
+                          <span className={`text-[8px] font-mono font-bold px-1.5 py-0.2 rounded border ${fam.color}`}>
+                            {fam.label}
+                          </span>
+                        </div>
+                      </th>
+                    );
+                  })}
+                  <th className="p-3 text-[10px] font-bold text-[#0D5145] border-l border-[#D5DCD6] bg-[#EBF1EC]">
                     Class Recall
                   </th>
                 </tr>
@@ -1402,41 +1443,61 @@ export const MetricsPage: React.FC = () => {
                 {confusionMatrix.map((row, rIdx) => {
                   const actualClass = classes[rIdx] || `Class ${rIdx}`;
                   const diagVal = row[rIdx] || 0;
+                  const actualFamily = getGeneratorFamily(actualClass);
                   return (
-                    <tr key={rIdx} className="border-b border-[#D5D9D1] last:border-b-0 hover:bg-[#F7F6F0]/50 transition-colors">
-                      <td className="p-3.5 text-left font-bold text-[#083C33] bg-[#F7F6F0]/40 whitespace-nowrap text-[11px]">
-                        {actualClass}
+                    <tr key={rIdx} className="border-b border-[#D5DCD6]/70 last:border-b-0 hover:bg-[#F3F8F5]/60 transition-colors">
+                      <td className="p-3.5 text-left font-bold text-[#083C33] bg-[#F7F9F7]/70 whitespace-nowrap text-xs border-r border-[#D5DCD6]">
+                        <div className="flex items-center justify-between gap-2.5">
+                          <span className="font-mono">{actualClass}</span>
+                          <span className={`text-[9px] font-mono font-bold px-1.5 py-0.5 rounded border ${actualFamily.color}`}>
+                            {actualFamily.label}
+                          </span>
+                        </div>
                       </td>
                       {row.map((val, cIdx) => {
                         const predClass = classes[cIdx] || `Class ${cIdx}`;
                         const isDiag = rIdx === cIdx;
                         const isSelected = selectedCell?.actual === actualClass && selectedCell?.pred === predClass;
                         
-                        let cellStyle = 'text-[#52706A] hover:bg-[#D5D9D1]/30 cursor-pointer';
+                        let cellStyle = 'text-[#52706A] hover:bg-[#D5DCD6]/40 cursor-pointer bg-white';
                         
                         if (isDiag) {
-                          cellStyle = 'bg-[#0D5145] text-white font-bold hover:bg-[#083C33] cursor-pointer shadow-inner';
+                          cellStyle = 'bg-gradient-to-br from-[#083C33] via-[#0D5145] to-[#125B4D] text-white font-extrabold shadow-inner hover:brightness-110 cursor-pointer';
                         } else if (val >= 2) {
-                          cellStyle = 'bg-amber-100/90 text-amber-900 font-semibold cursor-pointer hover:bg-amber-200/90';
+                          cellStyle = 'bg-amber-100/90 text-amber-950 font-bold border border-amber-200/80 cursor-pointer hover:bg-amber-200';
+                        } else if (val === 0) {
+                          cellStyle = 'text-[#8EA8A1]/70 bg-white hover:bg-[#F5F8F6] cursor-pointer';
                         }
 
                         if (isSelected) {
-                          cellStyle += ' ring-2 ring-inset ring-[#083C33] font-bold';
+                          cellStyle += ' ring-2 ring-inset ring-emerald-400 font-black scale-105 z-20 shadow-lg';
                         }
 
                         return (
                           <td
                             key={cIdx}
                             onClick={() => setSelectedCell({ actual: actualClass, pred: predClass, value: val })}
-                            className={`p-3 border-l border-[#D5D9D1]/60 transition-all ${cellStyle}`}
+                            className={`p-3 border-l border-[#D5DCD6]/60 transition-all text-xs font-mono relative ${cellStyle}`}
                             title={`Click to inspect: Ground Truth ${actualClass} → Predicted ${predClass} (${val}%)`}
                           >
                             {val}%
+                            {isDiag && (
+                              <span className="absolute top-1 right-1 w-1 h-1 rounded-full bg-emerald-400 opacity-80" />
+                            )}
                           </td>
                         );
                       })}
-                      <td className="p-3 border-l border-[#D5D9D1] bg-[#EBF0E6]/30 font-bold text-[#0D5145]">
-                        {diagVal}%
+                      {/* Class Recall column */}
+                      <td className="p-3 border-l border-[#D5DCD6] bg-[#F2F7F4] text-xs font-bold text-[#0D5145] font-mono">
+                        <div className="flex items-center justify-center gap-2">
+                          <span>{diagVal}%</span>
+                          <div className="w-12 bg-[#DCE5DF] h-1.5 rounded-full overflow-hidden hidden sm:block">
+                            <div 
+                              className="bg-gradient-to-r from-[#0D5145] to-emerald-500 h-full rounded-full"
+                              style={{ width: `${diagVal}%` }}
+                            />
+                          </div>
+                        </div>
                       </td>
                     </tr>
                   );
@@ -1446,16 +1507,62 @@ export const MetricsPage: React.FC = () => {
           </div>
         </div>
 
-        <div className="text-xs text-[#52706A] flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-2 border-t border-[#D5D9D1]/60">
-          <p>
-            * Interactive Matrix: Click any grid cell to load detailed structural frequency rationale and cross-architecture variance diagnostics.
-          </p>
-          <div className="flex items-center space-x-4 shrink-0 font-mono text-[11px]">
-            <span className="text-[#083C33] font-semibold">
-              Mean Diagonal Accuracy: <strong className="text-[#0D5145] text-sm">93.3%</strong>
-            </span>
+        {/* 3 Telemetry Summary Satellite Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2 border-t border-[#D5DCD6]/70 relative z-10">
+          
+          <div className="bg-white/80 backdrop-blur-sm p-4.5 rounded-2xl border border-[#D5DCD6] shadow-xs flex items-center gap-3.5 hover:border-emerald-600/30 transition-all">
+            <div className="p-2.5 rounded-xl bg-emerald-50 text-[#0D5145] border border-emerald-200/60">
+              <CheckCircle2 className="w-5 h-5 text-[#0D5145]" />
+            </div>
+            <div>
+              <span className="text-[10px] font-mono uppercase tracking-wider text-[#52706A] font-semibold block">
+                Mean Diagonal Accuracy
+              </span>
+              <div className="flex items-baseline gap-1.5 mt-0.5">
+                <span className="text-xl font-bold font-mono text-[#083C33]">93.3%</span>
+                <span className="text-[10px] font-mono text-emerald-800 bg-emerald-50 px-1.5 py-0.2 rounded border border-emerald-200 font-semibold">
+                  True Positive Rate
+                </span>
+              </div>
+            </div>
           </div>
+
+          <div className="bg-white/80 backdrop-blur-sm p-4.5 rounded-2xl border border-[#D5DCD6] shadow-xs flex items-center gap-3.5 hover:border-emerald-600/30 transition-all">
+            <div className="p-2.5 rounded-xl bg-teal-50 text-teal-700 border border-teal-200/60">
+              <Activity className="w-5 h-5 text-teal-700" />
+            </div>
+            <div>
+              <span className="text-[10px] font-mono uppercase tracking-wider text-[#52706A] font-semibold block">
+                Cross-Family Leakage
+              </span>
+              <div className="flex items-baseline gap-1.5 mt-0.5">
+                <span className="text-xl font-bold font-mono text-[#083C33]">&lt; 1.8%</span>
+                <span className="text-[10px] font-mono text-teal-800 bg-teal-50 px-1.5 py-0.2 rounded border border-teal-200 font-semibold">
+                  Low Dispersion
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white/80 backdrop-blur-sm p-4.5 rounded-2xl border border-[#D5DCD6] shadow-xs flex items-center gap-3.5 hover:border-emerald-600/30 transition-all">
+            <div className="p-2.5 rounded-xl bg-[#0D5145]/10 text-[#0D5145] border border-[#0D5145]/20">
+              <ShieldCheck className="w-5 h-5 text-[#0D5145]" />
+            </div>
+            <div>
+              <span className="text-[10px] font-mono uppercase tracking-wider text-[#52706A] font-semibold block">
+                Sensor Isolation Rate
+              </span>
+              <div className="flex items-baseline gap-1.5 mt-0.5">
+                <span className="text-xl font-bold font-mono text-[#083C33]">94.0%</span>
+                <span className="text-[10px] font-mono text-[#0D5145] bg-[#0D5145]/10 px-1.5 py-0.2 rounded border border-[#0D5145]/20 font-semibold">
+                  Camera Pristine
+                </span>
+              </div>
+            </div>
+          </div>
+
         </div>
+
       </section>
 
       {/* ========================================================================= */}
