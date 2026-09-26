@@ -24,7 +24,11 @@ import {
   SlidersHorizontal,
   ChevronRight,
   Target,
-  ShieldAlert
+  ShieldAlert,
+  Radio,
+  Grid,
+  Waves,
+  Camera
 } from 'lucide-react';
 import { apiService } from '../../services/api';
 import type { EvaluationMetricsData } from '../../types/forensics';
@@ -1313,9 +1317,9 @@ export const MetricsPage: React.FC = () => {
       {/* ========================================================================= */}
       <section className="rounded-[34px] bg-gradient-to-b from-white via-[#FCFCFA] to-[#F7F6F0] p-7 sm:p-10 border border-[#D9DED4] shadow-[0_8px_30px_rgba(8,60,51,0.04)] relative overflow-hidden space-y-8">
         
-        {/* Subtle decorative atmospheric glows */}
-        <div className="absolute -top-28 -right-28 w-88 h-88 rounded-full bg-emerald-500/5 blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-28 -left-28 w-88 h-88 rounded-full bg-teal-500/5 blur-3xl pointer-events-none" />
+        {/* Atmospheric ambient glows */}
+        <div className="absolute -top-28 -right-28 w-96 h-96 rounded-full bg-emerald-500/5 blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-28 -left-28 w-96 h-96 rounded-full bg-teal-500/5 blur-3xl pointer-events-none" />
 
         {/* Section Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-5 pb-6 border-b border-[#D5D9D1]/80 relative z-10">
@@ -1327,27 +1331,27 @@ export const MetricsPage: React.FC = () => {
               </span>
             </div>
             <h2 className="text-2xl sm:text-3xl font-bold text-[#083C33] tracking-tight font-serif flex items-center gap-3">
-              <span className="p-2 rounded-xl bg-[#083C33] text-white shadow-sm inline-flex">
+              <span className="p-2.5 rounded-2xl bg-[#083C33] text-white shadow-sm inline-flex">
                 <BarChart3 className="w-5 h-5 text-emerald-300" />
               </span>
               <span>Multi-Class Source Attribution Matrix (8×8)</span>
             </h2>
             <p className="text-xs sm:text-sm text-[#52706A] mt-2 max-w-2xl leading-relaxed">
-              Discrete classification distribution between pristine sensor captures, generative adversarial upsamplers, and latent diffusion engines.
+              Discrete classification distribution between pristine physical camera captures, generative adversarial upsamplers, and latent diffusion engines.
             </p>
           </div>
 
           {/* Interactive Legend Box */}
-          <div className="flex flex-wrap items-center gap-2.5 text-xs font-mono bg-white/90 backdrop-blur-sm p-2.5 sm:p-3 rounded-2xl border border-[#D5DCD6] shadow-xs shrink-0">
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-gradient-to-r from-[#083C33] to-[#0D5145] text-white text-[10px] font-bold shadow-2xs">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+          <div className="flex flex-wrap items-center gap-2 text-xs font-mono bg-white/90 backdrop-blur-sm p-2.5 sm:p-3 rounded-2xl border border-[#D5DCD6] shadow-xs shrink-0">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-gradient-to-r from-[#083C33] to-[#0D5145] text-white text-[10px] font-bold shadow-2xs">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
               &gt;90% True Positive
             </span>
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-amber-100/90 text-amber-950 border border-amber-300 text-[10px] font-bold shadow-2xs">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-amber-100/90 text-amber-950 border border-amber-300 text-[10px] font-bold shadow-2xs">
               <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
               ≥2% Cross-Leak
             </span>
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-[#F0F4F1] text-[#52706A] border border-[#D5DCD6] text-[10px] font-semibold">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-[#F0F4F1] text-[#52706A] border border-[#D5DCD6] text-[10px] font-semibold">
               <span className="w-1.5 h-1.5 rounded-full bg-slate-400" />
               ≤1% Orthogonal
             </span>
@@ -1361,14 +1365,17 @@ export const MetricsPage: React.FC = () => {
               initial={{ opacity: 0, y: -8, scale: 0.98 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -8, scale: 0.98 }}
-              className="relative overflow-hidden rounded-[24px] bg-gradient-to-r from-[#041B17] via-[#082E26] to-[#041814] text-white p-5 sm:p-6 border border-emerald-500/30 shadow-[0_12px_32px_rgba(8,60,51,0.28)] space-y-3 relative z-10"
+              className="relative overflow-hidden rounded-[26px] bg-gradient-to-r from-[#041B17] via-[#082E26] to-[#041814] text-white p-5 sm:p-6 border border-emerald-500/30 shadow-[0_12px_32px_rgba(8,60,51,0.28)] space-y-3 relative z-10"
             >
+              {/* Top Accent Stripe */}
+              <div className="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-emerald-400 via-teal-300 to-emerald-500" />
+              
               {/* Subtle tech watermark */}
               <div className="absolute -right-8 -bottom-8 w-44 h-44 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none" />
 
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-emerald-500/20 pb-3 relative z-10">
                 <div className="flex flex-wrap items-center gap-2.5">
-                  <div className="p-1.5 rounded-lg bg-emerald-500/20 text-emerald-300">
+                  <div className="p-2 rounded-xl bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
                     <Info className="w-4 h-4" />
                   </div>
                   <div className="flex items-center gap-2 text-xs font-mono">
@@ -1385,9 +1392,9 @@ export const MetricsPage: React.FC = () => {
                 </div>
 
                 <div className="flex items-center gap-3">
-                  <div className="flex items-center gap-2 bg-black/40 px-3.5 py-1 rounded-xl border border-emerald-500/30">
-                    <span className="text-[10px] font-mono uppercase text-emerald-300">Attribution Rate:</span>
-                    <span className="text-base font-extrabold font-mono text-emerald-300 drop-shadow-[0_0_8px_rgba(52,211,153,0.4)]">
+                  <div className="flex items-center gap-2 bg-black/40 px-3.5 py-1.5 rounded-xl border border-emerald-500/30">
+                    <span className="text-[10px] font-mono uppercase text-emerald-300 font-semibold">Attribution Rate:</span>
+                    <span className="text-base font-extrabold font-mono text-emerald-300 drop-shadow-[0_0_8px_rgba(52,211,153,0.5)]">
                       {selectedCell.value}%
                     </span>
                   </div>
@@ -1414,7 +1421,11 @@ export const MetricsPage: React.FC = () => {
 
         {/* Matrix Grid Box */}
         <div className="overflow-x-auto relative z-10">
-          <div className="min-w-[800px] border border-[#D5DCD6] rounded-[24px] overflow-hidden bg-white/95 backdrop-blur-md shadow-[0_4px_24px_rgba(8,60,51,0.03)]">
+          <div className="relative overflow-hidden min-w-[800px] border border-[#D5DCD6] rounded-[26px] bg-white/95 backdrop-blur-md shadow-[0_6px_28px_rgba(8,60,51,0.04)]">
+            
+            {/* Top Accent Stripe on the Matrix Card */}
+            <div className="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-[#083C33] via-[#0D5145] to-emerald-500 z-20" />
+
             <table className="w-full text-xs text-center border-collapse font-mono">
               <thead>
                 <tr className="bg-gradient-to-r from-[#F4F7F4] via-[#F8FAF7] to-[#EFF4F0] text-[#52706A] border-b border-[#D5DCD6]">
@@ -1482,7 +1493,7 @@ export const MetricsPage: React.FC = () => {
                           >
                             {val}%
                             {isDiag && (
-                              <span className="absolute top-1 right-1 w-1 h-1 rounded-full bg-emerald-400 opacity-80" />
+                              <span className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-emerald-400 opacity-90 shadow-[0_0_4px_rgba(52,211,153,0.8)]" />
                             )}
                           </td>
                         );
@@ -1507,56 +1518,178 @@ export const MetricsPage: React.FC = () => {
           </div>
         </div>
 
-        {/* 3 Telemetry Summary Satellite Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2 border-t border-[#D5DCD6]/70 relative z-10">
+        {/* 3 Telemetry Summary Satellite Cards (Styled like Decision Threshold Sensitivity) */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 pt-2 border-t border-[#D5DCD6]/70 relative z-10">
           
-          <div className="bg-white/80 backdrop-blur-sm p-4.5 rounded-2xl border border-[#D5DCD6] shadow-xs flex items-center gap-3.5 hover:border-emerald-600/30 transition-all">
-            <div className="p-2.5 rounded-xl bg-emerald-50 text-[#0D5145] border border-emerald-200/60">
-              <CheckCircle2 className="w-5 h-5 text-[#0D5145]" />
-            </div>
-            <div>
-              <span className="text-[10px] font-mono uppercase tracking-wider text-[#52706A] font-semibold block">
+          {/* Card 1: Mean Diagonal Accuracy */}
+          <div className="relative overflow-hidden rounded-[26px] border border-[#D5DCD8] bg-gradient-to-br from-white via-[#FCFCFA] to-[#F2F7F4] p-5 sm:p-6 shadow-[0_4px_20px_rgba(8,60,51,0.04)] hover:shadow-[0_16px_36px_rgba(8,60,51,0.09)] hover:border-emerald-600/40 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group">
+            
+            {/* Top Accent Stripe */}
+            <div className="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-emerald-600 via-teal-500 to-emerald-400" />
+            
+            {/* Subtle Radial Glow */}
+            <div className="absolute -top-12 -right-12 w-32 h-32 rounded-full bg-emerald-500/10 blur-xl pointer-events-none group-hover:scale-125 transition-transform duration-500" />
+
+            {/* Technical Reticle Watermark SVG */}
+            <svg className="absolute -right-3 -top-3 w-32 h-32 text-emerald-800/5 group-hover:text-emerald-800/10 transition-colors pointer-events-none" viewBox="0 0 100 100" fill="none" stroke="currentColor">
+              <circle cx="50" cy="50" r="45" strokeWidth="1" strokeDasharray="3 3" />
+              <circle cx="50" cy="50" r="32" strokeWidth="1.2" />
+              <circle cx="50" cy="50" r="18" strokeWidth="1" strokeDasharray="2 2" />
+              <circle cx="50" cy="50" r="5" strokeWidth="1.5" />
+              <line x1="50" y1="2" x2="50" y2="98" strokeWidth="1" strokeDasharray="4 4" />
+              <line x1="2" y1="50" x2="98" y2="50" strokeWidth="1" strokeDasharray="4 4" />
+            </svg>
+
+            <div className="relative z-10">
+              <div className="flex items-center justify-between mb-3.5">
+                <div className="p-2.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-[#0D5145] shadow-xs group-hover:scale-105 transition-transform duration-300">
+                  <CheckCircle2 className="w-5 h-5 text-[#0D5145]" />
+                </div>
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold tracking-wider uppercase text-emerald-800 bg-emerald-50/90 border border-emerald-200/80 shadow-2xs">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse" />
+                  Accuracy · High
+                </span>
+              </div>
+
+              <span className="text-xs font-mono uppercase tracking-wider text-[#52706A] block font-semibold">
                 Mean Diagonal Accuracy
               </span>
-              <div className="flex items-baseline gap-1.5 mt-0.5">
-                <span className="text-xl font-bold font-mono text-[#083C33]">93.3%</span>
-                <span className="text-[10px] font-mono text-emerald-800 bg-emerald-50 px-1.5 py-0.2 rounded border border-emerald-200 font-semibold">
-                  True Positive Rate
+
+              <div className="flex items-baseline gap-2 mt-1.5">
+                <span className="text-3xl sm:text-4xl font-extrabold font-mono text-[#083C33] tracking-tight group-hover:text-[#0D5145] transition-colors">
+                  93.3%
                 </span>
+                <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-800 border border-emerald-200">
+                  8-Model Mean
+                </span>
+              </div>
+            </div>
+
+            <div className="space-y-2 mt-4 pt-3.5 border-t border-[#D5DCD8]/70 relative z-10">
+              <div className="w-full bg-[#E2E8DF] h-2.5 rounded-full overflow-hidden p-0.5 border border-[#D5DCD0]/60">
+                <div 
+                  className="bg-gradient-to-r from-emerald-600 via-teal-500 to-emerald-400 h-full rounded-full transition-all duration-500 shadow-sm"
+                  style={{ width: '93.3%' }}
+                />
+              </div>
+              <div className="flex justify-between items-center text-[10px] font-mono text-[#52706A]">
+                <span>Diagonal True Positives</span>
+                <span className="font-bold text-[#0D5145]">&gt;90% Certified Target</span>
               </div>
             </div>
           </div>
 
-          <div className="bg-white/80 backdrop-blur-sm p-4.5 rounded-2xl border border-[#D5DCD6] shadow-xs flex items-center gap-3.5 hover:border-emerald-600/30 transition-all">
-            <div className="p-2.5 rounded-xl bg-teal-50 text-teal-700 border border-teal-200/60">
-              <Activity className="w-5 h-5 text-teal-700" />
-            </div>
-            <div>
-              <span className="text-[10px] font-mono uppercase tracking-wider text-[#52706A] font-semibold block">
+          {/* Card 2: Cross-Family Dispersion */}
+          <div className="relative overflow-hidden rounded-[26px] border border-[#D5DCD8] bg-gradient-to-br from-white via-[#FCFCFA] to-[#EFF7F6] p-5 sm:p-6 shadow-[0_4px_20px_rgba(8,60,51,0.04)] hover:shadow-[0_16px_36px_rgba(8,60,51,0.09)] hover:border-teal-600/40 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group">
+            
+            {/* Top Accent Stripe */}
+            <div className="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-teal-500 via-cyan-500 to-emerald-400" />
+            
+            {/* Subtle Radial Glow */}
+            <div className="absolute -top-12 -right-12 w-32 h-32 rounded-full bg-teal-500/10 blur-xl pointer-events-none group-hover:scale-125 transition-transform duration-500" />
+
+            {/* Technical Spectral Waveform Watermark SVG */}
+            <svg className="absolute -right-2 -top-2 w-32 h-24 text-teal-800/5 group-hover:text-teal-800/10 transition-colors pointer-events-none" viewBox="0 0 120 80" fill="none" stroke="currentColor">
+              <path d="M0,40 Q15,10 30,40 T60,40 T90,40 T120,40" strokeWidth="1.5" />
+              <path d="M0,40 Q15,20 30,40 T60,40 T90,40 T120,40" strokeWidth="1" strokeDasharray="3 3" />
+              <path d="M0,40 Q15,0 30,40 T60,40 T90,40 T120,40" strokeWidth="0.8" opacity="0.6" />
+              <line x1="15" y1="20" x2="15" y2="60" strokeWidth="1" strokeDasharray="2 2" />
+              <line x1="45" y1="15" x2="45" y2="65" strokeWidth="1" strokeDasharray="2 2" />
+              <line x1="75" y1="25" x2="75" y2="55" strokeWidth="1" strokeDasharray="2 2" />
+              <line x1="105" y1="10" x2="105" y2="70" strokeWidth="1" strokeDasharray="2 2" />
+            </svg>
+
+            <div className="relative z-10">
+              <div className="flex items-center justify-between mb-3.5">
+                <div className="p-2.5 rounded-2xl bg-teal-500/10 border border-teal-500/20 text-teal-700 shadow-xs group-hover:scale-105 transition-transform duration-300">
+                  <Activity className="w-5 h-5 text-teal-700" />
+                </div>
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold tracking-wider uppercase text-teal-800 bg-teal-50/90 border border-teal-200/80 shadow-2xs">
+                  <span className="w-1.5 h-1.5 rounded-full bg-teal-600 animate-pulse" />
+                  Dispersion · Low
+                </span>
+              </div>
+
+              <span className="text-xs font-mono uppercase tracking-wider text-[#52706A] block font-semibold">
                 Cross-Family Leakage
               </span>
-              <div className="flex items-baseline gap-1.5 mt-0.5">
-                <span className="text-xl font-bold font-mono text-[#083C33]">&lt; 1.8%</span>
-                <span className="text-[10px] font-mono text-teal-800 bg-teal-50 px-1.5 py-0.2 rounded border border-teal-200 font-semibold">
-                  Low Dispersion
+
+              <div className="flex items-baseline gap-2 mt-1.5">
+                <span className="text-3xl sm:text-4xl font-extrabold font-mono text-[#083C33] tracking-tight group-hover:text-teal-800 transition-colors">
+                  &lt; 1.8%
                 </span>
+                <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-md bg-teal-50 text-teal-800 border border-teal-200">
+                  Low Ambiguity
+                </span>
+              </div>
+            </div>
+
+            <div className="space-y-2 mt-4 pt-3.5 border-t border-[#D5DCD8]/70 relative z-10">
+              <div className="w-full bg-[#E2E8DF] h-2.5 rounded-full overflow-hidden p-0.5 border border-[#D5DCD0]/60">
+                <div 
+                  className="bg-gradient-to-r from-teal-600 via-cyan-500 to-emerald-400 h-full rounded-full transition-all duration-500 shadow-sm"
+                  style={{ width: '18%' }}
+                />
+              </div>
+              <div className="flex justify-between items-center text-[10px] font-mono text-[#52706A]">
+                <span>Inter-Family Confusion</span>
+                <span className="font-bold text-teal-700">Diffusion vs GAN Split</span>
               </div>
             </div>
           </div>
 
-          <div className="bg-white/80 backdrop-blur-sm p-4.5 rounded-2xl border border-[#D5DCD6] shadow-xs flex items-center gap-3.5 hover:border-emerald-600/30 transition-all">
-            <div className="p-2.5 rounded-xl bg-[#0D5145]/10 text-[#0D5145] border border-[#0D5145]/20">
-              <ShieldCheck className="w-5 h-5 text-[#0D5145]" />
-            </div>
-            <div>
-              <span className="text-[10px] font-mono uppercase tracking-wider text-[#52706A] font-semibold block">
+          {/* Card 3: Sensor Isolation Rate */}
+          <div className="relative overflow-hidden rounded-[26px] border border-[#D5DCD8] bg-gradient-to-br from-white via-[#FCFCFA] to-[#F3F6F2] p-5 sm:p-6 shadow-[0_4px_20px_rgba(8,60,51,0.04)] hover:shadow-[0_16px_36px_rgba(8,60,51,0.09)] hover:border-[#0D5145]/40 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group">
+            
+            {/* Top Accent Stripe */}
+            <div className="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-[#083C33] via-[#0D5145] to-emerald-500" />
+            
+            {/* Subtle Radial Glow */}
+            <div className="absolute -top-12 -right-12 w-32 h-32 rounded-full bg-[#0D5145]/10 blur-xl pointer-events-none group-hover:scale-125 transition-transform duration-500" />
+
+            {/* Technical Shield Perimeter Watermark SVG */}
+            <svg className="absolute -right-3 -top-3 w-32 h-32 text-emerald-900/5 group-hover:text-emerald-900/10 transition-colors pointer-events-none" viewBox="0 0 100 100" fill="none" stroke="currentColor">
+              <path d="M50,10 L82,24 C82,58 50,88 50,88 C50,88 18,58 18,24 Z" strokeWidth="1.2" />
+              <path d="M50,22 L72,32 C72,54 50,74 50,74 C50,74 28,54 28,32 Z" strokeWidth="0.9" strokeDasharray="3 3" />
+              <circle cx="50" cy="48" r="8" strokeWidth="1" />
+              <line x1="50" y1="38" x2="50" y2="58" strokeWidth="1.2" />
+            </svg>
+
+            <div className="relative z-10">
+              <div className="flex items-center justify-between mb-3.5">
+                <div className="p-2.5 rounded-2xl bg-[#0D5145]/10 border border-[#0D5145]/20 text-[#0D5145] shadow-xs group-hover:scale-105 transition-transform duration-300">
+                  <ShieldCheck className="w-5 h-5 text-[#0D5145]" />
+                </div>
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold tracking-wider uppercase text-[#0D5145] bg-[#0D5145]/5 border border-[#0D5145]/20 shadow-2xs">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#0D5145] animate-pulse" />
+                  Boundary · Pristine
+                </span>
+              </div>
+
+              <span className="text-xs font-mono uppercase tracking-wider text-[#52706A] block font-semibold">
                 Sensor Isolation Rate
               </span>
-              <div className="flex items-baseline gap-1.5 mt-0.5">
-                <span className="text-xl font-bold font-mono text-[#083C33]">94.0%</span>
-                <span className="text-[10px] font-mono text-[#0D5145] bg-[#0D5145]/10 px-1.5 py-0.2 rounded border border-[#0D5145]/20 font-semibold">
-                  Camera Pristine
+
+              <div className="flex items-baseline gap-2 mt-1.5">
+                <span className="text-3xl sm:text-4xl font-extrabold font-mono text-[#083C33] tracking-tight group-hover:text-[#0D5145] transition-colors">
+                  94.0%
                 </span>
+                <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-md bg-[#0D5145]/10 text-[#0D5145] border border-[#0D5145]/20">
+                  Dirac Filter
+                </span>
+              </div>
+            </div>
+
+            <div className="space-y-2 mt-4 pt-3.5 border-t border-[#D5DCD8]/70 relative z-10">
+              <div className="w-full bg-[#E2E8DF] h-2.5 rounded-full overflow-hidden p-0.5 border border-[#D5DCD0]/60">
+                <div 
+                  className="bg-gradient-to-r from-[#0D5145] via-emerald-600 to-teal-500 h-full rounded-full transition-all duration-500 shadow-sm"
+                  style={{ width: '94.0%' }}
+                />
+              </div>
+              <div className="flex justify-between items-center text-[10px] font-mono text-[#52706A]">
+                <span>Hardware Sensor Distinction</span>
+                <span className="font-bold text-[#0D5145]">Zero False Accusation</span>
               </div>
             </div>
           </div>
@@ -1568,85 +1701,244 @@ export const MetricsPage: React.FC = () => {
       {/* ========================================================================= */}
       {/* 5. ARCHITECTURAL ABLATION STUDY                                           */}
       {/* ========================================================================= */}
-      <section className="rounded-[32px] bg-white p-7 sm:p-10 border border-[#D5D9D1] shadow-xs space-y-6">
+      <section className="rounded-[34px] bg-gradient-to-b from-white via-[#FCFCFA] to-[#F7F6F0] p-7 sm:p-10 border border-[#D9DED4] shadow-[0_8px_30px_rgba(8,60,51,0.04)] relative overflow-hidden space-y-8">
         
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-[#D5D9D1]">
+        {/* Atmospheric ambient glows */}
+        <div className="absolute -top-28 -right-28 w-96 h-96 rounded-full bg-emerald-500/5 blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-28 -left-28 w-96 h-96 rounded-full bg-teal-500/5 blur-3xl pointer-events-none" />
+
+        {/* Section Header */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-5 pb-6 border-b border-[#D5D9D1]/80 relative z-10">
           <div>
-            <span className="text-[11px] font-mono uppercase tracking-[0.18em] text-[#0D5145] font-semibold block">
-              SCIENTIFIC FEATURE ATTRIBUTION POWER
-            </span>
-            <h2 className="text-2xl font-bold text-[#083C33] tracking-tight font-serif mt-1 flex items-center space-x-2.5">
-              <Layers className="w-5 h-5 text-[#0D5145]" />
+            <div className="flex items-center gap-2 mb-1.5">
+              <span className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase tracking-[0.16em] bg-[#0D5145]/10 text-[#0D5145] border border-[#0D5145]/20">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#0D5145] animate-pulse" />
+                Scientific Feature Attribution Power
+              </span>
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-bold text-[#083C33] tracking-tight font-serif flex items-center gap-3">
+              <span className="p-2.5 rounded-2xl bg-[#083C33] text-white shadow-sm inline-flex">
+                <Layers className="w-5 h-5 text-emerald-300" />
+              </span>
               <span>Architectural Ablation &amp; Progressive Gain Study</span>
             </h2>
-            <p className="text-xs sm:text-sm text-[#52706A] mt-1 max-w-2xl leading-relaxed">
+            <p className="text-xs sm:text-sm text-[#52706A] mt-2 max-w-2xl leading-relaxed">
               Step-by-step benchmark demonstrating why residual frequency analysis provides decisive discriminative power over pure pixel-space representations.
             </p>
           </div>
 
-          <div className="flex items-center bg-[#F7F6F0] p-1 rounded-xl border border-[#D5D9D1]">
+          {/* Minimalist View Switcher */}
+          <div className="flex items-center bg-[#F0F4F1] p-1.5 rounded-2xl border border-[#D5DCD6] shadow-inner shrink-0">
             <button
+              type="button"
               onClick={() => setActiveAblationTab('cards')}
-              className={`px-3 py-1.5 text-xs font-mono rounded-lg transition-all ${activeAblationTab === 'cards' ? 'bg-white font-bold text-[#083C33] shadow-2xs' : 'text-[#52706A] hover:text-[#083C33]'}`}
+              className={`px-3.5 py-1.5 text-xs font-mono font-semibold rounded-xl transition-all duration-200 cursor-pointer ${
+                activeAblationTab === 'cards' 
+                  ? 'bg-white font-bold text-[#083C33] shadow-xs border border-[#D5DCD6]/60' 
+                  : 'text-[#52706A] hover:text-[#083C33]'
+              }`}
             >
               Progressive Cards
             </button>
             <button
+              type="button"
               onClick={() => setActiveAblationTab('table')}
-              className={`px-3 py-1.5 text-xs font-mono rounded-lg transition-all ${activeAblationTab === 'table' ? 'bg-white font-bold text-[#083C33] shadow-2xs' : 'text-[#52706A] hover:text-[#083C33]'}`}
+              className={`px-3.5 py-1.5 text-xs font-mono font-semibold rounded-xl transition-all duration-200 cursor-pointer ${
+                activeAblationTab === 'table' 
+                  ? 'bg-white font-bold text-[#083C33] shadow-xs border border-[#D5DCD6]/60' 
+                  : 'text-[#52706A] hover:text-[#083C33]'
+              }`}
             >
               Full Data Table
             </button>
           </div>
         </div>
 
+        {/* Minimalist Progressive Gain Stepper Track */}
+        <div className="bg-gradient-to-r from-white via-[#F7FAF7] to-[#EEF5F1] p-4 sm:p-5 rounded-2xl border border-[#D5DCD6] shadow-xs relative z-10">
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+            
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] font-mono uppercase tracking-wider font-bold text-[#0D5145] bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200">
+                Ablation Sequence
+              </span>
+              <span className="text-xs font-mono text-[#52706A]">Incremental Accuracy Gains:</span>
+            </div>
+
+            {/* Stepper items */}
+            <div className="flex flex-wrap items-center gap-2 text-xs font-mono">
+              <div className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-white border border-[#D5DCD6] shadow-2xs">
+                <span className="w-1.5 h-1.5 rounded-full bg-slate-400" />
+                <span className="text-[#52706A]">01 RGB</span>
+                <span className="font-bold text-[#083C33]">82.4%</span>
+              </div>
+
+              <span className="text-[#0D5145] font-bold text-[11px]">+5.7% →</span>
+
+              <div className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-white border border-[#D5DCD6] shadow-2xs">
+                <span className="w-1.5 h-1.5 rounded-full bg-teal-500" />
+                <span className="text-[#52706A]">02 SRM</span>
+                <span className="font-bold text-[#083C33]">88.1%</span>
+              </div>
+
+              <span className="text-[#0D5145] font-bold text-[11px]">+1.6% →</span>
+
+              <div className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-white border border-[#D5DCD6] shadow-2xs">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                <span className="text-[#52706A]">03 Spectral</span>
+                <span className="font-bold text-[#083C33]">89.7%</span>
+              </div>
+
+              <span className="text-[#0D5145] font-bold text-[11px]">+4.5% →</span>
+
+              <div className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-[#083C33] text-white border border-[#083C33] shadow-xs">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="text-emerald-200">04 DeepTrace</span>
+                <span className="font-bold text-emerald-300">94.2%</span>
+              </div>
+            </div>
+
+            {/* Total Lift Pill */}
+            <div className="shrink-0">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs font-mono font-extrabold bg-[#0D5145] text-white shadow-2xs">
+                <Sparkles className="w-3.5 h-3.5 text-emerald-300" />
+                +11.8% Net Total Lift
+              </span>
+            </div>
+
+          </div>
+        </div>
+
+        {/* Tab 1: Progressive Cards */}
         {activeAblationTab === 'cards' ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 relative z-10">
             {ABLATION_STUDY.map((item, idx) => {
               const isProposed = item.gain === '+11.8%';
+              
+              if (isProposed) {
+                // Card 4: DeepTrace Hero Card (Luxury Obsidian Minimal)
+                return (
+                  <div 
+                    key={idx}
+                    className="relative overflow-hidden rounded-[26px] border border-emerald-500/40 bg-gradient-to-br from-[#051C17] via-[#08352C] to-[#031512] text-white p-6 shadow-[0_12px_32px_rgba(8,60,51,0.25)] hover:shadow-[0_20px_44px_rgba(8,60,51,0.35)] hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group"
+                  >
+                    {/* Top Accent Stripe */}
+                    <div className="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-emerald-400 via-teal-300 to-emerald-500" />
+                    
+                    {/* Subtle Radial Glow */}
+                    <div className="absolute -top-12 -right-12 w-32 h-32 rounded-full bg-emerald-500/15 blur-xl pointer-events-none group-hover:scale-125 transition-transform duration-500" />
+
+                    <div className="space-y-3.5 relative z-10">
+                      <div className="flex items-center justify-between">
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                          STAGE {item.step} · PROPOSED
+                        </span>
+                        <span className="px-2.5 py-0.5 rounded-md text-xs font-mono font-extrabold bg-gradient-to-r from-emerald-400 to-teal-300 text-[#051C17] shadow-sm">
+                          {item.gain}
+                        </span>
+                      </div>
+
+                      <div>
+                        <h3 className="text-lg font-bold font-serif text-white tracking-tight">
+                          {item.configuration}
+                        </h3>
+                        <span className="text-[11px] font-mono text-emerald-300/80 block mt-0.5">
+                          {item.domain}
+                        </span>
+                      </div>
+
+                      <p className="text-xs text-emerald-100/85 leading-relaxed">
+                        {item.description}
+                      </p>
+                    </div>
+
+                    <div className="pt-4 mt-4 border-t border-emerald-500/30 space-y-2 relative z-10">
+                      <div className="flex items-center justify-between text-xs font-mono">
+                        <span className="text-emerald-300/70">Accuracy Benchmark:</span>
+                        <span className="font-extrabold text-xl text-emerald-300 drop-shadow-[0_0_8px_rgba(52,211,153,0.5)]">
+                          {item.accuracy}%
+                        </span>
+                      </div>
+
+                      <div className="w-full bg-black/40 rounded-full h-2 overflow-hidden p-0.5 border border-emerald-500/30">
+                        <div 
+                          className="h-full rounded-full bg-gradient-to-r from-emerald-400 via-teal-300 to-emerald-500 transition-all duration-500 shadow-sm"
+                          style={{ width: `${item.accuracy}%` }}
+                        />
+                      </div>
+
+                      <div className="flex justify-between text-[10px] font-mono text-emerald-300/70 pt-0.5">
+                        <span>F1: {item.f1}%</span>
+                        <span>ROC-AUC: {item.auc.toFixed(3)}</span>
+                      </div>
+                    </div>
+                  </div>
+                );
+              }
+
+              // Cards 1, 2, 3: Minimalist Light Cards
+              const stripeGradients = [
+                'bg-slate-300 group-hover:bg-slate-400',
+                'bg-gradient-to-r from-teal-400 to-emerald-400',
+                'bg-gradient-to-r from-teal-500 to-emerald-500'
+              ];
+              const accentStripe = stripeGradients[idx] || 'bg-slate-300';
+
               return (
                 <div 
                   key={idx}
-                  className={`p-6 rounded-[24px] border transition-all flex flex-col justify-between space-y-4 ${
-                    isProposed 
-                      ? 'bg-[#083C33] text-white border-[#166355] shadow-md' 
-                      : 'bg-[#F7F6F0] border-[#D5D9D1] text-[#2D3F3A] hover:border-[#0D5145]'
-                  }`}
+                  className="relative overflow-hidden rounded-[26px] border border-[#D5DCD8] bg-gradient-to-br from-white via-[#FCFCFA] to-[#F5F8F6] p-6 shadow-[0_4px_20px_rgba(8,60,51,0.03)] hover:shadow-[0_12px_28px_rgba(8,60,51,0.07)] hover:border-[#0D5145]/30 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group"
                 >
-                  <div className="space-y-3">
+                  {/* Top Accent Stripe */}
+                  <div className={`absolute top-0 inset-x-0 h-1.5 transition-colors ${accentStripe}`} />
+
+                  <div className="space-y-3.5 relative z-10">
                     <div className="flex items-center justify-between">
-                      <span className={`text-[10px] font-mono font-bold uppercase tracking-wider ${isProposed ? 'text-emerald-300' : 'text-[#0D5145]'}`}>
+                      <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#52706A] bg-[#EFF3F0] px-2.5 py-0.5 rounded-full border border-[#D5DDD6]">
                         STAGE {item.step}
                       </span>
-                      <span className={`text-xs font-mono font-bold px-2 py-0.5 rounded-md ${isProposed ? 'bg-emerald-400 text-[#083C33]' : 'bg-white text-[#0D5145] border border-[#D5D9D1]'}`}>
+                      <span className={`text-xs font-mono font-bold px-2 py-0.5 rounded-md ${
+                        item.gain === 'Baseline' 
+                          ? 'bg-slate-100 text-[#52706A] border border-slate-200' 
+                          : 'bg-emerald-50 text-[#0D5145] border border-emerald-200'
+                      }`}>
                         {item.gain}
                       </span>
                     </div>
 
-                    <h3 className={`text-lg font-bold font-serif ${isProposed ? 'text-white' : 'text-[#083C33]'}`}>
-                      {item.configuration}
-                    </h3>
-                    <span className={`text-xs font-mono block ${isProposed ? 'text-[#A3C2B8]' : 'text-[#52706A]'}`}>
-                      {item.domain}
-                    </span>
+                    <div>
+                      <h3 className="text-lg font-bold font-serif text-[#083C33] tracking-tight">
+                        {item.configuration}
+                      </h3>
+                      <span className="text-[11px] font-mono text-[#52706A] block mt-0.5">
+                        {item.domain}
+                      </span>
+                    </div>
 
-                    <p className={`text-xs leading-relaxed ${isProposed ? 'text-[#D9DED4]/85' : 'text-[#52706A]'}`}>
+                    <p className="text-xs text-[#52706A] leading-relaxed">
                       {item.description}
                     </p>
                   </div>
 
-                  <div className={`pt-3 border-t space-y-2 ${isProposed ? 'border-[#166355]' : 'border-[#D5D9D1]'}`}>
+                  <div className="pt-4 mt-4 border-t border-[#D5DCD8]/70 space-y-2 relative z-10">
                     <div className="flex items-center justify-between text-xs font-mono">
-                      <span className={isProposed ? 'text-[#A3C2B8]' : 'text-[#52706A]'}>Accuracy:</span>
-                      <span className={`font-bold text-base ${isProposed ? 'text-emerald-300' : 'text-[#083C33]'}`}>
+                      <span className="text-[#52706A]">Accuracy:</span>
+                      <span className="font-extrabold text-xl text-[#083C33]">
                         {item.accuracy}%
                       </span>
                     </div>
-                    <div className="w-full bg-black/20 rounded-full h-1.5 overflow-hidden">
+
+                    <div className="w-full bg-[#E2E8DF] rounded-full h-2 overflow-hidden p-0.5 border border-[#D5DCD0]/60">
                       <div 
-                        className={`h-full rounded-full ${isProposed ? 'bg-emerald-400' : 'bg-[#0D5145]'}`} 
-                        style={{ width: `${item.accuracy}%` }} 
+                        className="h-full rounded-full bg-gradient-to-r from-[#0D5145] to-emerald-600 transition-all duration-500"
+                        style={{ width: `${item.accuracy}%` }}
                       />
+                    </div>
+
+                    <div className="flex justify-between text-[10px] font-mono text-[#52706A] pt-0.5">
+                      <span>F1: {item.f1}%</span>
+                      <span>ROC-AUC: {item.auc.toFixed(3)}</span>
                     </div>
                   </div>
                 </div>
@@ -1654,152 +1946,449 @@ export const MetricsPage: React.FC = () => {
             })}
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse text-xs">
-              <thead>
-                <tr className="border-b border-[#D5D9D1] text-[#52706A] font-mono text-[11px]">
-                  <th className="pb-3 font-semibold uppercase tracking-wider">Ablation Configuration</th>
-                  <th className="pb-3 font-semibold uppercase tracking-wider">Domain Stream</th>
-                  <th className="pb-3 font-semibold uppercase tracking-wider text-right">Accuracy</th>
-                  <th className="pb-3 font-semibold uppercase tracking-wider text-right">F1-Score</th>
-                  <th className="pb-3 font-semibold uppercase tracking-wider text-right">ROC-AUC</th>
-                  <th className="pb-3 font-semibold uppercase tracking-wider text-right">Net Margin</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-[#D5D9D1]/60">
-                {ABLATION_STUDY.map((row, idx) => {
-                  const isProposed = row.gain === '+11.8%';
-                  return (
-                    <tr 
-                      key={idx} 
-                      className={`hover:bg-[#F7F6F0]/60 transition-colors ${isProposed ? 'bg-[#EBF0E6]/50 font-medium' : ''}`}
-                    >
-                      <td className="py-3.5 pr-4">
-                        <div className="font-bold text-[#083C33] text-sm flex items-center space-x-2">
-                          <span>{row.configuration}</span>
-                          {isProposed && (
-                            <span className="px-2 py-0.5 text-[9px] font-mono uppercase bg-[#0D5145] text-white rounded-full font-bold">
-                              DeepTrace
-                            </span>
-                          )}
-                        </div>
-                        <p className="text-[11px] text-[#52706A] mt-0.5 leading-normal max-w-md">
-                          {row.description}
-                        </p>
-                      </td>
-                      <td className="py-3.5 pr-4 text-[11px] font-mono text-[#52706A]">
-                        {row.domain}
-                      </td>
-                      <td className="py-3.5 pr-4 text-right font-mono font-bold text-sm text-[#083C33]">
-                        {row.accuracy.toFixed(1)}%
-                      </td>
-                      <td className="py-3.5 pr-4 text-right font-mono text-[#083C33]">
-                        {row.f1.toFixed(1)}%
-                      </td>
-                      <td className="py-3.5 pr-4 text-right font-mono text-[#083C33]">
-                        {row.auc.toFixed(3)}
-                      </td>
-                      <td className="py-3.5 text-right font-mono font-bold">
-                        <span className={`px-2 py-0.5 rounded-md text-xs ${isProposed ? 'bg-[#0D5145] text-white' : row.gain.startsWith('+') ? 'bg-[#EBF0E6] text-[#0D5145]' : 'text-[#52706A]'}`}>
-                          {row.gain}
-                        </span>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+          /* Tab 2: Full Data Table */
+          <div className="overflow-x-auto relative z-10">
+            <div className="relative overflow-hidden min-w-[780px] border border-[#D5DCD6] rounded-[24px] bg-white/95 backdrop-blur-md shadow-[0_4px_20px_rgba(8,60,51,0.03)]">
+              
+              {/* Top Accent Stripe on Table */}
+              <div className="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-[#083C33] via-[#0D5145] to-emerald-500" />
+
+              <table className="w-full text-left border-collapse text-xs">
+                <thead>
+                  <tr className="bg-gradient-to-r from-[#F4F7F4] via-[#F8FAF7] to-[#EFF4F0] border-b border-[#D5DCD6] text-[#52706A] font-mono text-[11px]">
+                    <th className="py-4 px-5 font-bold uppercase tracking-wider text-[#083C33]">Ablation Stage &amp; Configuration</th>
+                    <th className="py-4 px-4 font-bold uppercase tracking-wider text-[#083C33]">Domain Stream</th>
+                    <th className="py-4 px-4 font-bold uppercase tracking-wider text-[#083C33] text-right">Accuracy</th>
+                    <th className="py-4 px-4 font-bold uppercase tracking-wider text-[#083C33] text-right">Precision</th>
+                    <th className="py-4 px-4 font-bold uppercase tracking-wider text-[#083C33] text-right">Recall</th>
+                    <th className="py-4 px-4 font-bold uppercase tracking-wider text-[#083C33] text-right">F1-Score</th>
+                    <th className="py-4 px-4 font-bold uppercase tracking-wider text-[#083C33] text-right">ROC-AUC</th>
+                    <th className="py-4 px-5 font-bold uppercase tracking-wider text-[#083C33] text-right">Net Margin</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-[#D5DCD6]/60">
+                  {ABLATION_STUDY.map((row, idx) => {
+                    const isProposed = row.gain === '+11.8%';
+                    return (
+                      <tr 
+                        key={idx} 
+                        className={`transition-colors ${isProposed ? 'bg-emerald-50/70 font-medium' : 'hover:bg-[#F7FAF7]'}`}
+                      >
+                        <td className="py-4 px-5">
+                          <div className="font-bold text-[#083C33] text-sm flex items-center space-x-2">
+                            <span>Stage {row.step}: {row.configuration}</span>
+                            {isProposed && (
+                              <span className="px-2 py-0.5 text-[9px] font-mono uppercase bg-[#0D5145] text-white rounded-full font-bold shadow-2xs">
+                                Proposed DeepTrace
+                              </span>
+                            )}
+                          </div>
+                          <p className="text-[11px] text-[#52706A] mt-1 leading-normal max-w-md">
+                            {row.description}
+                          </p>
+                        </td>
+                        <td className="py-4 px-4 text-[11px] font-mono text-[#52706A]">
+                          <span className="bg-white px-2 py-1 rounded-md border border-[#D5DCD6] shadow-2xs">
+                            {row.domain}
+                          </span>
+                        </td>
+                        <td className="py-4 px-4 text-right font-mono font-extrabold text-sm text-[#083C33]">
+                          {row.accuracy.toFixed(1)}%
+                        </td>
+                        <td className="py-4 px-4 text-right font-mono text-[#52706A]">
+                          {row.precision.toFixed(1)}%
+                        </td>
+                        <td className="py-4 px-4 text-right font-mono text-[#52706A]">
+                          {row.recall.toFixed(1)}%
+                        </td>
+                        <td className="py-4 px-4 text-right font-mono font-semibold text-[#083C33]">
+                          {row.f1.toFixed(1)}%
+                        </td>
+                        <td className="py-4 px-4 text-right font-mono text-[#52706A]">
+                          {row.auc.toFixed(3)}
+                        </td>
+                        <td className="py-4 px-5 text-right font-mono font-bold">
+                          <span className={`px-2.5 py-1 rounded-lg text-xs shadow-2xs ${
+                            isProposed 
+                              ? 'bg-[#0D5145] text-white' 
+                              : row.gain.startsWith('+') 
+                                ? 'bg-emerald-50 text-[#0D5145] border border-emerald-200' 
+                                : 'bg-slate-100 text-[#52706A] border border-slate-200'
+                          }`}>
+                            {row.gain}
+                          </span>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
+
+        {/* Scientific Finding Callout Banner */}
+        <div className="relative overflow-hidden p-5 rounded-2xl bg-gradient-to-r from-[#F4F8F5] via-[#FAFCFA] to-white border-l-4 border-l-[#0D5145] border border-[#D5DCD6] flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xs relative z-10">
+          <div className="flex items-start gap-3">
+            <div className="p-2 rounded-xl bg-[#0D5145]/10 text-[#0D5145] shrink-0 mt-0.5">
+              <Sparkles className="w-4 h-4 text-[#0D5145]" />
+            </div>
+            <div>
+              <span className="text-xs font-bold text-[#083C33] uppercase font-mono tracking-wide block">
+                Empirical Research Finding
+              </span>
+              <p className="text-xs text-[#2D3F3A] mt-0.5 leading-relaxed max-w-3xl">
+                Ablating residual high-pass noise reduces attribution accuracy by <strong>11.8%</strong> and increases cross-generator dispersion by <strong>4.2×</strong>, proving that forensic source signatures reside decisively in residual frequency artifacts rather than semantic pixel content.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3 shrink-0 font-mono text-xs">
+            <div className="bg-white px-3 py-1.5 rounded-xl border border-[#D5DCD6] text-center shadow-2xs">
+              <span className="text-[9px] uppercase tracking-wider text-[#52706A] block">Accuracy Delta</span>
+              <span className="font-bold text-[#0D5145] text-sm">+11.8%</span>
+            </div>
+            <div className="bg-white px-3 py-1.5 rounded-xl border border-[#D5DCD6] text-center shadow-2xs">
+              <span className="text-[9px] uppercase tracking-wider text-[#52706A] block">Peak ROC-AUC</span>
+              <span className="font-bold text-[#0D5145] text-sm">0.978</span>
+            </div>
+          </div>
+        </div>
 
       </section>
 
       {/* ========================================================================= */}
       {/* 6. PHYSICAL FREQUENCY ARTIFACT TAXONOMY                                   */}
       {/* ========================================================================= */}
-      <section className="rounded-[32px] bg-white p-7 sm:p-10 border border-[#D5D9D1] shadow-xs space-y-6">
+      <section className="rounded-[34px] bg-gradient-to-b from-white via-[#FCFCFA] to-[#F7F6F0] p-7 sm:p-10 border border-[#D9DED4] shadow-[0_8px_30px_rgba(8,60,51,0.04)] relative overflow-hidden space-y-8">
         
-        <div className="pb-4 border-b border-[#D5D9D1]">
-          <span className="text-[11px] font-mono uppercase tracking-[0.18em] text-[#0D5145] font-semibold block">
-            PHYSICAL DISCRIMINATION TAXONOMY
-          </span>
-          <h2 className="text-2xl font-bold text-[#083C33] tracking-tight font-serif mt-1 flex items-center space-x-2.5">
-            <Sparkles className="w-5 h-5 text-[#0D5145]" />
-            <span>Forensic Frequency Signature Breakdown</span>
-          </h2>
-          <p className="text-xs sm:text-sm text-[#52706A] mt-1 max-w-3xl leading-relaxed">
-            Mathematical and physical rationale explaining why residual frequency artifacts unambiguously discriminate each synthetic generative family.
-          </p>
+        {/* Ambient atmospheric glows */}
+        <div className="absolute -top-28 -right-28 w-96 h-96 rounded-full bg-emerald-500/5 blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-28 -left-28 w-96 h-96 rounded-full bg-teal-500/5 blur-3xl pointer-events-none" />
+
+        {/* Section Header */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-5 pb-6 border-b border-[#D5D9D1]/80 relative z-10">
+          <div>
+            <div className="flex items-center gap-2 mb-1.5">
+              <span className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase tracking-[0.16em] bg-[#0D5145]/10 text-[#0D5145] border border-[#0D5145]/20">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#0D5145] animate-pulse" />
+                Physical Discrimination Taxonomy
+              </span>
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-bold text-[#083C33] tracking-tight font-serif flex items-center gap-3">
+              <span className="p-2.5 rounded-2xl bg-[#083C33] text-white shadow-sm inline-flex">
+                <Radio className="w-5 h-5 text-emerald-300" />
+              </span>
+              <span>Forensic Frequency Signature Breakdown</span>
+            </h2>
+            <p className="text-xs sm:text-sm text-[#52706A] mt-2 max-w-3xl leading-relaxed">
+              Mathematical and physical rationale explaining why residual frequency artifacts unambiguously discriminate each synthetic generative family from genuine silicon captures.
+            </p>
+          </div>
+
+          <div className="flex items-center gap-2 shrink-0">
+            <span className="px-3.5 py-1.5 rounded-xl text-xs font-mono font-bold bg-[#0D5145]/10 text-[#0D5145] border border-[#0D5145]/20 flex items-center gap-2">
+              <Activity className="w-3.5 h-3.5 text-[#0D5145]" />
+              3 Discrimination Paradigms
+            </span>
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+        {/* 3 Premium Minimal Boxes Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative z-10">
           
-          {/* Card 1: GANs */}
-          <div className="bg-[#F7F6F0] p-6 rounded-[24px] border border-[#D5D9D1] flex flex-col justify-between space-y-4 hover:border-[#0D5145] transition-all">
-            <div className="space-y-3">
+          {/* Box 1: GAN Upsampling */}
+          <div className="relative overflow-hidden rounded-[26px] border border-[#D5DCD8] bg-gradient-to-br from-white via-[#FCFCFA] to-[#F5F8F6] p-6 shadow-[0_4px_24px_rgba(8,60,51,0.03)] hover:shadow-[0_16px_36px_rgba(8,60,51,0.08)] hover:border-emerald-500/40 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group">
+            {/* Top Accent Stripe */}
+            <div className="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-emerald-500 via-teal-400 to-emerald-600" />
+            
+            {/* Subtle SVG Background Watermark - 2D Lattice Grid & Dirac comb */}
+            <div className="absolute top-4 right-4 w-32 h-32 opacity-[0.06] group-hover:opacity-[0.12] transition-opacity pointer-events-none text-emerald-800">
+              <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="1.2">
+                <circle cx="50" cy="50" r="45" strokeDasharray="3 3" />
+                <circle cx="50" cy="50" r="30" />
+                <circle cx="50" cy="50" r="15" strokeDasharray="2 2" />
+                <line x1="50" y1="5" x2="50" y2="95" />
+                <line x1="5" y1="50" x2="95" y2="50" />
+                <rect x="35" y="35" width="30" height="30" strokeDasharray="2 2" />
+                <circle cx="35" cy="35" r="2.5" fill="currentColor" />
+                <circle cx="65" cy="35" r="2.5" fill="currentColor" />
+                <circle cx="35" cy="65" r="2.5" fill="currentColor" />
+                <circle cx="65" cy="65" r="2.5" fill="currentColor" />
+              </svg>
+            </div>
+
+            <div className="space-y-4 relative z-10">
+              {/* Header row */}
               <div className="flex items-center justify-between">
-                <span className="w-2.5 h-2.5 rounded-full bg-emerald-700" />
-                <span className="text-[10px] font-mono font-bold text-[#0D5145] bg-white px-2.5 py-0.5 rounded-md border border-[#D5D9D1]">
-                  ACC: 92.7%
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider bg-emerald-50 text-[#0D5145] border border-emerald-200">
+                  <Grid className="w-3 h-3 text-emerald-600" />
+                  GAN Architecture
+                </span>
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-mono font-extrabold bg-[#083C33] text-emerald-300 shadow-2xs">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  92.7% ACC
                 </span>
               </div>
-              <h3 className="font-bold text-base text-[#083C33] font-serif">
-                GAN Upsampling (StyleGAN2 / ProGAN)
-              </h3>
+
+              {/* Title & Domain */}
+              <div>
+                <h3 className="text-lg font-bold font-serif text-[#083C33] tracking-tight group-hover:text-[#0D5145] transition-colors">
+                  GAN Upsampling Artifacts
+                </h3>
+                <span className="text-[11px] font-mono text-[#52706A] block mt-0.5">
+                  StyleGAN2 / ProGAN / StarGAN
+                </span>
+              </div>
+
+              {/* Physical description */}
               <p className="text-xs text-[#52706A] leading-relaxed">
                 Transposed convolution upsampling layers inject periodic grid patterns that manifest as discrete Dirac comb spikes in the 2D FFT magnitude spectrum and high-band DCT coefficient peaks.
               </p>
+
+              {/* Physical mechanism chip */}
+              <div className="bg-white/80 backdrop-blur-xs p-3 rounded-xl border border-[#D5DCD8] space-y-1.5 shadow-2xs">
+                <div className="flex items-center justify-between text-[10px] font-mono">
+                  <span className="text-[#52706A] uppercase tracking-wider">Physical Marker:</span>
+                  <span className="font-bold text-[#083C33]">Dirac Harmonic Spikes</span>
+                </div>
+                <div className="flex items-center justify-between text-[10px] font-mono">
+                  <span className="text-[#52706A] uppercase tracking-wider">Spatial Frequency:</span>
+                  <span className="font-semibold text-[#0D5145]">k · f_sampling Periodic</span>
+                </div>
+              </div>
             </div>
-            <div className="pt-3 border-t border-[#D5D9D1] text-[11px] font-mono text-[#083C33]">
-              <span className="text-[#52706A] block text-[10px] uppercase">Distinguishing Fingerprint:</span>
-              <strong className="text-[#0D5145]">Upsampling Periodic Checkerboard</strong>
+
+            {/* Bottom telemetry footer */}
+            <div className="pt-4 mt-5 border-t border-[#D5DCD8]/70 space-y-2.5 relative z-10">
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-[10px] font-mono uppercase tracking-wider text-[#52706A]">Distinguishing Fingerprint</span>
+              </div>
+              <div className="p-2.5 rounded-xl bg-gradient-to-r from-emerald-50/80 to-[#F0F5F2] border border-emerald-200/60">
+                <div className="font-bold text-xs text-[#0D5145] font-mono flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                  Upsampling Periodic Checkerboard
+                </div>
+              </div>
+
+              {/* Progress bar indicator */}
+              <div className="space-y-1">
+                <div className="flex justify-between text-[10px] font-mono text-[#52706A]">
+                  <span>Attribution Discriminability</span>
+                  <span className="font-bold text-[#083C33]">92.7%</span>
+                </div>
+                <div className="w-full bg-[#E2E8DF] rounded-full h-1.5 overflow-hidden p-0.5 border border-[#D5DCD0]/60">
+                  <div 
+                    className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 transition-all duration-500"
+                    style={{ width: '92.7%' }}
+                  />
+                </div>
+              </div>
             </div>
           </div>
 
-          {/* Card 2: Diffusion */}
-          <div className="bg-[#F7F6F0] p-6 rounded-[24px] border border-[#D5D9D1] flex flex-col justify-between space-y-4 hover:border-[#0D5145] transition-all">
-            <div className="space-y-3">
+          {/* Box 2: Latent Diffusion */}
+          <div className="relative overflow-hidden rounded-[26px] border border-[#D5DCD8] bg-gradient-to-br from-white via-[#FCFCFA] to-[#F5F8F6] p-6 shadow-[0_4px_24px_rgba(8,60,51,0.03)] hover:shadow-[0_16px_36px_rgba(8,60,51,0.08)] hover:border-teal-500/40 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group">
+            {/* Top Accent Stripe */}
+            <div className="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-teal-500 via-cyan-400 to-emerald-500" />
+            
+            {/* Subtle SVG Background Watermark - Radial Wave Decay */}
+            <div className="absolute top-4 right-4 w-32 h-32 opacity-[0.06] group-hover:opacity-[0.12] transition-opacity pointer-events-none text-teal-800">
+              <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="1.2">
+                <circle cx="50" cy="50" r="44" strokeDasharray="1 3" />
+                <circle cx="50" cy="50" r="36" strokeDasharray="2 3" />
+                <circle cx="50" cy="50" r="28" />
+                <circle cx="50" cy="50" r="20" />
+                <circle cx="50" cy="50" r="12" />
+                <path d="M 10 50 Q 30 20 50 50 T 90 50" strokeDasharray="3 3" />
+                <path d="M 10 65 Q 30 35 50 65 T 90 65" opacity="0.6" />
+              </svg>
+            </div>
+
+            <div className="space-y-4 relative z-10">
+              {/* Header row */}
               <div className="flex items-center justify-between">
-                <span className="w-2.5 h-2.5 rounded-full bg-teal-700" />
-                <span className="text-[10px] font-mono font-bold text-[#0D5145] bg-white px-2.5 py-0.5 rounded-md border border-[#D5D9D1]">
-                  ACC: 93.6%
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider bg-teal-50 text-teal-800 border border-teal-200">
+                  <Waves className="w-3 h-3 text-teal-600" />
+                  Diffusion Model
+                </span>
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-mono font-extrabold bg-[#083C33] text-teal-300 shadow-2xs">
+                  <span className="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse" />
+                  93.6% ACC
                 </span>
               </div>
-              <h3 className="font-bold text-base text-[#083C33] font-serif">
-                Latent Diffusion (SDXL / LDM / Midjourney)
-              </h3>
+
+              {/* Title & Domain */}
+              <div>
+                <h3 className="text-lg font-bold font-serif text-[#083C33] tracking-tight group-hover:text-teal-800 transition-colors">
+                  Latent Diffusion Signatures
+                </h3>
+                <span className="text-[11px] font-mono text-[#52706A] block mt-0.5">
+                  SDXL / LDM / Midjourney / DALL-E 3
+                </span>
+              </div>
+
+              {/* Physical description */}
               <p className="text-xs text-[#52706A] leading-relaxed">
                 Iterative reverse-denoising via score matching suppresses high-frequency stochastic noise. The VAE decoding stage introduces characteristic spectral power roll-off at peripheral frequencies.
               </p>
+
+              {/* Physical mechanism chip */}
+              <div className="bg-white/80 backdrop-blur-xs p-3 rounded-xl border border-[#D5DCD8] space-y-1.5 shadow-2xs">
+                <div className="flex items-center justify-between text-[10px] font-mono">
+                  <span className="text-[#52706A] uppercase tracking-wider">Physical Marker:</span>
+                  <span className="font-bold text-[#083C33]">Radial Power Roll-off</span>
+                </div>
+                <div className="flex items-center justify-between text-[10px] font-mono">
+                  <span className="text-[#52706A] uppercase tracking-wider">Decay Law:</span>
+                  <span className="font-semibold text-teal-700">f^(-α), α &gt; 2.8 Steep Slope</span>
+                </div>
+              </div>
             </div>
-            <div className="pt-3 border-t border-[#D5D9D1] text-[11px] font-mono text-[#083C33]">
-              <span className="text-[#52706A] block text-[10px] uppercase">Distinguishing Fingerprint:</span>
-              <strong className="text-[#0D5145]">VAE Decoder High-Band Roll-off</strong>
+
+            {/* Bottom telemetry footer */}
+            <div className="pt-4 mt-5 border-t border-[#D5DCD8]/70 space-y-2.5 relative z-10">
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-[10px] font-mono uppercase tracking-wider text-[#52706A]">Distinguishing Fingerprint</span>
+              </div>
+              <div className="p-2.5 rounded-xl bg-gradient-to-r from-teal-50/80 to-[#F0F5F2] border border-teal-200/60">
+                <div className="font-bold text-xs text-teal-800 font-mono flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-teal-500" />
+                  VAE Decoder High-Band Roll-off
+                </div>
+              </div>
+
+              {/* Progress bar indicator */}
+              <div className="space-y-1">
+                <div className="flex justify-between text-[10px] font-mono text-[#52706A]">
+                  <span>Attribution Discriminability</span>
+                  <span className="font-bold text-[#083C33]">93.6%</span>
+                </div>
+                <div className="w-full bg-[#E2E8DF] rounded-full h-1.5 overflow-hidden p-0.5 border border-[#D5DCD0]/60">
+                  <div 
+                    className="h-full rounded-full bg-gradient-to-r from-teal-500 to-cyan-500 transition-all duration-500"
+                    style={{ width: '93.6%' }}
+                  />
+                </div>
+              </div>
             </div>
           </div>
 
-          {/* Card 3: Pristine Sensor */}
-          <div className="bg-[#F7F6F0] p-6 rounded-[24px] border border-[#D5D9D1] flex flex-col justify-between space-y-4 hover:border-[#0D5145] transition-all">
-            <div className="space-y-3">
+          {/* Box 3: Pristine Sensor */}
+          <div className="relative overflow-hidden rounded-[26px] border border-[#D5DCD8] bg-gradient-to-br from-white via-[#FCFCFA] to-[#F5F8F6] p-6 shadow-[0_4px_24px_rgba(8,60,51,0.03)] hover:shadow-[0_16px_36px_rgba(8,60,51,0.08)] hover:border-[#083C33]/50 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group">
+            {/* Top Accent Stripe */}
+            <div className="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-[#083C33] via-[#0D5145] to-emerald-700" />
+            
+            {/* Subtle SVG Background Watermark - Silicon CMOS Grid & Noise */}
+            <div className="absolute top-4 right-4 w-32 h-32 opacity-[0.06] group-hover:opacity-[0.12] transition-opacity pointer-events-none text-[#083C33]">
+              <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="1.2">
+                <rect x="15" y="15" width="70" height="70" rx="8" />
+                <circle cx="50" cy="50" r="22" />
+                <circle cx="50" cy="50" r="8" fill="currentColor" opacity="0.4" />
+                <line x1="50" y1="15" x2="50" y2="28" />
+                <line x1="50" y1="72" x2="50" y2="85" />
+                <line x1="15" y1="50" x2="28" y2="50" />
+                <line x1="72" y1="50" x2="85" y2="50" />
+              </svg>
+            </div>
+
+            <div className="space-y-4 relative z-10">
+              {/* Header row */}
               <div className="flex items-center justify-between">
-                <span className="w-2.5 h-2.5 rounded-full bg-slate-600" />
-                <span className="text-[10px] font-mono font-bold text-[#0D5145] bg-white px-2.5 py-0.5 rounded-md border border-[#D5D9D1]">
-                  ACC: 94.0%
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider bg-slate-100 text-[#083C33] border border-slate-300">
+                  <Camera className="w-3 h-3 text-[#083C33]" />
+                  Physical Optical Sensor
+                </span>
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-mono font-extrabold bg-[#083C33] text-emerald-300 shadow-2xs">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  94.0% ACC
                 </span>
               </div>
-              <h3 className="font-bold text-base text-[#083C33] font-serif">
-                Pristine Physical Sensors (Genuine Media)
-              </h3>
+
+              {/* Title & Domain */}
+              <div>
+                <h3 className="text-lg font-bold font-serif text-[#083C33] tracking-tight group-hover:text-[#0D5145] transition-colors">
+                  Pristine Optical Sensors
+                </h3>
+                <span className="text-[11px] font-mono text-[#52706A] block mt-0.5">
+                  Silicon CMOS / CCD Sensor Noise
+                </span>
+              </div>
+
+              {/* Physical description */}
               <p className="text-xs text-[#52706A] leading-relaxed">
-                Natural optical captures strictly adhere to the continuous 1/f^α power-law spectral decay without harmonic periodic peaks, preserving intrinsic silicon Photo-Response Non-Uniformity (PRNU).
+                Natural optical captures strictly adhere to continuous 1/f^α power-law spectral decay without harmonic periodic peaks, preserving intrinsic silicon Photo-Response Non-Uniformity (PRNU).
               </p>
+
+              {/* Physical mechanism chip */}
+              <div className="bg-white/80 backdrop-blur-xs p-3 rounded-xl border border-[#D5DCD8] space-y-1.5 shadow-2xs">
+                <div className="flex items-center justify-between text-[10px] font-mono">
+                  <span className="text-[#52706A] uppercase tracking-wider">Physical Marker:</span>
+                  <span className="font-bold text-[#083C33]">Silicon PRNU Invariance</span>
+                </div>
+                <div className="flex items-center justify-between text-[10px] font-mono">
+                  <span className="text-[#52706A] uppercase tracking-wider">Spectral Profile:</span>
+                  <span className="font-semibold text-[#0D5145]">Natural 1/f Continuous Decay</span>
+                </div>
+              </div>
             </div>
-            <div className="pt-3 border-t border-[#D5D9D1] text-[11px] font-mono text-[#083C33]">
-              <span className="text-[#52706A] block text-[10px] uppercase">Distinguishing Fingerprint:</span>
-              <strong className="text-[#0D5145]">Physical PRNU Noise &amp; 1/f Decay</strong>
+
+            {/* Bottom telemetry footer */}
+            <div className="pt-4 mt-5 border-t border-[#D5DCD8]/70 space-y-2.5 relative z-10">
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-[10px] font-mono uppercase tracking-wider text-[#52706A]">Distinguishing Fingerprint</span>
+              </div>
+              <div className="p-2.5 rounded-xl bg-gradient-to-r from-emerald-50/80 to-[#F0F5F2] border border-[#D5DCD8]">
+                <div className="font-bold text-xs text-[#083C33] font-mono flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#083C33]" />
+                  Physical PRNU Noise &amp; 1/f Decay
+                </div>
+              </div>
+
+              {/* Progress bar indicator */}
+              <div className="space-y-1">
+                <div className="flex justify-between text-[10px] font-mono text-[#52706A]">
+                  <span>Attribution Discriminability</span>
+                  <span className="font-bold text-[#083C33]">94.0%</span>
+                </div>
+                <div className="w-full bg-[#E2E8DF] rounded-full h-1.5 overflow-hidden p-0.5 border border-[#D5DCD0]/60">
+                  <div 
+                    className="h-full rounded-full bg-gradient-to-r from-[#083C33] to-[#0D5145] transition-all duration-500"
+                    style={{ width: '94.0%' }}
+                  />
+                </div>
+              </div>
             </div>
           </div>
 
+        </div>
+
+        {/* Comparative Diagnostic Summary Strip */}
+        <div className="p-5 rounded-2xl bg-gradient-to-r from-white via-[#F7FAF7] to-[#EEF5F1] border border-[#D5DCD6] shadow-xs relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] font-mono uppercase tracking-wider font-bold text-[#0D5145] bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200">
+              Discriminative Law
+            </span>
+            <span className="text-xs font-mono text-[#52706A]">Multi-Domain Physics Coupling:</span>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs font-mono w-full lg:w-auto">
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white border border-[#D5DCD6] shadow-2xs">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+              <span className="text-[#52706A]">Harmonics:</span>
+              <span className="font-bold text-[#083C33]">GAN Strides</span>
+            </div>
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white border border-[#D5DCD6] shadow-2xs">
+              <span className="w-1.5 h-1.5 rounded-full bg-teal-500" />
+              <span className="text-[#52706A]">Roll-Off:</span>
+              <span className="font-bold text-[#083C33]">VAE Decoders</span>
+            </div>
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white border border-[#D5DCD6] shadow-2xs">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#083C33]" />
+              <span className="text-[#52706A]">Stochastic 1/f:</span>
+              <span className="font-bold text-[#083C33]">Silicon Sensors</span>
+            </div>
+          </div>
         </div>
 
       </section>
