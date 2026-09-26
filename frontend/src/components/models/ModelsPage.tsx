@@ -18,7 +18,9 @@ import {
   Terminal,
   Gauge,
   Sliders,
-  Database
+  Database,
+  Camera,
+  Waves
 } from 'lucide-react';
 import { apiService } from '../../services/api';
 import type { ModelMetadata } from '../../types/forensics';
@@ -558,36 +560,199 @@ export const ModelsPage: React.FC = () => {
             'Midjourney v5',
             'Real'
           ]).map((clsName, idx) => {
-            const isReal = clsName.toLowerCase().includes('real');
-            const isDiffusion = clsName.toLowerCase().includes('sd') || clsName.toLowerCase().includes('diff') || clsName.toLowerCase().includes('midjourney');
+            const lower = clsName.toLowerCase();
+            const isReal = lower.includes('real') || lower.includes('authentic');
+            const isSg3 = lower.includes('stylegan3');
+            const isGan = isSg3 || lower.includes('stylegan') || lower.includes('progan');
+            const isMj = lower.includes('midjourney');
+            const isXl = lower.includes('xl');
+
+            const familyType = isReal ? 'Real' : isGan ? 'GAN' : 'Diffusion';
+            const familyLabel = isReal ? 'ORGANIC / SENSOR' : isGan ? 'ADVERSARIAL GAN' : 'LATENT DIFFUSION';
+            
+            const mechanism = isReal
+              ? 'Physical Optical Sensor (Bayer CFA)'
+              : isSg3
+              ? 'Continuous Signal Translation'
+              : lower.includes('progan')
+              ? 'Progressive Transposed Conv'
+              : lower.includes('stylegan')
+              ? 'Style-Modulated Latent Conv2D'
+              : isMj
+              ? 'Proprietary Latent Diffusion Prior'
+              : isXl
+              ? 'Cascaded U-Net 2.6B + Latent Refiner'
+              : 'LDM U-Net 860M + 8× VAE Decoder';
+
+            const artifact = isReal
+              ? 'Continuous 1/f power-law decay with PRNU silicon noise floor.'
+              : isSg3
+              ? 'Suppressed aliasing with subtle radial harmonic rings in Fourier domain.'
+              : lower.includes('progan')
+              ? 'Strong harmonic peak multiples in radial azimuthal power spectrum.'
+              : lower.includes('stylegan')
+              ? 'Periodic deconvolution checkerboard spikes visible in 2D FFT.'
+              : isMj
+              ? 'Steep spectral power falloff at high frequencies with proprietary prior.'
+              : isXl
+              ? 'Suppressed highs with multi-scale decoder wavelet seams.'
+              : 'High-frequency roll-off induced by latent VAE decoders in residual band.';
+
+            const signature = isReal
+              ? '1/f Natural Decay'
+              : isSg3
+              ? 'Harmonic Rings'
+              : isGan
+              ? 'Periodic Nyquist Spikes'
+              : isMj
+              ? 'High-Cut Roll-off'
+              : 'Spectral Roll-off';
+
+            const bars = isReal
+              ? [85, 68, 52, 38]
+              : isSg3
+              ? [68, 88, 56, 80]
+              : isGan
+              ? [55, 96, 42, 90]
+              : isMj
+              ? [94, 78, 40, 18]
+              : [90, 72, 32, 14];
+
+            const theme = isReal
+              ? {
+                  cardBg: 'bg-gradient-to-br from-emerald-500/[0.04] via-white to-emerald-600/[0.07] hover:border-emerald-600/70 hover:shadow-emerald-950/10',
+                  borderColor: 'border-emerald-200/90',
+                  badgeBg: 'bg-emerald-50/90 text-emerald-800 border-emerald-300/80',
+                  dotColor: 'bg-emerald-600 shadow-[0_0_8px_rgba(16,185,129,0.7)]',
+                  iconBg: 'text-emerald-700 bg-emerald-100/70',
+                  watermark: 'text-emerald-800/[0.04] group-hover:text-emerald-800/[0.08]',
+                  barColor: 'bg-emerald-600',
+                  signatureColor: 'text-emerald-800'
+                }
+              : isSg3
+              ? {
+                  cardBg: 'bg-gradient-to-br from-amber-500/[0.03] via-white to-[#0D4F43]/[0.05] hover:border-amber-600/70 hover:shadow-amber-950/10',
+                  borderColor: 'border-amber-200/90',
+                  badgeBg: 'bg-amber-50/90 text-amber-800 border-amber-300/80',
+                  dotColor: 'bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.7)]',
+                  iconBg: 'text-amber-700 bg-amber-100/70',
+                  watermark: 'text-amber-800/[0.04] group-hover:text-amber-800/[0.08]',
+                  barColor: 'bg-amber-600',
+                  signatureColor: 'text-amber-800'
+                }
+              : isGan
+              ? {
+                  cardBg: 'bg-gradient-to-br from-teal-500/[0.03] via-white to-[#0D4F43]/[0.06] hover:border-[#0D4F43]/70 hover:shadow-teal-950/10',
+                  borderColor: 'border-[#D5D9D1]',
+                  badgeBg: 'bg-teal-50/90 text-teal-800 border-teal-300/80',
+                  dotColor: 'bg-teal-600 shadow-[0_0_8px_rgba(20,184,166,0.7)]',
+                  iconBg: 'text-teal-700 bg-teal-100/70',
+                  watermark: 'text-teal-800/[0.04] group-hover:text-teal-800/[0.08]',
+                  barColor: 'bg-teal-700',
+                  signatureColor: 'text-teal-800'
+                }
+              : isMj
+              ? {
+                  cardBg: 'bg-gradient-to-br from-indigo-500/[0.04] via-white to-[#0D4F43]/[0.06] hover:border-indigo-600/70 hover:shadow-indigo-950/10',
+                  borderColor: 'border-indigo-200/90',
+                  badgeBg: 'bg-indigo-50/90 text-indigo-800 border-indigo-300/80',
+                  dotColor: 'bg-indigo-600 shadow-[0_0_8px_rgba(99,102,241,0.7)]',
+                  iconBg: 'text-indigo-700 bg-indigo-100/70',
+                  watermark: 'text-indigo-800/[0.04] group-hover:text-indigo-800/[0.08]',
+                  barColor: 'bg-indigo-600',
+                  signatureColor: 'text-indigo-800'
+                }
+              : {
+                  cardBg: 'bg-gradient-to-br from-sky-500/[0.03] via-white to-[#0D4F43]/[0.06] hover:border-[#0D4F43]/70 hover:shadow-sky-950/10',
+                  borderColor: 'border-sky-200/90',
+                  badgeBg: 'bg-sky-50/90 text-sky-800 border-sky-300/80',
+                  dotColor: 'bg-sky-600 shadow-[0_0_8px_rgba(2,132,199,0.7)]',
+                  iconBg: 'text-sky-700 bg-sky-100/70',
+                  watermark: 'text-sky-800/[0.04] group-hover:text-sky-800/[0.08]',
+                  barColor: 'bg-[#0D5145]',
+                  signatureColor: 'text-[#0D5145]'
+                };
+
             return (
               <div 
                 key={clsName}
-                className="p-5 rounded-[22px] bg-[#F7F6F0] border border-[#D5D9D1] shadow-2xs flex flex-col justify-between space-y-3 hover:border-[#0D5145] hover:bg-white transition-all group"
+                className={`relative overflow-hidden p-5 rounded-[22px] border ${theme.borderColor} ${theme.cardBg} shadow-2xs hover:shadow-md transition-all duration-300 flex flex-col justify-between group hover:-translate-y-1`}
               >
-                <div className="flex items-center justify-between text-xs font-mono text-[#52706A]">
-                  <span>CLASS {String(idx).padStart(2, '0')}</span>
-                  <span className={`w-2.5 h-2.5 rounded-full ${isReal ? 'bg-emerald-600' : 'bg-[#0D5145]'}`} />
+                {/* Subtle Ambient Watermark in Background */}
+                <div className={`absolute -right-3 -bottom-3 ${theme.watermark} transition-all duration-500 group-hover:scale-110 pointer-events-none`}>
+                  {familyType === 'Real' ? (
+                    <Camera className="w-24 h-24" />
+                  ) : familyType === 'GAN' ? (
+                    <Cpu className="w-24 h-24" />
+                  ) : (
+                    <Waves className="w-24 h-24" />
+                  )}
                 </div>
-                <div>
-                  <h4 className="text-base font-bold text-[#083C33] font-serif group-hover:text-[#0D5145] transition-colors">
-                    {clsName}
-                  </h4>
-                  <span className="text-[11px] text-[#0D5145] font-mono block mt-1 font-semibold">
-                    {isDiffusion
-                      ? 'Denoising Score Matching'
-                      : isReal
-                      ? 'Physical Optical Sensor'
-                      : 'Adversarial Upsampling'}
-                  </span>
-                  <p className="text-[11px] text-[#52706A] mt-1.5 leading-relaxed">
-                    {isDiffusion
-                      ? 'High-frequency roll-off induced by latent VAE decoders.'
-                      : isReal
-                      ? 'Continuous 1/f power-law decay with PRNU silicon noise.'
-                      : 'Periodic deconvolution checkerboard spikes in 2D FFT.'}
-                  </p>
+
+                <div className="relative z-10 space-y-3">
+                  {/* Top Bar: Monospace Class Pill + Family Pill with Pulse */}
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-mono tracking-wider font-semibold px-2 py-0.5 rounded-full bg-white/95 border border-[#D5D9D1] text-[#52706A] shadow-2xs">
+                      CLASS {String(idx).padStart(2, '0')}
+                    </span>
+                    <div className="flex items-center gap-1.5">
+                      <span className={`w-1.5 h-1.5 rounded-full ${theme.dotColor} animate-pulse`} />
+                      <span className={`text-[9px] font-mono uppercase font-bold tracking-wider px-2 py-0.5 rounded-full border ${theme.badgeBg}`}>
+                        {familyLabel}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Class Name & Mechanism Pill */}
+                  <div>
+                    <div className="flex items-center justify-between">
+                      <h4 className="text-base sm:text-lg font-bold text-[#083C33] font-serif group-hover:text-[#0D5145] transition-colors tracking-tight">
+                        {clsName}
+                      </h4>
+                      <div className={`w-6 h-6 rounded-lg flex items-center justify-center ${theme.iconBg} opacity-85 group-hover:opacity-100 transition-opacity`}>
+                        {familyType === 'Real' ? (
+                          <Camera className="w-3.5 h-3.5" />
+                        ) : familyType === 'GAN' ? (
+                          <Cpu className="w-3.5 h-3.5" />
+                        ) : (
+                          <Sparkles className="w-3.5 h-3.5" />
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
+                      <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-md bg-white/85 border border-[#D5D9D1]/70 text-[#083C33]">
+                        {mechanism}
+                      </span>
+                    </div>
+
+                    <p className="text-[11px] text-[#52706A] mt-2 leading-relaxed">
+                      {artifact}
+                    </p>
+                  </div>
                 </div>
+
+                {/* Footer: Forensic FFT Signature + Equalizer Display */}
+                <div className="relative z-10 pt-3 mt-3 border-t border-[#D5D9D1]/70 flex items-center justify-between">
+                  <div className="flex items-center gap-1.5">
+                    <Activity className={`w-3.5 h-3.5 ${theme.signatureColor}`} />
+                    <span className="text-[10px] font-mono font-medium text-[#3D5A52]">
+                      {signature}
+                    </span>
+                  </div>
+
+                  {/* 4-bar equalizer illustrating frequency energy spectrum */}
+                  <div className="flex items-end gap-1 h-3.5 px-1.5 py-0.5 rounded bg-white/80 border border-[#D5D9D1]/60" title="Simulated Azimuthal FFT Energy Spectrum">
+                    {bars.map((barHeight, bIdx) => (
+                      <span
+                        key={bIdx}
+                        className={`w-1 rounded-xs transition-all duration-300 ${theme.barColor}`}
+                        style={{ height: `${barHeight}%` }}
+                      />
+                    ))}
+                  </div>
+                </div>
+
               </div>
             );
           })}
