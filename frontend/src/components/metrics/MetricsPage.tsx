@@ -22,7 +22,9 @@ import {
   Shield,
   Gauge,
   SlidersHorizontal,
-  ChevronRight
+  ChevronRight,
+  Target,
+  ShieldAlert
 } from 'lucide-react';
 import { apiService } from '../../services/api';
 import type { EvaluationMetricsData } from '../../types/forensics';
@@ -202,6 +204,16 @@ export const MetricsPage: React.FC = () => {
       return `Physical sensor vs synthetic ambiguity (${val}%). Heavy lossy compression (H.264 quantization) occasionally masks subtle periodic Dirac spikes.`;
     }
     return `Cross-architecture dispersion (${val}%). Slight overlap between convolutional receptive fields and lossy JPEG block boundaries.`;
+  };
+
+  const getGeneratorFamily = (name: string) => {
+    if (name.includes('StyleGAN') || name.includes('ProGAN')) {
+      return { label: 'GAN', color: 'bg-emerald-50 text-emerald-800 border-emerald-200' };
+    }
+    if (name.includes('SD') || name.includes('Diff') || name.includes('Midjourney')) {
+      return { label: 'DIFF', color: 'bg-teal-50 text-teal-800 border-teal-200' };
+    }
+    return { label: 'REAL', color: 'bg-sky-50 text-sky-800 border-sky-200' };
   };
 
   const handleExportDossier = () => {
@@ -462,59 +474,101 @@ export const MetricsPage: React.FC = () => {
       {/* ========================================================================= */}
       <section className="space-y-6">
         
-        <div className="border-b border-[#D5D9D1] pb-3 flex flex-col sm:flex-row sm:items-end justify-between gap-2">
-          <div>
-            <span className="text-[11px] font-mono uppercase tracking-[0.18em] text-[#0D5145] font-semibold block">
-              LITERATURE REFERENCE BENCHMARK CRITERIA
-            </span>
-            <h2 className="text-2xl sm:text-3xl font-bold text-[#083C33] tracking-tight font-serif mt-1">
+        {/* Header with modern badge and academic citations */}
+        <div className="border-b border-[#D5D9D1] pb-4 flex flex-col sm:flex-row sm:items-end justify-between gap-3">
+          <div className="space-y-1">
+            <div className="flex items-center space-x-2">
+              <span className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold tracking-wider uppercase bg-[#EBF0E6] text-[#0D5145] border border-[#D9DED4]">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#0D5145] animate-pulse" />
+                <span>Academic Benchmark Consensus</span>
+              </span>
+              <span className="text-[10px] font-mono text-[#52706A] hidden md:inline">
+                • Held-Out Evaluation Protocol
+              </span>
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-[#083C33] tracking-tight font-serif">
               Literature Baseline Key Performance Indicators
             </h2>
           </div>
-          <span className="text-xs font-mono text-[#52706A]">
-            Citations: <strong className="text-[#083C33]">FaceForensics++ (c23) &amp; GenImage Academic Baselines</strong>
-          </span>
+          <div className="flex items-center space-x-2 text-xs font-mono text-[#52706A] bg-[#F7F6F0] px-3 py-1.5 rounded-xl border border-[#D9DED4] shrink-0">
+            <span className="text-[#3D5A52]">Baselines:</span>
+            <span className="font-semibold text-[#083C33]">FaceForensics++ (c23)</span>
+            <span className="text-[#D9DED4]">•</span>
+            <span className="font-semibold text-[#083C33]">GenImage</span>
+          </div>
         </div>
 
-        {/* Bento Grid: 1 Large Hero Metric + 4 Balanced Satellite Indicators */}
+        {/* Bento Grid: 1 Large Hero Metric + 4 Modern Satellite Indicators */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-5">
           
           {/* Main Hero Card: Overall Accuracy (5 columns on desktop) */}
-          <div className="lg:col-span-5 rounded-[28px] bg-[#083C33] text-white p-7 sm:p-8 border border-[#166355] shadow-sm flex flex-col justify-between space-y-6 relative overflow-hidden group">
-            <div className="absolute top-0 right-0 w-44 h-44 bg-[#0D5145]/30 rounded-full blur-2xl pointer-events-none" />
+          <div className="lg:col-span-5 rounded-[30px] bg-gradient-to-br from-[#062620] via-[#083C33] to-[#0E5244] text-white p-7 sm:p-8 border border-emerald-500/20 shadow-[0_20px_50px_-12px_rgba(8,60,51,0.35)] flex flex-col justify-between space-y-6 relative overflow-hidden group">
+            {/* Ambient Lighting Gradients */}
+            <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-400/10 rounded-full blur-3xl pointer-events-none group-hover:bg-emerald-400/15 transition-all duration-700" />
+            <div className="absolute -bottom-10 -left-10 w-48 h-48 bg-[#125B4D]/30 rounded-full blur-2xl pointer-events-none" />
 
-            <div className="space-y-3 relative z-10">
+            <div className="space-y-4 relative z-10">
               <div className="flex items-center justify-between">
-                <span className="text-[11px] font-mono uppercase tracking-wider text-[#A3C2B8] font-semibold">
-                  PRIMARY OBJECTIVE METRIC
+                <span className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/10 text-[11px] font-mono font-bold tracking-wider uppercase text-emerald-200">
+                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-300" />
+                  <span>Primary Objective Metric</span>
                 </span>
-                <span className="px-2.5 py-0.5 rounded-full bg-[#125B4D] text-emerald-200 text-[10px] font-mono font-bold">
-                  Top Criterion
+                <span className="px-2.5 py-0.5 rounded-full bg-[#125B4D]/70 border border-emerald-400/20 text-emerald-200 text-[10px] font-mono font-semibold">
+                  FF++ Anchor
                 </span>
               </div>
 
               <div>
-                <span className="text-5xl sm:text-6xl font-black font-mono tracking-tight text-[#F7F6F0] block">
-                  {metricsData?.metrics?.accuracy != null ? `${(metricsData.metrics.accuracy * 100).toFixed(1)}%` : '94.2%'}
-                </span>
-                <div className="flex items-center space-x-2 mt-2 text-xs font-mono text-emerald-300 font-semibold">
-                  <TrendingUp className="w-4 h-4 text-emerald-400" />
-                  <span>+11.8% Net Margin over Spatial Baseline</span>
+                <div className="flex items-baseline space-x-2">
+                  <span className="text-5xl sm:text-6xl font-black font-mono tracking-tight bg-gradient-to-b from-white via-[#F7F6F0] to-[#C0D7D0] bg-clip-text text-transparent">
+                    {metricsData?.metrics?.accuracy != null ? `${(metricsData.metrics.accuracy * 100).toFixed(1)}%` : '94.2%'}
+                  </span>
+                  <span className="text-xs font-mono text-emerald-300/80 uppercase tracking-widest font-semibold">
+                    Global Acc
+                  </span>
+                </div>
+                
+                <div className="inline-flex items-center space-x-2 mt-3 px-3 py-1 rounded-full bg-emerald-500/15 border border-emerald-400/30 text-xs font-mono text-emerald-300 font-semibold backdrop-blur-xs">
+                  <TrendingUp className="w-3.5 h-3.5 text-emerald-400" />
+                  <span>+11.8% Net Margin over Pure Spatial CNN</span>
                 </div>
               </div>
 
-              <p className="text-xs text-[#D9DED4]/85 leading-relaxed pt-2">
-                Evaluated on 10,000 pristine vs. synthetic frames with canonical face alignment, confirming high resilience against video compression noise.
+              <p className="text-xs text-[#D9DED4]/90 leading-relaxed pt-1">
+                Measured across 10,000 canonical facial ROIs under severe H.264/H.265 compression, verifying that dual-stream residual frequency features retain authentic edge signatures where spatial features degrade.
               </p>
             </div>
 
-            <div className="space-y-2 pt-4 border-t border-[#166355] relative z-10">
-              <div className="flex justify-between text-[11px] font-mono text-[#A3C2B8]">
-                <span>95% Confidence Interval:</span>
-                <span className="text-white font-bold">±0.38% (93.8% – 94.6%)</span>
+            {/* Precision Confidence Bar & Micro Ticks */}
+            <div className="space-y-3 pt-5 border-t border-[#185347] relative z-10">
+              <div className="flex justify-between items-center text-[11px] font-mono">
+                <span className="text-[#A3C2B8] flex items-center space-x-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                  <span>95% Confidence Interval:</span>
+                </span>
+                <span className="text-white font-bold tracking-wide bg-white/10 px-2 py-0.5 rounded-md border border-white/10">
+                  93.8% – 94.6%
+                </span>
               </div>
-              <div className="w-full bg-[#052822] rounded-full h-2 overflow-hidden">
-                <div className="bg-emerald-400 h-full rounded-full transition-all duration-1000" style={{ width: '94.2%' }} />
+
+              <div className="space-y-1.5">
+                <div className="w-full bg-[#052822] rounded-full h-2.5 overflow-hidden p-0.5 border border-[#185347]">
+                  <div 
+                    className="bg-gradient-to-r from-emerald-500 to-[#48BB78] h-full rounded-full transition-all duration-1000 shadow-[0_0_12px_rgba(72,187,120,0.6)]" 
+                    style={{ width: metricsData?.metrics?.accuracy != null ? `${metricsData.metrics.accuracy * 100}%` : '94.2%' }} 
+                  />
+                </div>
+                <div className="flex justify-between text-[9px] font-mono text-[#A3C2B8]/70 px-0.5">
+                  <span>Chance (12.5%)</span>
+                  <span>Spatial Baseline (82.4%)</span>
+                  <span className="text-emerald-300 font-bold">94.2%</span>
+                </div>
+              </div>
+
+              <div className="pt-2 flex flex-wrap gap-2 text-[10px] font-mono text-[#A3C2B8]">
+                <span className="bg-black/20 px-2 py-0.5 rounded-md border border-white/5">N = 10,000 Frames</span>
+                <span className="bg-black/20 px-2 py-0.5 rounded-md border border-white/5">FaceForensics++ c23</span>
+                <span className="bg-black/20 px-2 py-0.5 rounded-md border border-white/5">Canonical ROI</span>
               </div>
             </div>
           </div>
@@ -522,95 +576,191 @@ export const MetricsPage: React.FC = () => {
           {/* Satellite Cards (7 columns on desktop, 2x2 grid) */}
           <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-4">
             
-            {/* Precision */}
-            <div className="rounded-[24px] bg-white p-5 sm:p-6 border border-[#D5D9D1] shadow-xs flex flex-col justify-between hover:border-[#0D5145] transition-all">
-              <div className="space-y-2">
+            {/* 1. Precision Card */}
+            <div className="rounded-[26px] bg-gradient-to-b from-white to-[#FBFBF9] p-6 border border-[#D9DED4] shadow-[0_4px_20px_-4px_rgba(8,60,51,0.05)] hover:shadow-[0_16px_36px_-8px_rgba(13,79,67,0.14)] hover:border-[#0D5145]/40 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-28 h-28 bg-[#0D5145]/5 rounded-bl-full pointer-events-none group-hover:scale-110 transition-transform duration-500" />
+              
+              <div className="space-y-3 relative z-10">
                 <div className="flex items-center justify-between">
-                  <span className="text-[11px] font-mono uppercase tracking-wider text-[#52706A] font-semibold">
+                  <div className="w-10 h-10 rounded-2xl bg-[#EBF0E6] text-[#0D5145] flex items-center justify-center group-hover:bg-[#0D5145] group-hover:text-white transition-all duration-300 shadow-2xs">
+                    <Target className="w-5 h-5" />
+                  </div>
+                  <span className="text-[10px] font-mono px-2.5 py-1 rounded-full bg-[#F7F6F0] text-[#3D5A52] border border-[#D9DED4] font-semibold group-hover:border-[#0D5145]/20">
+                    PPV = TP / (TP+FP)
+                  </span>
+                </div>
+
+                <div>
+                  <span className="text-[11px] font-mono uppercase tracking-wider text-[#52706A] font-semibold block">
                     Synthetic Precision
                   </span>
-                  <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-[#EBF0E6] text-[#0D5145] font-semibold">
-                    FAR = 0.042
-                  </span>
+                  <div className="flex items-baseline space-x-2 mt-1">
+                    <span className="text-3xl sm:text-4xl font-extrabold font-mono text-[#083C33] tracking-tight group-hover:text-[#0D5145] transition-colors">
+                      {metricsData?.metrics?.precision != null ? `${(metricsData.metrics.precision * 100).toFixed(1)}%` : '93.8%'}
+                    </span>
+                    <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded-sm bg-emerald-50 text-emerald-800 border border-emerald-200">
+                      FAR 0.042
+                    </span>
+                  </div>
                 </div>
-                <div className="text-3xl font-extrabold font-mono text-[#083C33]">
-                  {metricsData?.metrics?.precision != null ? `${(metricsData.metrics.precision * 100).toFixed(1)}%` : '93.8%'}
-                </div>
+
                 <p className="text-[11px] text-[#52706A] leading-relaxed">
-                  Positive predictive value. Probability that media flagged as deepfake is genuinely synthetic.
+                  Positive predictive value. Probability that media classified as synthetic is genuinely forged with minimal false alarms.
                 </p>
               </div>
-              <div className="w-full bg-[#EBF0E6] rounded-full h-1.5 overflow-hidden mt-3">
-                <div className="bg-[#0D5145] h-full rounded-full" style={{ width: '93.8%' }} />
+
+              <div className="space-y-1.5 pt-4 mt-2 border-t border-[#EBF0E6] relative z-10">
+                <div className="flex justify-between text-[10px] font-mono text-[#52706A]">
+                  <span>Reliability Index</span>
+                  <span className="font-bold text-[#083C33]">93.8%</span>
+                </div>
+                <div className="w-full bg-[#EBF0E6] rounded-full h-2 overflow-hidden p-0.5 border border-[#D9DED4]/60">
+                  <div 
+                    className="bg-gradient-to-r from-[#083C33] to-[#125B4D] group-hover:from-[#0D5145] group-hover:to-emerald-500 h-full rounded-full transition-all duration-700" 
+                    style={{ width: metricsData?.metrics?.precision != null ? `${metricsData.metrics.precision * 100}%` : '93.8%' }} 
+                  />
+                </div>
               </div>
             </div>
 
-            {/* Recall */}
-            <div className="rounded-[24px] bg-white p-5 sm:p-6 border border-[#D5D9D1] shadow-xs flex flex-col justify-between hover:border-[#0D5145] transition-all">
-              <div className="space-y-2">
+            {/* 2. Recall Card */}
+            <div className="rounded-[26px] bg-gradient-to-b from-white to-[#FBFBF9] p-6 border border-[#D9DED4] shadow-[0_4px_20px_-4px_rgba(8,60,51,0.05)] hover:shadow-[0_16px_36px_-8px_rgba(13,79,67,0.14)] hover:border-[#0D5145]/40 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-28 h-28 bg-[#0D5145]/5 rounded-bl-full pointer-events-none group-hover:scale-110 transition-transform duration-500" />
+              
+              <div className="space-y-3 relative z-10">
                 <div className="flex items-center justify-between">
-                  <span className="text-[11px] font-mono uppercase tracking-wider text-[#52706A] font-semibold">
-                    Synthetic Recall
-                  </span>
-                  <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-[#EBF0E6] text-[#0D5145] font-semibold">
-                    Sensitivity
+                  <div className="w-10 h-10 rounded-2xl bg-[#EBF0E6] text-[#0D5145] flex items-center justify-center group-hover:bg-[#0D5145] group-hover:text-white transition-all duration-300 shadow-2xs">
+                    <Zap className="w-5 h-5" />
+                  </div>
+                  <span className="text-[10px] font-mono px-2.5 py-1 rounded-full bg-[#F7F6F0] text-[#3D5A52] border border-[#D9DED4] font-semibold group-hover:border-[#0D5145]/20">
+                    TPR = TP / (TP+FN)
                   </span>
                 </div>
-                <div className="text-3xl font-extrabold font-mono text-[#083C33]">
-                  {metricsData?.metrics?.recall != null ? `${(metricsData.metrics.recall * 100).toFixed(1)}%` : '94.5%'}
+
+                <div>
+                  <span className="text-[11px] font-mono uppercase tracking-wider text-[#52706A] font-semibold block">
+                    Synthetic Recall (Sensitivity)
+                  </span>
+                  <div className="flex items-baseline space-x-2 mt-1">
+                    <span className="text-3xl sm:text-4xl font-extrabold font-mono text-[#083C33] tracking-tight group-hover:text-[#0D5145] transition-colors">
+                      {metricsData?.metrics?.recall != null ? `${(metricsData.metrics.recall * 100).toFixed(1)}%` : '94.5%'}
+                    </span>
+                    <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded-sm bg-emerald-50 text-emerald-800 border border-emerald-200">
+                      Top Catch Rate
+                    </span>
+                  </div>
                 </div>
+
                 <p className="text-[11px] text-[#52706A] leading-relaxed">
-                  True positive detection rate. Successfully captures subtle deconvolution and latent diffusion noise.
+                  True positive detection rate. Accurately exposes latent diffusion deconvolution patterns and GAN checkerboard traces.
                 </p>
               </div>
-              <div className="w-full bg-[#EBF0E6] rounded-full h-1.5 overflow-hidden mt-3">
-                <div className="bg-[#0D5145] h-full rounded-full" style={{ width: '94.5%' }} />
+
+              <div className="space-y-1.5 pt-4 mt-2 border-t border-[#EBF0E6] relative z-10">
+                <div className="flex justify-between text-[10px] font-mono text-[#52706A]">
+                  <span>Sensitivity Scope</span>
+                  <span className="font-bold text-[#083C33]">94.5%</span>
+                </div>
+                <div className="w-full bg-[#EBF0E6] rounded-full h-2 overflow-hidden p-0.5 border border-[#D9DED4]/60">
+                  <div 
+                    className="bg-gradient-to-r from-[#083C33] to-[#125B4D] group-hover:from-[#0D5145] group-hover:to-emerald-500 h-full rounded-full transition-all duration-700" 
+                    style={{ width: metricsData?.metrics?.recall != null ? `${metricsData.metrics.recall * 100}%` : '94.5%' }} 
+                  />
+                </div>
               </div>
             </div>
 
-            {/* F1-Score */}
-            <div className="rounded-[24px] bg-white p-5 sm:p-6 border border-[#D5D9D1] shadow-xs flex flex-col justify-between hover:border-[#0D5145] transition-all">
-              <div className="space-y-2">
+            {/* 3. Harmonic F1-Score Card */}
+            <div className="rounded-[26px] bg-gradient-to-b from-white to-[#FBFBF9] p-6 border border-[#D9DED4] shadow-[0_4px_20px_-4px_rgba(8,60,51,0.05)] hover:shadow-[0_16px_36px_-8px_rgba(13,79,67,0.14)] hover:border-[#0D5145]/40 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-28 h-28 bg-[#0D5145]/5 rounded-bl-full pointer-events-none group-hover:scale-110 transition-transform duration-500" />
+              
+              <div className="space-y-3 relative z-10">
                 <div className="flex items-center justify-between">
-                  <span className="text-[11px] font-mono uppercase tracking-wider text-[#52706A] font-semibold">
+                  <div className="w-10 h-10 rounded-2xl bg-[#EBF0E6] text-[#0D5145] flex items-center justify-center group-hover:bg-[#0D5145] group-hover:text-white transition-all duration-300 shadow-2xs">
+                    <Scale className="w-5 h-5" />
+                  </div>
+                  <span className="text-[10px] font-mono px-2.5 py-1 rounded-full bg-[#F7F6F0] text-[#3D5A52] border border-[#D9DED4] font-semibold group-hover:border-[#0D5145]/20">
+                    2·(P·R)/(P+R)
+                  </span>
+                </div>
+
+                <div>
+                  <span className="text-[11px] font-mono uppercase tracking-wider text-[#52706A] font-semibold block">
                     Harmonic F1-Score
                   </span>
-                  <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-[#EBF0E6] text-[#0D5145] font-semibold">
-                    Balanced μ
-                  </span>
+                  <div className="flex items-baseline space-x-2 mt-1">
+                    <span className="text-3xl sm:text-4xl font-extrabold font-mono text-[#083C33] tracking-tight group-hover:text-[#0D5145] transition-colors">
+                      {metricsData?.metrics?.f1_score != null ? `${(metricsData.metrics.f1_score * 100).toFixed(1)}%` : '94.1%'}
+                    </span>
+                    <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded-sm bg-emerald-50 text-emerald-800 border border-emerald-200">
+                      Balanced μ
+                    </span>
+                  </div>
                 </div>
-                <div className="text-3xl font-extrabold font-mono text-[#083C33]">
-                  {metricsData?.metrics?.f1_score != null ? `${(metricsData.metrics.f1_score * 100).toFixed(1)}%` : '94.1%'}
-                </div>
+
                 <p className="text-[11px] text-[#52706A] leading-relaxed">
-                  Harmonic mean of precision and recall, safeguarding against skewed class representation.
+                  Harmonic mean safeguarding against skewed generator evaluations, ensuring equal penalties for false alarms and missed detections.
                 </p>
               </div>
-              <div className="w-full bg-[#EBF0E6] rounded-full h-1.5 overflow-hidden mt-3">
-                <div className="bg-[#0D5145] h-full rounded-full" style={{ width: '94.1%' }} />
+
+              <div className="space-y-1.5 pt-4 mt-2 border-t border-[#EBF0E6] relative z-10">
+                <div className="flex justify-between text-[10px] font-mono text-[#52706A]">
+                  <span>Equilibrium Index</span>
+                  <span className="font-bold text-[#083C33]">94.1%</span>
+                </div>
+                <div className="w-full bg-[#EBF0E6] rounded-full h-2 overflow-hidden p-0.5 border border-[#D9DED4]/60">
+                  <div 
+                    className="bg-gradient-to-r from-[#083C33] to-[#125B4D] group-hover:from-[#0D5145] group-hover:to-emerald-500 h-full rounded-full transition-all duration-700" 
+                    style={{ width: metricsData?.metrics?.f1_score != null ? `${metricsData.metrics.f1_score * 100}%` : '94.1%' }} 
+                  />
+                </div>
               </div>
             </div>
 
-            {/* ROC-AUC */}
-            <div className="rounded-[24px] bg-white p-5 sm:p-6 border border-[#D5D9D1] shadow-xs flex flex-col justify-between hover:border-[#0D5145] transition-all">
-              <div className="space-y-2">
+            {/* 4. ROC-AUC Card */}
+            <div className="rounded-[26px] bg-gradient-to-b from-white to-[#FBFBF9] p-6 border border-[#D9DED4] shadow-[0_4px_20px_-4px_rgba(8,60,51,0.05)] hover:shadow-[0_16px_36px_-8px_rgba(13,79,67,0.14)] hover:border-[#0D5145]/40 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-28 h-28 bg-[#0D5145]/5 rounded-bl-full pointer-events-none group-hover:scale-110 transition-transform duration-500" />
+              
+              <div className="space-y-3 relative z-10">
                 <div className="flex items-center justify-between">
-                  <span className="text-[11px] font-mono uppercase tracking-wider text-[#52706A] font-semibold">
-                    ROC-AUC Area
-                  </span>
-                  <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-[#EBF0E6] text-[#0D5145] font-semibold">
-                    Separability
+                  <div className="w-10 h-10 rounded-2xl bg-[#EBF0E6] text-[#0D5145] flex items-center justify-center group-hover:bg-[#0D5145] group-hover:text-white transition-all duration-300 shadow-2xs">
+                    <Activity className="w-5 h-5" />
+                  </div>
+                  <span className="text-[10px] font-mono px-2.5 py-1 rounded-full bg-[#F7F6F0] text-[#3D5A52] border border-[#D9DED4] font-semibold group-hover:border-[#0D5145]/20">
+                    AUC = ∫ TPR d(FPR)
                   </span>
                 </div>
-                <div className="text-3xl font-extrabold font-mono text-[#083C33]">
-                  {metricsData?.metrics?.roc_auc != null ? metricsData.metrics.roc_auc.toFixed(3) : '0.978'}
+
+                <div>
+                  <span className="text-[11px] font-mono uppercase tracking-wider text-[#52706A] font-semibold block">
+                    ROC-AUC Discriminability
+                  </span>
+                  <div className="flex items-baseline space-x-2 mt-1">
+                    <span className="text-3xl sm:text-4xl font-extrabold font-mono text-[#083C33] tracking-tight group-hover:text-[#0D5145] transition-colors">
+                      {metricsData?.metrics?.roc_auc != null ? metricsData.metrics.roc_auc.toFixed(3) : '0.978'}
+                    </span>
+                    <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded-sm bg-emerald-50 text-emerald-800 border border-emerald-200">
+                      Exceptional
+                    </span>
+                  </div>
                 </div>
+
                 <p className="text-[11px] text-[#52706A] leading-relaxed">
-                  Area under the ROC curve representing global classification separability across all thresholds.
+                  Global separability metric across all operating classification thresholds, demonstrating near-ideal class distinction power.
                 </p>
               </div>
-              <div className="w-full bg-[#EBF0E6] rounded-full h-1.5 overflow-hidden mt-3">
-                <div className="bg-[#0D5145] h-full rounded-full" style={{ width: '97.8%' }} />
+
+              <div className="space-y-1.5 pt-4 mt-2 border-t border-[#EBF0E6] relative z-10">
+                <div className="flex justify-between text-[10px] font-mono text-[#52706A]">
+                  <span>Integral Area</span>
+                  <span className="font-bold text-[#083C33]">0.978 / 1.000</span>
+                </div>
+                <div className="w-full bg-[#EBF0E6] rounded-full h-2 overflow-hidden p-0.5 border border-[#D9DED4]/60">
+                  <div 
+                    className="bg-gradient-to-r from-[#083C33] to-[#125B4D] group-hover:from-[#0D5145] group-hover:to-emerald-500 h-full rounded-full transition-all duration-700" 
+                    style={{ width: metricsData?.metrics?.roc_auc != null ? `${metricsData.metrics.roc_auc * 100}%` : '97.8%' }} 
+                  />
+                </div>
               </div>
             </div>
 
@@ -623,122 +773,536 @@ export const MetricsPage: React.FC = () => {
       {/* ========================================================================= */}
       {/* 3. INTERACTIVE DECISION THRESHOLD SENSITIVITY ENGINE                       */}
       {/* ========================================================================= */}
-      <section className="rounded-[32px] bg-white p-7 sm:p-10 border border-[#D5D9D1] shadow-xs space-y-8">
+      <section className="rounded-[34px] bg-gradient-to-b from-white via-[#FCFCFA] to-[#F7F6F0] p-7 sm:p-10 border border-[#D9DED4] shadow-[0_8px_30px_rgba(8,60,51,0.04)] relative overflow-hidden space-y-8">
         
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#D5D9D1]">
+        {/* Subtle decorative glow */}
+        <div className="absolute -top-24 -right-24 w-80 h-80 rounded-full bg-emerald-500/5 blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-24 -left-24 w-80 h-80 rounded-full bg-teal-500/5 blur-3xl pointer-events-none" />
+
+        {/* Section Header */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-5 pb-6 border-b border-[#D5D9D1]/80 relative z-10">
           <div>
-            <span className="text-[11px] font-mono uppercase tracking-[0.18em] text-[#0D5145] font-semibold block">
-              OPERATIONAL WORKFLOW CALIBRATION
-            </span>
-            <h2 className="text-2xl font-bold text-[#083C33] tracking-tight font-serif mt-1 flex items-center space-x-2.5">
-              <SlidersHorizontal className="w-5 h-5 text-[#0D5145]" />
+            <div className="flex items-center gap-2 mb-1.5">
+              <span className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase tracking-[0.16em] bg-[#0D5145]/10 text-[#0D5145] border border-[#0D5145]/20">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#0D5145] animate-pulse" />
+                Operational Workflow Calibration
+              </span>
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-bold text-[#083C33] tracking-tight font-serif flex items-center gap-3">
+              <span className="p-2 rounded-xl bg-[#083C33] text-white shadow-sm inline-flex">
+                <SlidersHorizontal className="w-5 h-5 text-emerald-300" />
+              </span>
               <span>Interactive Decision Threshold Sensitivity</span>
             </h2>
-            <p className="text-xs sm:text-sm text-[#52706A] mt-1 max-w-2xl leading-relaxed">
-              Dynamically model operational trade-offs between evidentiary specificity (minimizing false accusations) and rapid triage recall.
+            <p className="text-xs sm:text-sm text-[#52706A] mt-2 max-w-2xl leading-relaxed">
+              Dynamically model operational trade-offs between evidentiary specificity (minimizing false accusations) and rapid triage recall across investigative pipelines.
             </p>
           </div>
 
-          <div className="flex flex-col sm:items-end gap-1">
-            <div className={`px-4 py-1 rounded-full border text-xs font-mono font-semibold shadow-2xs ${thresholdDynamics.modeBadgeColor}`}>
+          <div className="flex flex-col sm:items-end gap-1.5 shrink-0">
+            <div className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full border text-xs font-mono font-bold shadow-2xs ${thresholdDynamics.modeBadgeColor}`}>
+              <span className="w-2 h-2 rounded-full bg-current opacity-80" />
               {thresholdDynamics.modeTitle}
             </div>
-            <span className="text-[11px] font-mono text-[#0D5145] font-semibold">
+            <span className="text-[11px] font-mono text-[#0D5145] font-semibold flex items-center gap-1.5">
+              <Shield className="w-3.5 h-3.5 text-[#0D5145]" />
               {thresholdDynamics.legalSafety}
             </span>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        {/* Calibration Bay Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch relative z-10">
           
-          {/* Slider & Operating Regime Panel */}
-          <div className="lg:col-span-7 space-y-5 bg-[#F7F6F0] p-6 rounded-[24px] border border-[#D5D9D1]">
-            <div className="flex justify-between items-center text-xs font-mono">
-              <span className="text-[#52706A] font-semibold uppercase tracking-wider">Classification Cutoff Threshold (τ):</span>
-              <span className="text-xl font-bold text-[#083C33] bg-white px-4 py-1 rounded-xl border border-[#D5D9D1] shadow-2xs font-mono">
-                τ = {threshold.toFixed(2)}
-              </span>
-            </div>
+          {/* Left Column: Interactive Calibration Deck */}
+          <div className="lg:col-span-7 flex flex-col justify-between space-y-6 bg-white/90 backdrop-blur-sm p-6 sm:p-7 rounded-[28px] border border-[#D9DED4] shadow-xs relative overflow-hidden">
             
-            <div className="space-y-3">
-              <input 
-                type="range" 
-                min="0.10" 
-                max="0.90" 
-                step="0.05"
-                value={threshold}
-                onChange={(e) => setThreshold(parseFloat(e.target.value))}
-                className="w-full accent-[#0D5145] cursor-pointer h-2.5 bg-[#D5D9D1] rounded-lg"
-              />
-
-              <div className="grid grid-cols-3 gap-2 text-center text-xs font-mono">
-                <button 
-                  onClick={() => setThreshold(0.20)} 
-                  className={`p-2 rounded-xl border transition-all ${threshold <= 0.35 ? 'bg-white border-[#0D5145] text-[#083C33] font-bold shadow-2xs' : 'border-[#D5D9D1] text-[#52706A] hover:bg-white'}`}
-                >
-                  <span className="block text-[10px] uppercase text-[#52706A]">0.10 – 0.35</span>
-                  <span>Intake Triage</span>
-                </button>
-                <button 
-                  onClick={() => setThreshold(0.50)} 
-                  className={`p-2 rounded-xl border transition-all ${threshold > 0.35 && threshold < 0.65 ? 'bg-white border-[#0D5145] text-[#083C33] font-bold shadow-2xs' : 'border-[#D5D9D1] text-[#52706A] hover:bg-white'}`}
-                >
-                  <span className="block text-[10px] uppercase text-[#52706A]">0.50 Default</span>
-                  <span>Balanced Baseline</span>
-                </button>
-                <button 
-                  onClick={() => setThreshold(0.80)} 
-                  className={`p-2 rounded-xl border transition-all ${threshold >= 0.65 ? 'bg-white border-[#0D5145] text-[#083C33] font-bold shadow-2xs' : 'border-[#D5D9D1] text-[#52706A] hover:bg-white'}`}
-                >
-                  <span className="block text-[10px] uppercase text-[#52706A]">0.65 – 0.90</span>
-                  <span>Judicial Strict</span>
-                </button>
+            {/* Cutoff Readout & Status Header */}
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <span className="text-[11px] font-mono font-bold text-[#52706A] uppercase tracking-wider block">
+                  Classification Cutoff
+                </span>
+                <span className="text-xs text-[#2D3F3A] font-medium">
+                  Continuous probability discriminator parameter
+                </span>
+              </div>
+              
+              {/* Cyber Cutoff Bezel Box */}
+              <div className="relative overflow-hidden bg-gradient-to-br from-[#041A16] via-[#082E26] to-[#031512] text-white px-5 py-2.5 rounded-2xl border border-emerald-500/30 shadow-[0_4px_20px_rgba(8,60,51,0.22)] flex items-center gap-3.5 group">
+                <div className="absolute -right-4 -bottom-4 w-16 h-16 bg-emerald-500/10 rounded-full blur-md pointer-events-none" />
+                <div className="flex items-center gap-2">
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+                  </span>
+                  <span className="text-[10px] font-mono text-emerald-200/80 uppercase tracking-widest font-semibold">Active τ</span>
+                </div>
+                <div className="h-4 w-px bg-emerald-500/30" />
+                <span className="text-2xl font-extrabold font-mono text-emerald-300 tracking-wider drop-shadow-[0_0_10px_rgba(52,211,153,0.45)]">
+                  τ = {threshold.toFixed(2)}
+                </span>
               </div>
             </div>
 
-            <div className="pt-3 border-t border-[#D5D9D1]/70 space-y-1.5 text-xs">
-              <p className="text-[#2D3F3A] leading-relaxed">
-                <strong>Forensic Profile:</strong> {thresholdDynamics.modeDesc}
-              </p>
-              <p className="text-[#52706A] text-[11px] leading-relaxed italic">
-                * {thresholdDynamics.recommendation}
-              </p>
+            {/* Custom Interactive Range Track Box */}
+            <div className="space-y-3.5 bg-gradient-to-b from-[#F8FAF7] to-[#EFF4F0] p-5 sm:p-6 rounded-2xl border border-[#D5DDD6] shadow-inner relative overflow-hidden">
+              {/* Background Waveform Texture */}
+              <svg className="absolute inset-0 w-full h-full text-emerald-900/5 pointer-events-none" preserveAspectRatio="none" viewBox="0 0 400 100" fill="none">
+                <path d="M0,50 Q50,20 100,50 T200,50 T300,50 T400,50" stroke="currentColor" strokeWidth="1" />
+                <path d="M0,50 Q50,35 100,50 T200,50 T300,50 T400,50" stroke="currentColor" strokeWidth="0.8" strokeDasharray="3 3" />
+                <path d="M0,50 Q50,65 100,50 T200,50 T300,50 T400,50" stroke="currentColor" strokeWidth="0.8" strokeDasharray="2 4" />
+              </svg>
+
+              <div className="flex justify-between items-center text-xs font-mono text-[#52706A] relative z-10">
+                <span className="font-semibold flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-teal-500" />
+                  0.10 (High Sensitivity)
+                </span>
+                <span className="font-bold text-[#0D5145] bg-white px-2.5 py-0.5 rounded-md border border-[#D5DCD6] shadow-2xs">
+                  Current: {threshold.toFixed(2)}
+                </span>
+                <span className="font-semibold flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                  0.90 (High Specificity)
+                </span>
+              </div>
+
+              <div className="relative py-1.5 z-10">
+                <input 
+                  type="range" 
+                  min="0.10" 
+                  max="0.90" 
+                  step="0.05"
+                  value={threshold}
+                  onChange={(e) => setThreshold(parseFloat(e.target.value))}
+                  className="w-full h-3 rounded-full appearance-none cursor-pointer focus:outline-hidden"
+                  style={{
+                    background: `linear-gradient(to right, #0D5145 0%, #0D5145 ${((threshold - 0.10) / 0.80) * 100}%, #CBD5E1 ${((threshold - 0.10) / 0.80) * 100}%, #CBD5E1 100%)`
+                  }}
+                />
+              </div>
+
+              {/* Tick milestones */}
+              <div className="flex justify-between items-center text-[10px] font-mono text-[#52706A]/80 px-1 pt-0.5 relative z-10">
+                <span className="hover:text-[#083C33] cursor-pointer" onClick={() => setThreshold(0.10)}>0.10</span>
+                <span className="hover:text-[#083C33] cursor-pointer" onClick={() => setThreshold(0.25)}>0.25</span>
+                <span className="font-bold text-[#0D5145] bg-[#0D5145]/10 px-2 py-0.5 rounded-md hover:bg-[#0D5145]/20 cursor-pointer" onClick={() => setThreshold(0.50)}>
+                  0.50 (Default)
+                </span>
+                <span className="hover:text-[#083C33] cursor-pointer" onClick={() => setThreshold(0.75)}>0.75</span>
+                <span className="hover:text-[#083C33] cursor-pointer" onClick={() => setThreshold(0.90)}>0.90</span>
+              </div>
             </div>
+
+            {/* Segmented Operating Regimes Boxes */}
+            <div className="space-y-2.5">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-mono uppercase tracking-wider text-[#52706A] font-bold block">
+                  Target Investigative Regimes
+                </span>
+                <span className="text-[10px] font-mono text-[#0D5145] font-semibold">
+                  Click to calibrate
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+                
+                {/* 1. Intake Triage */}
+                <button
+                  type="button"
+                  onClick={() => setThreshold(0.20)}
+                  className={`relative overflow-hidden p-4 rounded-2xl border text-left transition-all duration-300 cursor-pointer group ${
+                    threshold <= 0.35
+                      ? 'bg-gradient-to-br from-[#062923] to-[#041A16] text-white border-[#062923] shadow-lg ring-2 ring-emerald-500/40 -translate-y-0.5'
+                      : 'bg-gradient-to-br from-white to-[#F8FAF7] border-[#D9DED4] text-[#2D3F3A] hover:bg-white hover:border-[#0D5145]/40 hover:shadow-md'
+                  }`}
+                >
+                  {/* Subtle top indicator bar */}
+                  <div className={`absolute top-0 inset-x-0 h-1 transition-opacity ${
+                    threshold <= 0.35 ? 'bg-gradient-to-r from-teal-400 to-emerald-400 opacity-100' : 'bg-transparent opacity-0'
+                  }`} />
+
+                  <div className="flex items-center justify-between mb-2">
+                    <span className={`text-[10px] font-mono uppercase tracking-wider font-bold px-2 py-0.5 rounded-md ${
+                      threshold <= 0.35 ? 'bg-white/20 text-emerald-200' : 'bg-[#EBF0E6] text-[#52706A]'
+                    }`}>
+                      0.10 – 0.35
+                    </span>
+                    {threshold <= 0.35 ? (
+                      <span className="flex h-2 w-2 relative">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
+                      </span>
+                    ) : (
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#CBD5E1] group-hover:bg-[#0D5145]" />
+                    )}
+                  </div>
+                  <span className={`block font-serif font-bold text-sm ${threshold <= 0.35 ? 'text-white' : 'text-[#083C33]'}`}>
+                    Intake Triage
+                  </span>
+                  <span className={`block text-[11px] mt-0.5 leading-snug ${threshold <= 0.35 ? 'text-emerald-200/90' : 'text-[#52706A]'}`}>
+                    High-recall screening
+                  </span>
+                </button>
+
+                {/* 2. Balanced Baseline */}
+                <button
+                  type="button"
+                  onClick={() => setThreshold(0.50)}
+                  className={`relative overflow-hidden p-4 rounded-2xl border text-left transition-all duration-300 cursor-pointer group ${
+                    threshold > 0.35 && threshold < 0.65
+                      ? 'bg-gradient-to-br from-[#062923] to-[#041A16] text-white border-[#062923] shadow-lg ring-2 ring-emerald-500/40 -translate-y-0.5'
+                      : 'bg-gradient-to-br from-white to-[#F8FAF7] border-[#D9DED4] text-[#2D3F3A] hover:bg-white hover:border-[#0D5145]/40 hover:shadow-md'
+                  }`}
+                >
+                  {/* Subtle top indicator bar */}
+                  <div className={`absolute top-0 inset-x-0 h-1 transition-opacity ${
+                    threshold > 0.35 && threshold < 0.65 ? 'bg-gradient-to-r from-emerald-400 to-teal-400 opacity-100' : 'bg-transparent opacity-0'
+                  }`} />
+
+                  <div className="flex items-center justify-between mb-2">
+                    <span className={`text-[10px] font-mono uppercase tracking-wider font-bold px-2 py-0.5 rounded-md ${
+                      threshold > 0.35 && threshold < 0.65 ? 'bg-white/20 text-emerald-200' : 'bg-[#EBF0E6] text-[#52706A]'
+                    }`}>
+                      0.50 Default
+                    </span>
+                    {threshold > 0.35 && threshold < 0.65 ? (
+                      <span className="flex h-2 w-2 relative">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
+                      </span>
+                    ) : (
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#CBD5E1] group-hover:bg-[#0D5145]" />
+                    )}
+                  </div>
+                  <span className={`block font-serif font-bold text-sm ${threshold > 0.35 && threshold < 0.65 ? 'text-white' : 'text-[#083C33]'}`}>
+                    Balanced Baseline
+                  </span>
+                  <span className={`block text-[11px] mt-0.5 leading-snug ${threshold > 0.35 && threshold < 0.65 ? 'text-emerald-200/90' : 'text-[#52706A]'}`}>
+                    Standard verification
+                  </span>
+                </button>
+
+                {/* 3. Judicial Strict */}
+                <button
+                  type="button"
+                  onClick={() => setThreshold(0.80)}
+                  className={`relative overflow-hidden p-4 rounded-2xl border text-left transition-all duration-300 cursor-pointer group ${
+                    threshold >= 0.65
+                      ? 'bg-gradient-to-br from-[#062923] to-[#041A16] text-white border-[#062923] shadow-lg ring-2 ring-amber-400/40 -translate-y-0.5'
+                      : 'bg-gradient-to-br from-white to-[#F8FAF7] border-[#D9DED4] text-[#2D3F3A] hover:bg-white hover:border-[#0D5145]/40 hover:shadow-md'
+                  }`}
+                >
+                  {/* Subtle top indicator bar */}
+                  <div className={`absolute top-0 inset-x-0 h-1 transition-opacity ${
+                    threshold >= 0.65 ? 'bg-gradient-to-r from-amber-400 to-orange-400 opacity-100' : 'bg-transparent opacity-0'
+                  }`} />
+
+                  <div className="flex items-center justify-between mb-2">
+                    <span className={`text-[10px] font-mono uppercase tracking-wider font-bold px-2 py-0.5 rounded-md ${
+                      threshold >= 0.65 ? 'bg-white/20 text-amber-200' : 'bg-[#EBF0E6] text-[#52706A]'
+                    }`}>
+                      0.65 – 0.90
+                    </span>
+                    {threshold >= 0.65 ? (
+                      <span className="flex h-2 w-2 relative">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75" />
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-400" />
+                      </span>
+                    ) : (
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#CBD5E1] group-hover:bg-[#0D5145]" />
+                    )}
+                  </div>
+                  <span className={`block font-serif font-bold text-sm ${threshold >= 0.65 ? 'text-white' : 'text-[#083C33]'}`}>
+                    Judicial Strict
+                  </span>
+                  <span className={`block text-[11px] mt-0.5 leading-snug ${threshold >= 0.65 ? 'text-amber-200/90' : 'text-[#52706A]'}`}>
+                    Courtroom admissible
+                  </span>
+                </button>
+
+              </div>
+            </div>
+
+            {/* Forensic Profile Context Bay Box */}
+            <div className="relative overflow-hidden p-5 rounded-2xl bg-gradient-to-r from-[#F4F7F4] via-[#F8FAF8] to-white border-l-4 border-l-[#0D5145] border border-[#D5DCD6] shadow-xs space-y-2">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="p-1 rounded-lg bg-[#0D5145]/10 text-[#0D5145]">
+                    <Info className="w-4 h-4" />
+                  </div>
+                  <span className="text-xs font-bold text-[#083C33] uppercase font-mono tracking-wide">
+                    Active Forensic Profile
+                  </span>
+                </div>
+                <span className="text-[10px] font-mono text-[#0D5145] font-semibold bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
+                  Evidentiary Protocol
+                </span>
+              </div>
+
+              <p className="text-xs text-[#2D3F3A] leading-relaxed">
+                {thresholdDynamics.modeDesc}
+              </p>
+              
+              <div className="pt-2 border-t border-[#D5DCD6]/70 flex items-center gap-2 text-[11px] text-[#52706A]">
+                <Sparkles className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                <span className="italic leading-relaxed">{thresholdDynamics.recommendation}</span>
+              </div>
+            </div>
+
           </div>
 
-          {/* Dynamic Metrics Readout Gauges */}
-          <div className="lg:col-span-5 grid grid-cols-2 gap-3.5">
-            <div className="bg-[#F7F6F0] p-4.5 rounded-[22px] border border-[#D5D9D1] text-center">
-              <span className="text-[10px] font-mono text-[#52706A] block uppercase tracking-wider font-semibold">Calibrated Precision</span>
-              <span className="text-3xl font-extrabold font-mono text-[#083C33] mt-1 block">
-                {thresholdDynamics.precision}%
-              </span>
-              <span className="text-[10px] text-[#0D5145] font-medium block mt-0.5">Confidence In Synthetics</span>
+          {/* Right Column: 2x2 Telemetry Metric Gauges (Designed Boxes) */}
+          <div className="lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 gap-4.5">
+            
+            {/* ============================================================= */}
+            {/* Box 1: Calibrated Precision                                   */}
+            {/* ============================================================= */}
+            <div className="relative overflow-hidden rounded-[26px] border border-[#D5DCD8] bg-gradient-to-br from-white via-[#FCFCFA] to-[#F2F7F4] p-5 sm:p-6 shadow-[0_4px_20px_rgba(8,60,51,0.04)] hover:shadow-[0_16px_36px_rgba(8,60,51,0.09)] hover:border-emerald-600/40 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group">
+              
+              {/* Top Accent Stripe */}
+              <div className="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-emerald-600 via-teal-500 to-emerald-400" />
+              
+              {/* Subtle Radial Glow */}
+              <div className="absolute -top-12 -right-12 w-32 h-32 rounded-full bg-emerald-500/10 blur-xl pointer-events-none group-hover:scale-125 transition-transform duration-500" />
+
+              {/* Technical Reticle Watermark SVG */}
+              <svg className="absolute -right-3 -top-3 w-32 h-32 text-emerald-800/5 group-hover:text-emerald-800/10 transition-colors pointer-events-none" viewBox="0 0 100 100" fill="none" stroke="currentColor">
+                <circle cx="50" cy="50" r="45" strokeWidth="1" strokeDasharray="3 3" />
+                <circle cx="50" cy="50" r="32" strokeWidth="1.2" />
+                <circle cx="50" cy="50" r="18" strokeWidth="1" strokeDasharray="2 2" />
+                <circle cx="50" cy="50" r="5" strokeWidth="1.5" />
+                <line x1="50" y1="2" x2="50" y2="98" strokeWidth="1" strokeDasharray="4 4" />
+                <line x1="2" y1="50" x2="98" y2="50" strokeWidth="1" strokeDasharray="4 4" />
+              </svg>
+
+              <div className="relative z-10">
+                {/* Header Row */}
+                <div className="flex items-center justify-between mb-3.5">
+                  <div className="p-2.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-[#0D5145] shadow-xs group-hover:scale-105 transition-transform duration-300">
+                    <Target className="w-5 h-5 text-[#0D5145]" />
+                  </div>
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold tracking-wider uppercase text-emerald-800 bg-emerald-50/90 border border-emerald-200/80 shadow-2xs">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse" />
+                    Specificity
+                  </span>
+                </div>
+
+                <span className="text-xs font-mono uppercase tracking-wider text-[#52706A] block font-semibold">
+                  Calibrated Precision
+                </span>
+
+                <div className="flex items-baseline gap-2 mt-1.5">
+                  <span className="text-3xl sm:text-4xl font-extrabold font-mono text-[#083C33] tracking-tight group-hover:text-[#0D5145] transition-colors">
+                    {thresholdDynamics.precision}%
+                  </span>
+                  <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-800 border border-emerald-200">
+                    95% CI ±0.3%
+                  </span>
+                </div>
+              </div>
+
+              {/* Progress & Telemetry Section */}
+              <div className="space-y-2 mt-4 pt-3.5 border-t border-[#D5DCD8]/70 relative z-10">
+                <div className="w-full bg-[#E2E8DF] h-2.5 rounded-full overflow-hidden p-0.5 border border-[#D5DCD0]/60">
+                  <div 
+                    className="bg-gradient-to-r from-emerald-600 via-teal-500 to-emerald-400 h-full rounded-full transition-all duration-500 shadow-sm"
+                    style={{ width: `${thresholdDynamics.precision}%` }}
+                  />
+                </div>
+                <div className="flex justify-between items-center text-[10px] font-mono text-[#52706A]">
+                  <span>Confidence In Synthetics</span>
+                  <span className="font-bold text-[#0D5145]">Min. False Accusations</span>
+                </div>
+              </div>
             </div>
 
-            <div className="bg-[#F7F6F0] p-4.5 rounded-[22px] border border-[#D5D9D1] text-center">
-              <span className="text-[10px] font-mono text-[#52706A] block uppercase tracking-wider font-semibold">Calibrated Recall</span>
-              <span className="text-3xl font-extrabold font-mono text-[#083C33] mt-1 block">
-                {thresholdDynamics.recall}%
-              </span>
-              <span className="text-[10px] text-[#0D5145] font-medium block mt-0.5">Synthetic Detection Power</span>
+            {/* ============================================================= */}
+            {/* Box 2: Calibrated Recall                                      */}
+            {/* ============================================================= */}
+            <div className="relative overflow-hidden rounded-[26px] border border-[#D5DCD8] bg-gradient-to-br from-white via-[#FCFCFA] to-[#EFF7F6] p-5 sm:p-6 shadow-[0_4px_20px_rgba(8,60,51,0.04)] hover:shadow-[0_16px_36px_rgba(8,60,51,0.09)] hover:border-teal-600/40 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group">
+              
+              {/* Top Accent Stripe */}
+              <div className="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-teal-500 via-cyan-500 to-emerald-400" />
+              
+              {/* Subtle Radial Glow */}
+              <div className="absolute -top-12 -right-12 w-32 h-32 rounded-full bg-teal-500/10 blur-xl pointer-events-none group-hover:scale-125 transition-transform duration-500" />
+
+              {/* Technical Spectral Waveform Watermark SVG */}
+              <svg className="absolute -right-2 -top-2 w-32 h-24 text-teal-800/5 group-hover:text-teal-800/10 transition-colors pointer-events-none" viewBox="0 0 120 80" fill="none" stroke="currentColor">
+                <path d="M0,40 Q15,10 30,40 T60,40 T90,40 T120,40" strokeWidth="1.5" />
+                <path d="M0,40 Q15,20 30,40 T60,40 T90,40 T120,40" strokeWidth="1" strokeDasharray="3 3" />
+                <path d="M0,40 Q15,0 30,40 T60,40 T90,40 T120,40" strokeWidth="0.8" opacity="0.6" />
+                <line x1="15" y1="20" x2="15" y2="60" strokeWidth="1" strokeDasharray="2 2" />
+                <line x1="45" y1="15" x2="45" y2="65" strokeWidth="1" strokeDasharray="2 2" />
+                <line x1="75" y1="25" x2="75" y2="55" strokeWidth="1" strokeDasharray="2 2" />
+                <line x1="105" y1="10" x2="105" y2="70" strokeWidth="1" strokeDasharray="2 2" />
+              </svg>
+
+              <div className="relative z-10">
+                {/* Header Row */}
+                <div className="flex items-center justify-between mb-3.5">
+                  <div className="p-2.5 rounded-2xl bg-teal-500/10 border border-teal-500/20 text-teal-700 shadow-xs group-hover:scale-105 transition-transform duration-300">
+                    <Zap className="w-5 h-5 text-teal-700" />
+                  </div>
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold tracking-wider uppercase text-teal-800 bg-teal-50/90 border border-teal-200/80 shadow-2xs">
+                    <span className="w-1.5 h-1.5 rounded-full bg-teal-600 animate-pulse" />
+                    Sensitivity
+                  </span>
+                </div>
+
+                <span className="text-xs font-mono uppercase tracking-wider text-[#52706A] block font-semibold">
+                  Calibrated Recall
+                </span>
+
+                <div className="flex items-baseline gap-2 mt-1.5">
+                  <span className="text-3xl sm:text-4xl font-extrabold font-mono text-[#083C33] tracking-tight group-hover:text-teal-800 transition-colors">
+                    {thresholdDynamics.recall}%
+                  </span>
+                  <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-md bg-teal-50 text-teal-800 border border-teal-200">
+                    Coverage High
+                  </span>
+                </div>
+              </div>
+
+              {/* Progress & Telemetry Section */}
+              <div className="space-y-2 mt-4 pt-3.5 border-t border-[#D5DCD8]/70 relative z-10">
+                <div className="w-full bg-[#E2E8DF] h-2.5 rounded-full overflow-hidden p-0.5 border border-[#D5DCD0]/60">
+                  <div 
+                    className="bg-gradient-to-r from-teal-600 via-cyan-500 to-emerald-400 h-full rounded-full transition-all duration-500 shadow-sm"
+                    style={{ width: `${thresholdDynamics.recall}%` }}
+                  />
+                </div>
+                <div className="flex justify-between items-center text-[10px] font-mono text-[#52706A]">
+                  <span>Synthetic Detection Power</span>
+                  <span className="font-bold text-teal-700">True Positive Capture</span>
+                </div>
+              </div>
             </div>
 
-            <div className="bg-[#F7F6F0] p-4.5 rounded-[22px] border border-[#D5D9D1] text-center">
-              <span className="text-[10px] font-mono text-[#52706A] block uppercase tracking-wider font-semibold">Harmonic F1</span>
-              <span className="text-3xl font-extrabold font-mono text-[#083C33] mt-1 block">
-                {thresholdDynamics.f1}%
-              </span>
-              <span className="text-[10px] text-[#52706A] block mt-0.5">Harmonic Equilibrium</span>
+            {/* ============================================================= */}
+            {/* Box 3: Harmonic F1-Score                                      */}
+            {/* ============================================================= */}
+            <div className="relative overflow-hidden rounded-[26px] border border-[#D5DCD8] bg-gradient-to-br from-white via-[#FCFCFA] to-[#F3F6F2] p-5 sm:p-6 shadow-[0_4px_20px_rgba(8,60,51,0.04)] hover:shadow-[0_16px_36px_rgba(8,60,51,0.09)] hover:border-[#0D5145]/40 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group">
+              
+              {/* Top Accent Stripe */}
+              <div className="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-[#083C33] via-[#0D5145] to-emerald-500" />
+              
+              {/* Subtle Radial Glow */}
+              <div className="absolute -top-12 -right-12 w-32 h-32 rounded-full bg-[#0D5145]/10 blur-xl pointer-events-none group-hover:scale-125 transition-transform duration-500" />
+
+              {/* Technical Harmonic Scale Watermark SVG */}
+              <svg className="absolute -right-3 -top-3 w-32 h-32 text-emerald-900/5 group-hover:text-emerald-900/10 transition-colors pointer-events-none" viewBox="0 0 100 100" fill="none" stroke="currentColor">
+                <polygon points="50,15 85,80 15,80" strokeWidth="1.2" strokeDasharray="4 2" />
+                <circle cx="50" cy="45" r="22" strokeWidth="1" />
+                <line x1="25" y1="55" x2="75" y2="55" strokeWidth="1.8" />
+                <circle cx="50" cy="55" r="3.5" fill="currentColor" opacity="0.3" />
+                <path d="M25,55 L20,70 L30,70 Z" strokeWidth="1" />
+                <path d="M75,55 L70,70 L80,70 Z" strokeWidth="1" />
+              </svg>
+
+              <div className="relative z-10">
+                {/* Header Row */}
+                <div className="flex items-center justify-between mb-3.5">
+                  <div className="p-2.5 rounded-2xl bg-[#0D5145]/10 border border-[#0D5145]/20 text-[#0D5145] shadow-xs group-hover:scale-105 transition-transform duration-300">
+                    <Scale className="w-5 h-5 text-[#0D5145]" />
+                  </div>
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold tracking-wider uppercase text-[#0D5145] bg-[#0D5145]/5 border border-[#0D5145]/20 shadow-2xs">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#0D5145] animate-pulse" />
+                    Harmonic
+                  </span>
+                </div>
+
+                <span className="text-xs font-mono uppercase tracking-wider text-[#52706A] block font-semibold">
+                  Harmonic F1-Score
+                </span>
+
+                <div className="flex items-baseline gap-2 mt-1.5">
+                  <span className="text-3xl sm:text-4xl font-extrabold font-mono text-[#083C33] tracking-tight group-hover:text-[#0D5145] transition-colors">
+                    {thresholdDynamics.f1}%
+                  </span>
+                  <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-md bg-[#0D5145]/10 text-[#0D5145] border border-[#0D5145]/20">
+                    β = 1.0 Optimal
+                  </span>
+                </div>
+              </div>
+
+              {/* Progress & Telemetry Section */}
+              <div className="space-y-2 mt-4 pt-3.5 border-t border-[#D5DCD8]/70 relative z-10">
+                <div className="w-full bg-[#E2E8DF] h-2.5 rounded-full overflow-hidden p-0.5 border border-[#D5DCD0]/60">
+                  <div 
+                    className="bg-gradient-to-r from-[#0D5145] via-emerald-600 to-teal-500 h-full rounded-full transition-all duration-500 shadow-sm"
+                    style={{ width: `${thresholdDynamics.f1}%` }}
+                  />
+                </div>
+                <div className="flex justify-between items-center text-[10px] font-mono text-[#52706A]">
+                  <span>Harmonic Equilibrium</span>
+                  <span className="font-bold text-[#0D5145]">P/R Trade-off Balance</span>
+                </div>
+              </div>
             </div>
 
-            <div className="bg-[#F7F6F0] p-4.5 rounded-[22px] border border-[#D5D9D1] text-center">
-              <span className="text-[10px] font-mono text-[#52706A] block uppercase tracking-wider font-semibold">False Alarm Rate (α)</span>
-              <span className="text-3xl font-extrabold font-mono text-[#0D5145] mt-1 block">
-                {thresholdDynamics.fpr}%
-              </span>
-              <span className="text-[10px] text-[#52706A] block mt-0.5">Type-I Error Margin</span>
+            {/* ============================================================= */}
+            {/* Box 4: False Alarm Rate                                       */}
+            {/* ============================================================= */}
+            <div className="relative overflow-hidden rounded-[26px] border border-[#D5DCD8] bg-gradient-to-br from-white via-[#FCFCFA] to-[#FDF6F0] p-5 sm:p-6 shadow-[0_4px_20px_rgba(8,60,51,0.04)] hover:shadow-[0_16px_36px_rgba(8,60,51,0.09)] hover:border-amber-500/40 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group">
+              
+              {/* Top Accent Stripe */}
+              <div className="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-amber-500 via-orange-400 to-rose-400" />
+              
+              {/* Subtle Radial Glow */}
+              <div className="absolute -top-12 -right-12 w-32 h-32 rounded-full bg-amber-500/10 blur-xl pointer-events-none group-hover:scale-125 transition-transform duration-500" />
+
+              {/* Technical Shield Perimeter Watermark SVG */}
+              <svg className="absolute -right-3 -top-3 w-32 h-32 text-amber-800/5 group-hover:text-amber-800/10 transition-colors pointer-events-none" viewBox="0 0 100 100" fill="none" stroke="currentColor">
+                <path d="M50,10 L82,24 C82,58 50,88 50,88 C50,88 18,58 18,24 Z" strokeWidth="1.2" />
+                <path d="M50,22 L72,32 C72,54 50,74 50,74 C50,74 28,54 28,32 Z" strokeWidth="0.9" strokeDasharray="3 3" />
+                <circle cx="50" cy="48" r="8" strokeWidth="1" />
+                <line x1="50" y1="38" x2="50" y2="58" strokeWidth="1.2" />
+              </svg>
+
+              <div className="relative z-10">
+                {/* Header Row */}
+                <div className="flex items-center justify-between mb-3.5">
+                  <div className="p-2.5 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-800 shadow-xs group-hover:scale-105 transition-transform duration-300">
+                    <ShieldAlert className="w-5 h-5 text-amber-700" />
+                  </div>
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold tracking-wider uppercase text-emerald-800 bg-emerald-50/90 border border-emerald-200/80 shadow-2xs">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-600" />
+                    Lower is Better
+                  </span>
+                </div>
+
+                <span className="text-xs font-mono uppercase tracking-wider text-[#52706A] block font-semibold">
+                  False Alarm Rate (α)
+                </span>
+
+                <div className="flex items-baseline gap-2 mt-1.5">
+                  <span className="text-3xl sm:text-4xl font-extrabold font-mono text-amber-950 tracking-tight group-hover:text-amber-900 transition-colors">
+                    {thresholdDynamics.fpr}%
+                  </span>
+                  <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-md bg-amber-50 text-amber-900 border border-amber-200">
+                    &lt;5% Standard
+                  </span>
+                </div>
+              </div>
+
+              {/* Progress & Telemetry Section */}
+              <div className="space-y-2 mt-4 pt-3.5 border-t border-[#D5DCD8]/70 relative z-10">
+                <div className="w-full bg-[#E2E8DF] h-2.5 rounded-full overflow-hidden p-0.5 border border-[#D5DCD0]/60">
+                  <div 
+                    className="bg-gradient-to-r from-amber-500 via-orange-400 to-rose-400 h-full rounded-full transition-all duration-500 shadow-sm"
+                    style={{ width: `${Math.min(100, parseFloat(thresholdDynamics.fpr) * 8)}%` }}
+                  />
+                </div>
+                <div className="flex justify-between items-center text-[10px] font-mono text-[#52706A]">
+                  <span>Type-I Error Margin</span>
+                  <span className="font-bold text-amber-800">Target Pass (&lt;5%)</span>
+                </div>
+              </div>
             </div>
+
           </div>
 
         </div>

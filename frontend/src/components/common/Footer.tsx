@@ -5,7 +5,7 @@ export const Footer: React.FC = () => {
   return (
     <footer className="border-t border-[#166355] bg-[#083C33] py-12 mt-20 text-[#D9DED4] text-xs">
       <div className="site-container space-y-6">
-        
+
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 pb-6 border-b border-[#166355]">
           <div>
             <div className="flex items-center space-x-3 text-[#F7F6F0] font-bold text-sm">
@@ -38,14 +38,14 @@ export const Footer: React.FC = () => {
             <span>Research Integrity & Legal Admissibility Disclaimer:</span>
           </p>
           <p>
-            DeepTrace AI performs mathematical source attribution based on empirical frequency representations (2D FFT, 2D DCT) and high-pass noise residuals (Spatial Rich Models). 
+            DeepTrace AI performs mathematical source attribution based on empirical frequency representations (2D FFT, 2D DCT) and high-pass noise residuals (Spatial Rich Models).
             Predictions indicate learned similarity to known generative architectures (StyleGAN, Diffusion, etc.) within trained dataset distributions and do not constitute absolute device-level physical provenance.
             Uploaded media is processed ephemerally in accordance with privacy safeguards and automatically purged.
           </p>
         </div>
 
         <div className="flex flex-col sm:flex-row items-center justify-between text-[#D9DED4]/70 text-[11px] font-mono pt-2">
-          <p>© {new Date().getFullYear()} DeepTrace AI Research Project.</p>
+          <p>© {new Date().getFullYear()} DeepTrace AI Research Project by Ansari Arhama Najmul Kalam.</p>
           <p className="mt-2 sm:mt-0">FastAPI • PyTorch • OpenCV • React • TypeScript</p>
         </div>
 
