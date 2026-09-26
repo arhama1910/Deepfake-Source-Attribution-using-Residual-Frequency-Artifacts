@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ReactLenis } from 'lenis/react';
+import { ReactLenis, useLenis } from 'lenis/react';
 import { Navbar } from './components/common/Navbar';
 import { Footer } from './components/common/Footer';
 import { HeroSection } from './components/landing/HeroSection';
@@ -12,6 +12,34 @@ import { ModelsPage } from './components/models/ModelsPage';
 import { HistoryPage } from './components/history/HistoryPage';
 import KineticDotsLoader from './components/ui/kinetic-dots-loader';
 import type { AnalysisResult } from './types/forensics';
+
+// Ensures the page is always positioned at the very top whenever a section changes
+const ScrollToTopOnSectionChange: React.FC<{
+  activeTab: string;
+  resultId: string | null;
+}> = ({ activeTab, resultId }) => {
+  const lenis = useLenis();
+
+  useEffect(() => {
+    const scrollToTop = () => {
+      if (lenis) {
+        lenis.scrollTo(0, { immediate: true });
+      }
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+    };
+
+    scrollToTop();
+    const rafId = requestAnimationFrame(() => {
+      scrollToTop();
+    });
+
+    return () => cancelAnimationFrame(rafId);
+  }, [activeTab, resultId, lenis]);
+
+  return null;
+};
 
 export const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>('landing');
@@ -50,6 +78,7 @@ export const App: React.FC = () => {
 
   return (
     <ReactLenis root options={{ lerp: 0.1, duration: 1.2, smoothWheel: true }}>
+      <ScrollToTopOnSectionChange activeTab={activeTab} resultId={currentResult ? currentResult.id : null} />
       {/* Forensic Engine Preloader */}
       <AnimatePresence>
         {isInitialLoading && (

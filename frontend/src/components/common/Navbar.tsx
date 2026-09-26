@@ -17,6 +17,7 @@ import {
   X,
   Zap
 } from 'lucide-react';
+import { useLenis } from 'lenis/react';
 
 interface NavbarProps {
   activeTab: string;
@@ -41,6 +42,17 @@ const NAV_ITEMS: NavItemConfig[] = [
 export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const lenis = useLenis();
+
+  const handleNavClick = (tabId: string) => {
+    setActiveTab(tabId);
+    if (lenis) {
+      lenis.scrollTo(0, { immediate: true });
+    }
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+  };
 
   // Track window resizing for responsive motion boundaries
   useEffect(() => {
@@ -154,7 +166,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
           {/* Brand Logo & Title */}
           <div
             onClick={() => {
-              setActiveTab('landing');
+              handleNavClick('landing');
               setMobileOpen(false);
             }}
             className="flex items-center space-x-3 cursor-pointer group shrink-0 select-none"
@@ -201,7 +213,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
               return (
                 <button
                   key={item.id}
-                  onClick={() => setActiveTab(item.id)}
+                  onClick={() => handleNavClick(item.id)}
                   className={`relative px-4 py-1.5 rounded-full text-xs font-semibold tracking-wide transition-colors duration-200 z-10 flex items-center space-x-1.5 cursor-pointer ${
                     isActive 
                       ? 'text-[#0D4F43] font-bold' 
@@ -274,7 +286,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
                       <button
                         key={item.id}
                         onClick={() => {
-                          setActiveTab(item.id);
+                          handleNavClick(item.id);
                           setMobileOpen(false);
                         }}
                         className={`flex items-center space-x-2 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
